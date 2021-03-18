@@ -1,0 +1,32 @@
+
+[work done]
+-create new folder, git init, create git, link and push
+-npm install -g @vue/cli
+-vue create allezapp
+	-vue 2
+	-babel, router, vuex, css, linter
+	-history:no
+	-sass/scss (node)
+	-eslint+airbnb
+	-lint on save
+	-in package.json
+-cd allezapp
+-npm run serve
+-had to change the firebase.json fle:
+hosting: public
+to:
+hosting: dist
+
+
+
+plan:
+[x] -set up firebase db
+[x]-create each file for {user/profile/Navbar}
+[x]	-login + 
+-create main page: list
+	-routesList
+	
+	
+	
+	
+	

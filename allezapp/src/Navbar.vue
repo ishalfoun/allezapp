@@ -3,8 +3,15 @@
     <nav id="navbar" class="navbar is-dark" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
         <router-link class="navbar-item" to="/#/">
-          Isi's page
+          AllezApp
         </router-link>
+        <div class="navbar-item profile if-mobile" aria-expanded="false">
+          <template v-if="profile[0]">
+            <img class="image is-24x24 mr-2"
+              :src="user.image">
+              <span>{{user.name}}</span>
+          </template>
+        </div>
         <a role="button" class="navbar-burger" aria-label="menu"
           aria-expanded="false" data-target="navbarBasicExample"
           @click="showNav = !showNav" :class="{ 'is-active': showNav }"
@@ -182,7 +189,7 @@ export default {
   background-color: rgb(49, 133, 49);
 }
 .navbar-item.profile{
-  width: 35%;
+  width: 15%;
   margin-left:auto;
   margin-right:0;
   position:relative;
