@@ -24,9 +24,15 @@
       <div id="navbarBasicExample" class="navbar-menu" :class="{ 'is-active': showNav }">
 <!-- nav bar end for mobile: -->
         <div class="navbar-end if-mobile">
-          <div class="navbar-item flexcontainer" @click="sync()">
+          <div class="navbar-item flexcontainer">
             <a class="button is-primary" style="width:30%;">
-              Sync
+              nothing yet
+            </a>
+          </div>
+          <div class="navbar-item flexcontainer">
+            <a class="button is-danger is-small pl-2 pr-2"
+              v-if="isLoggedIn" @click="logout()">
+              Log Out
             </a>
           </div>
           <router-link class="navbar-item" to="/input">

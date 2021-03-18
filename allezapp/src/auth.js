@@ -50,9 +50,7 @@ firebase.auth().onAuthStateChanged((user) => {
       xp: 1,
       level: 1,
     };
-
     getOrCreateProfileThenStore(setProfile);
-
   } else {
     // No user is signed in.
     console.log('user signed out.');
