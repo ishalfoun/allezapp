@@ -2,7 +2,9 @@
 import { firestoreAction } from 'vuexfire';
 import firebase from '@/firebase';
 import db from '@/db';
-import profile from './profile';
+import profileJS from './profile';
+import store from '@/store';
+import { ToastProgrammatic as Toast } from 'buefy';
 
 ///
 ///
@@ -23,13 +25,16 @@ const actions = {
   initRoutes: firestoreAction(({ bindFirestoreRef }) => {
     bindFirestoreRef('routes', db.collection('routes'));
   }),
-  initProfileRoutes: firestoreAction(({ bindFirestoreRef }) => {
-    bindFirestoreRef('profileroutes', db.collection('profileroutes'));
+  initProfileRoutes: firestoreAction(({ bindFirestoreRef }, value) => {
+    if (value) {
+      bindFirestoreRef('profileroutes', db.collection('profileroutes').where('profileId', '==', value));
+    }
   }),
   ///
   // Gets all new routes from server, to create your routes
   ///
   async getRoutes({ getters }, profile) {
+    console.log('profile.lastUpdate ', profile.lastUpdate);
     //   - first filter the profileR belonging to me: 
     //   - next loop through both routes and profileroutes
     //   - if route not found, add to newRoutes
@@ -59,6 +64,8 @@ const actions = {
         const profileRouteEntry = {
           profileId: profile.id,
           routeId: route.id,
+          rating: route.rating,
+          routeNum: route.routeNum,
           cmp: 'N',
         };
         
@@ -94,7 +101,23 @@ const actions = {
         });
       }
       found = false;
-    });
+    }); // end for loop (deletion loop)
+
+    // assuming it was successful:
+    // store.commit('profile/setLastUpdate', firebase.firestore.FieldValue.serverTimestamp());
+    // store.commit('profile/setLastUpdate', 'a');
+    profileJS.state.profile[0].lastUpdate = firebase.firestore.FieldValue.serverTimestamp();
+    const lastUpdate = profileJS.state.profile[0].lastUpdate;
+        
+    await db
+      .collection('profiles')
+      .doc(profileJS.state.profile[0].id)
+      .update({ lastUpdate: lastUpdate});
+      Toast.open({
+        message: 'Last Update!',
+        queue: false,
+        type: 'is-success'
+      });
   },
 };
 

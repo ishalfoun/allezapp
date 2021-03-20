@@ -80,7 +80,6 @@ export default {
   }),
   mounted() {
     this.initRoutes();
-    this.initProfileRoutes();
   },
   computed: {
     ...mapState('data', ['routes', 'profileroutes']),
@@ -90,6 +89,13 @@ export default {
     ...mapActions('data', ['initRoutes', 'initProfileRoutes', 'getRoutes']),
     onGetRoutes() {
       this.getRoutes(this.profile[0]);
+    },
+  },
+  watch: {
+    profile() {
+      if (this.profile[0]) {
+        this.initProfileRoutes(this.profile[0].id);
+      }
     },
   },
 };

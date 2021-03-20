@@ -2,10 +2,6 @@ import { firestoreAction } from 'vuexfire';
 import db from '@/db';
 /* eslint no-shadow: ["error", { "allow": ["state"] }] */
 
-// when we call the init actions,
-// it is going to bind the collection
-// to this array of subreddits
-
 const state = {
   profile: [],
 };
