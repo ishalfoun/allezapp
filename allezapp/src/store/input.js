@@ -8,10 +8,10 @@ const routes = db.collection('routes');
 
 const state = {
   routes: [],
-  row: {},
 };
 
 const getters = {
+  getShowCorrectAnswer: (state) => (state.showCorrectAnswer ? state.showCorrectAnswer : false),
 };
 
 const actions = {

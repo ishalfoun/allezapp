@@ -10,12 +10,14 @@ async function getOrCreateProfileThenStore(profile) {
       if (doc.exists) {
         // console.log('profile exists!, saving to store.', doc.data());
         store.commit('profile/setProfile', profile); // save profile to store
+        // store.dispatch('data/getRoutes', profile);
       } else {
         // console.log('profile doesnt exist...creating now', profile);
         db.collection('profiles').doc(profile.id).set(profile)
           .then(() => {
             // console.log('Profile successfully created, saving to store');
             store.commit('profile/setProfile', profile); // save profile to store
+            // store.dispatch('data/getRoutes', profile);
           })
           .catch((error) => {
             console.error('Error creating profile: ', error);
@@ -49,6 +51,7 @@ firebase.auth().onAuthStateChanged((user) => {
       avatar: 1,
       xp: 1,
       level: 1,
+      lastUpdate: 0,
     };
     getOrCreateProfileThenStore(setProfile);
   } else {

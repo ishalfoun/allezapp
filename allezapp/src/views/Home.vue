@@ -2,6 +2,8 @@
   <div class='maincontainer' style="margin-top:0px!important">
     <br />
     <h1 class='title is-1 centered flex1'>Routes</h1>
+    <h5 v-if="profile[0] && profile[0].lastUpdate">
+      last update on profile: {{profile[0].lastUpdate.toDate()}}}</h5>
     <!-- {{routes}} -->
     <b-table
     :mobile-cards="false"
@@ -58,7 +60,15 @@
         {{props.row.profileId}}
       </b-table-column>
 
-      <b-table-column field="cmp" label="Complleted" v-slot="props">
+      <b-table-column field="routeNum" label="Route" v-slot="props">
+        {{props.row.routeNum}}
+      </b-table-column>
+
+      <b-table-column field="rating" label="Rating" v-slot="props">
+        {{props.row.rating}}
+      </b-table-column>
+
+      <b-table-column field="cmp" label="Completed" v-slot="props">
         {{props.row.cmp}}
       </b-table-column>
 
@@ -73,10 +83,13 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
+/* eslint-disable */
 
 export default {
   data: () => ({
     componentKey: 0,
+    happenedAlready: false,
+    happenedAlreadyGetRoutes: false,
   }),
   mounted() {
     this.initRoutes();
@@ -84,19 +97,44 @@ export default {
   computed: {
     ...mapState('data', ['routes', 'profileroutes']),
     ...mapState('profile', ['profile']),
+    ...mapState('auth', ['user']),
   },
   methods: {
     ...mapActions('data', ['initRoutes', 'initProfileRoutes', 'getRoutes']),
     onGetRoutes() {
       this.getRoutes(this.profile[0]);
     },
+    wait(timeout) { // await wait(500);
+      return new Promise(resolve => {
+        setTimeout(resolve, timeout);
+      });
+    },
   },
   watch: {
-    profile() {
-      if (this.profile[0]) {
-        this.initProfileRoutes(this.profile[0].id);
+    async profile() {
+          // console.log('1. in initProfileRoutes happened=', this.happenedAlready);
+      if (!this.happenedAlready) {
+        if (this.profile[0]) { // if user is logged in
+        // console.log('if (!this.happenedAlready &&  this.profile[0]: true');
+          this.initProfileRoutes(this.profile[0].id);
+          // this.getRoutes(this.profile[0]);
+          this.happenedAlready = true;
+          // this.wait(3000).then(() => {
+          //   this.happenedAlready = false;
+          // });
+        } 
       }
     },
+    async profileroutes() {
+      // console.log('2. in routesWatch(): happened=', this.happenedAlreadyGetRoutes);
+      if (!this.happenedAlreadyGetRoutes) {
+        // console.log('2.         routes.length=', (this.routes.length )); 
+        if (this.routes.length >0) {
+            this.getRoutes(this.profile[0]);
+            this.happenedAlreadyGetRoutes = true;
+          }
+        }
+    }
   },
 };
 </script>
