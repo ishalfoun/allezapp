@@ -3,7 +3,14 @@
     <br />
     <h1 class='title is-1 centered flex1'>Routes</h1>
     <h5 v-if="profile[0] && profile[0].lastUpdate">
-      last update on profile: {{profile[0].lastUpdate.toDate()}}}</h5>
+      last update: {{
+        profile[0].lastUpdate.toDate().getUTCFullYear()
+        }}/{{
+        (profile[0].lastUpdate.toDate().getUTCMonth() + 1)
+        }}/{{
+        profile[0].lastUpdate.toDate().getUTCDate()
+        }}
+      </h5>
     <!-- {{routes}} -->
     <b-table
     :mobile-cards="false"

@@ -44,18 +44,17 @@ const actions = {
   async getRoutes({ getters }, profile) {
     console.log('in getRoutes ');
 
+    ///
+    // only get Routes if your last update is not same as server
+    ///
     console.log('profile date: ', profile.lastUpdate.toDate());
-    // console.log('server date: ', lastUpdate[0].lastUpdate.toDate());
-    console.log('server date: ', new Date(state.lastUpdate[0].lastUpdate
-      .toDate()));
-    
-    // only get Routes if your last update is not same as serer
-    if (state.lastUpdate[0].lastUpdate == profile.lastUpdate) {
-      console.log('they equal');
-    } else {
-      console.log('they dont equal');
+    console.log('server date: ', state.lastUpdate[0].lastUpdate.toDate());
+    if (profile.lastUpdate.toDate() >= state.lastUpdate[0].lastUpdate
+    .toDate()) {
+    // if your date is same (or later) than server's: do nothing.
+      console.log('date is sme or later, doing nothing');
+      return;
     }
-
     //   - first filter the profileR belonging to me: 
     //   - next loop through both routes and profileroutes
     //   - if route not found, add to newRoutes
