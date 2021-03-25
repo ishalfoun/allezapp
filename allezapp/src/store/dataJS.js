@@ -1,10 +1,7 @@
-/* eslint-disable */
 import { firestoreAction } from 'vuexfire';
 import firebase from '@/firebase';
 import db from '@/db';
 import profileJS from './profile';
-import store from '@/store';
-import { ToastProgrammatic as Toast } from 'buefy';
 
 ///
 ///
@@ -16,17 +13,17 @@ import { ToastProgrammatic as Toast } from 'buefy';
 const state = {
   routes: [],
   profileroutes: [],
-  lastUpdate: []
+  lastUpdate: [],
 };
 
-const getters = {
-};
+// const getters = {
+// };
 
-function wait(timeout) {
-  return new Promise(resolve => {
-      setTimeout(resolve, timeout);
-  });
-};
+// function wait(timeout) {
+//   return new Promise(resolve => {
+//     setTimeout(resolve, timeout);
+//   });
+// }
 
 const actions = {
   initRoutes: firestoreAction(({ bindFirestoreRef }) => {
@@ -42,7 +39,7 @@ const actions = {
   // Gets all new routes from server, to create your routes
   ///
   async getRoutes({ getters }, profile) {
-    console.log('in getRoutes ');
+    console.log('in getRoutes ', getters);
 
     ///
     // only get Routes if your last update is not same as server
@@ -50,32 +47,30 @@ const actions = {
     console.log('profile date: ', profile.lastUpdate.toDate());
     console.log('server date: ', state.lastUpdate[0].lastUpdate.toDate());
     if (profile.lastUpdate.toDate() >= state.lastUpdate[0].lastUpdate
-    .toDate()) {
-    // if your date is same (or later) than server's: do nothing.
+      .toDate()) {
+      // if your date is same (or later) than server's: do nothing.
       console.log('date is sme or later, doing nothing');
       return;
     }
-    //   - first filter the profileR belonging to me: 
+    //   - first filter the profileR belonging to me:
     //   - next loop through both routes and profileroutes
     //   - if route not found, add to newRoutes
     const profileRsBelongingToMe = state.profileroutes.filter((value) => {
       // filter out only those pf's belonging to me:
       if (value.profileId === profile.id) {
         return true;
-      } else {
-        return false;
       }
+      return false;
     });
     //   - next loop through both routes and profileroutes
     let found = false;
     let atLeastOneRouteFound = false;
-    const newRoutes = [];
-    // for each route found on db: 
+    // for each route found on db:
     // console.log('   state.routes=', state.routes);
     // console.log('   profileRsBelongingToMe', profileRsBelongingToMe);
-    state.routes.forEach( async (route) => {
+    state.routes.forEach(async (route) => {
       //  check if the route is is found in my profileR)
-       profileRsBelongingToMe.forEach((value) =>{
+      profileRsBelongingToMe.forEach((value) => {
         // console.log(('value(' + value.routeId + ') === route.id(' + route.id + ')'));
         if (value.routeId === route.id) {
           found = true;
@@ -92,13 +87,14 @@ const actions = {
           routeNum: route.routeNum,
           cmp: 'N',
         };
-        
+
         await db.collection('profileroutes').doc().set(profileRouteEntry)
-        .then(() => {
-          console.log('      adding in for loop: profileRouteEntry saved to DB!');
-        }).catch((error) => {
-          console.error('      adding in for loop: Error creating profileRouteEntry: ', error);
-        });
+          .then(() => {
+            console.log('      adding in for loop: profileRouteEntry saved to DB!');
+          })
+          .catch((error) => {
+            console.error('      adding in for loop: Error creating profileRouteEntry: ', error);
+          });
       }
       found = false;
     }); // end for loop
@@ -109,19 +105,17 @@ const actions = {
     ///
     // delete all the non duplicate routes:
     ///
-    
+
     // console.log('var profileRsBelongingToMe: ', profileRsBelongingToMe);
-    var duplicates = profileRsBelongingToMe.reduce(function(acc, el, i, arr) {
+    const duplicates = profileRsBelongingToMe.reduce((acc, el, i, arr) => {
       // console.log('i('+ i + ') el=' , el);
       // console.log('           arr.indexOf(el):', arr.indexOf(el));
       // console.log('           acc.indexOf(el):', acc.indexOf(el));
-      if (arr.findIndex((element) => {
-        // console.log('     findIndex: element.routeId('+ element.routeId +') === el.routeId('+ el.routeId );
-        return (element.routeId === el.routeId);
-      }) !== i && acc.indexOf(el) < 0) {
+      if (arr.findIndex((element) => (element.routeId === el.routeId))
+       !== i && acc.indexOf(el) < 0) {
         // if index is not where it was first found
         // and not yet found
-        acc.push(el); 
+        acc.push(el);
         // console.log('index is not where it was first found');
         // console.log('  arr.indexOf(el)' + arr.indexOf(el) + ' !== i'+ i +', dup (el):', el);
       }
@@ -131,14 +125,14 @@ const actions = {
     console.log('   var duplicates: ', duplicates);
     duplicates.forEach(async (duplicate) => {
       await db.collection('profileroutes').doc(duplicate.id).delete()
-      .then(() => {
-        console.log('      duplicate profileR deleted');
-      }).catch((error) => {
-        console.error('      error while deleting dup profileR: ', error);
-        console.error('      error while deleting dup profileR: profileR.id ', duplicate.id);
-      });
+        .then(() => {
+          console.log('      duplicate profileR deleted');
+        })
+        .catch((error) => {
+          console.error('      error while deleting dup profileR: ', error);
+          console.error('      error while deleting dup profileR: profileR.id ', duplicate.id);
+        });
     });
-    
 
     ///
     // delete all the non invalid routes:
@@ -146,11 +140,11 @@ const actions = {
 
     found = false;
     atLeastOneRouteFound = false;
-    profileRsBelongingToMe.forEach( async (profileR) => {
+    profileRsBelongingToMe.forEach(async (profileR) => {
       // console.log('   foreach1: profileR.routeId(' + profileR.routeId);
       state.routes.forEach((route) => {
         // console.log('      foreach2: === route.id(' + route.id + ')');
-        if (found === false){
+        if (found === false) {
           if (route.id === profileR.routeId) {
             // console.log('      equals=true');
             found = true;
@@ -162,12 +156,13 @@ const actions = {
         console.log('   invalid profileR found!: ', profileR.routeId);
         atLeastOneRouteFound = true;
         await db.collection('profileroutes').doc(profileR.id).delete()
-        .then(() => {
-          console.log('      invalid profileR deleted');
-        }).catch((error) => {
-          console.error('      error while deleting profileR: ', error);
-          console.error('      error while deleting profileR: profileR.id ', profileR.id);
-        });
+          .then(() => {
+            console.log('      invalid profileR deleted');
+          })
+          .catch((error) => {
+            console.error('      error while deleting profileR: ', error);
+            console.error('      error while deleting profileR: profileR.id ', profileR.id);
+          });
       }
       found = false;
     }); // end for loop (deletion loop)
@@ -181,20 +176,18 @@ const actions = {
     // firebase.firestore.FieldValue.serverTimestamp()
     // console.log('timestamp1: ', firebase.firestore.Timestamp.now().toDate());
     console.log('timestamp2: ', firebase.firestore.FieldValue
-    .serverTimestamp());
-    // console.log('timestamp3: ', moment(firebase.firestore.FieldValue.serverTimestamp().toDate()).format('lll'));
-    // appData.timestamp = moment(firebase.firestore.FieldValue.serverTimestamp().toDate()).format('lll')
+      .serverTimestamp());
 
     await db
       .collection('profiles')
       .doc(profileJS.state.profile[0].id)
-      .update({ lastUpdate: state.lastUpdate[0].lastUpdate.toDate()})
+      .update({ lastUpdate: state.lastUpdate[0].lastUpdate.toDate() })
       .then(() => {
-      console.log('   profile.lastUpdate write success');
-
-    }).catch((error) => {
-      console.error('   profile.lastUpdate write error: ', error);
-    });;
+        console.log('   profile.lastUpdate write success');
+      })
+      .catch((error) => {
+        console.error('   profile.lastUpdate write error: ', error);
+      });
   },
 };
 
@@ -207,5 +200,5 @@ export default {
   namespaced: true,
   state,
   actions,
-  getters,
+  // getters,
 };

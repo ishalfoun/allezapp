@@ -3,8 +3,9 @@ import Vuex from 'vuex';
 import { vuexfireMutations } from 'vuexfire';
 import auth from './auth';
 import profile from './profile';
-import data from './data';
+import dataJS from './dataJS';
 import input from './input';
+import publish from './publish';
 
 Vue.use(Vuex);
 
@@ -13,7 +14,8 @@ export default new Vuex.Store({
   modules: {
     auth,
     profile,
-    data,
+    dataJS,
     input,
+    publish,
   },
 });

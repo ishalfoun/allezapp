@@ -1,32 +1,28 @@
 import { firestoreAction } from 'vuexfire';
 import firebase from '@/firebase';
 import db from '@/db';
-import { ToastProgrammatic as Toast } from 'buefy';
+// import { ToastProgrammatic as Toast } from 'buefy';
 /* eslint-disable */
 
-const routes = db.collection('routes');
-
 const state = {
-  routes: [],
+  routes: ["-1"],
+  componentKey: 0,
 };
 
 const getters = {
   getShowCorrectAnswer: (state) => (state.showCorrectAnswer ? state.showCorrectAnswer : false),
+  componentKey: (state) => (state.componentKey ? state.componentKey : {}),
 };
 
 const actions = {
   async createRoute({ getters }, route) {
-    const result = routes.doc(); // will create a document (record)
+    const result = db.collection('routes').doc(); // will create a document (record)
     route.id = result.id;
     route.created_at = firebase.firestore.FieldValue.serverTimestamp();
-    await routes.doc(route.id).set(route)
+    await db.collection('routes').doc(route.id).set(route)
       .then(() => {
         console.log('route successfully created!');
-        Toast.open({
-          message: 'Route Created!',
-          queue: false,
-          type: 'is-success',
-        });
+        state.componentKey += 1;
       }).catch((error) => {
         console.error('Error creating route: ', error);
       });
@@ -46,9 +42,33 @@ const actions = {
     });
   },
   initRoutes: firestoreAction(({ bindFirestoreRef }) => {
-    console.log('in initRoutes ');
+    // console.log('in initRoutes ');
     bindFirestoreRef('routes', db.collection('routes'));
   }),
+  async deleteRoute({getters}, rowid) {
+    console.log('deleting row: ', rowid);
+    db.collection('routes').doc(rowid).delete().then(async () => {
+      console.log('route successfully deleted!');
+      state.componentKey++;
+      console.log('state.componentKey updated: ', state.componentKey)
+    })
+    .catch((error) => {
+      console.error('Error deleting route: ', error);
+    });
+  },
+  async deleteAll({getters}, currentRoutes) {
+    console.log('  in deleteAll, currentRoutes=', currentRoutes);
+    currentRoutes.forEach((route) => {
+      db.collection('routes').doc(route.id).delete().then(async () => {
+        console.log('route successfully deleted!');
+        state.componentKey++;
+        console.log('state.componentKey updated: ', state.componentKey)
+      })
+      .catch((error) => {
+        console.error('Error deleting route: ', error);
+      });
+    });
+  },
 };
 
 export default {
