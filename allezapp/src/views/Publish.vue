@@ -8,7 +8,8 @@
     <!-- <div>(route) (rating) (id)</div>
     <div>(route) (rating) (id)</div>
     <div>(route) (rating) (id)</div> -->
-    routes: <br />
+
+    <!-- routes: <br />
     <template v-if="routes[0]">
         {{routes[0].rating}} {{routes[0].routeNum}} <br />
         {{routes[1].rating}} {{routes[1].routeNum}} <br />
@@ -21,7 +22,8 @@
     additions:  <br />
     {{additions}} <br />
     removals:  <br />
-    {{removals}}
+    {{removals}} -->
+
     <button @click="onCommit()" class="button is-fullwidth
         title is-4 flex1">Commit</button>
     <!-- <h5 v-if="profile[0] && profile[0].lastUpdate">
@@ -34,37 +36,61 @@
         }}
       </h5> -->
     <!-- {{addedRoutes}} -->
-    <!-- <b-table
-    :mobile-cards="false"
-    :data="addedRoutes"
-    ref="table"
-    :key="componentKey"
-    paginated
-    per-page="5"
-    aria-next-label="Next page"
-    aria-previous-label="Previous page"
-    aria-page-label="Page"
-    aria-current-label="Current page">
+    <h1 class='title is-1 centered flex1'>Additions {{additions.length}}</h1>
+    <div class="border">
+      <b-table
+      :key="componentKeyR"
+      style="width=100%"
+      :mobile-cards="false"
+      :data="additions"
+      ref="table">
 
-      <b-table-column field="id" label="ID" v-slot="props">
-        {{props.row.id}}
-      </b-table-column>
+        <b-table-column field="del" label="" v-slot="props">
+          <div @click="onDeleteAddi(props.row)"> X </div>
+        </b-table-column>
 
-      <b-table-column field="routeNum" label="Route" v-slot="props">
-        {{props.row.routeNum}}
-      </b-table-column>
+        <b-table-column field="routeNum" label="Route" v-slot="props">
+          {{props.row.routeNum}}
+        </b-table-column>
 
-      <b-table-column field="rating" label="Rating" v-slot="props">
-        {{props.row.rating}}
-      </b-table-column>
-
-      <template #footer v-if="(addedRoutes.length < 1)">
-        <div class="has-text-right">
-          No Records Found
+        <b-table-column field="rating" label="Rating" v-slot="props">
+          {{props.row.rating}}
+        </b-table-column>
+      </b-table>
+      <template v-if="additions.length === 0">
+        <div>
+          No Records
         </div>
       </template>
-    </b-table> -->
+    </div>
+    <h1 class='title is-1 centered flex1'>Removals {{removals.length}}</h1>
+    <div class="border">
+      <b-table
+      :key="componentKeyR2"
+      style="width=100%"
+      :mobile-cards="false"
+      :data="removals"
+      ref="table2">
 
+        <b-table-column field="" label="" v-slot="props">
+          <div @click="onDeleteRemo(props.row)"> X </div>
+        </b-table-column>
+
+        <b-table-column field="routeNum" label="Route" v-slot="props">
+          {{props.row.routeNum}}
+        </b-table-column>
+
+        <b-table-column field="rating" label="Rating" v-slot="props">
+          {{props.row.rating}}
+        </b-table-column>
+      </b-table>
+      <template v-if="removals.length === 0">
+        <div>
+          No Records
+        </div>
+      </template>
+    </div>
+    routes={{routes.length}}, routesR={{routesReal.length}}
     <!-- <button @click="onGetRoutes()" class="button is-fullwidth
       is-teal title is-4 flex1">Get routes from server</button>
 
@@ -115,7 +141,8 @@ import { mapState, mapActions } from 'vuex';
 
 export default {
   data: () => ({
-    componentKey: 0,
+    componentKeyR: 0,
+    componentKeyR2: 0,
     happenedAlready: false,
     happenedAlreadyGetRoutes: false,
   }),
@@ -123,14 +150,21 @@ export default {
     this.initRoutes();
   },
   computed: {
-    ...mapState('publish', ['routes', 'routesReal', 'additions', 'removals']),
+    ...mapState('publish', ['routes', 'routesReal', 'additions', 'removals', 'componentKey']),
     ...mapState('profile', ['profile']),
     ...mapState('auth', ['user']),
   },
   methods: {
-    ...mapActions('publish', ['initRoutes', 'commit', 'getAdditions']),
+    ...mapActions('publish', ['initRoutes', 'commit', 'getAdditions', 'deleteAddi', 'deleteRemo']),
     onCommit() {
       this.commit();
+      this.componentKeyR += 1;
+    },
+    onDeleteAddi(row) {
+      this.deleteAddi(row);
+    },
+    onDeleteRemo(row) {
+      this.deleteRemo(row);
     },
     // wait(timeout) { // await wait(500);
     //   return new Promise((resolve) => {
@@ -139,14 +173,28 @@ export default {
     // },
   },
   watch: {
-    async profile() {
-    // console.log('1. in profile() happened=', this.happenedAlready);
-      if (!this.happenedAlready
+    async routes() {
+      console.log('.... in routes()=', this.routes);
+      if (this.routes.length > 0
         && this.profile[0]) { // if user is logged in
         // console.log('if (!this.happenedAlready &&  this.profile[0]: true');
         this.getAdditions();
-        this.happenedAlready = true;
+        // this.happenedAlready = true;
       }
+    },
+    async routesReal() {
+      console.log('.... in routesReal()=', this.routesReal);
+      if (this.routesReal.length > 0
+        && this.profile[0]) { // if user is logged in
+        // console.log('if (!this.happenedAlready &&  this.profile[0]: true');
+        this.getAdditions();
+        // this.happenedAlready = true;
+      }
+    },
+    componentKey() {
+      this.componentKeyR += 1;
+      this.componentKeyR2 += 1;
+      console.log('componentKey watched!! componentKeyR=', this.componentKeyR);
     },
   },
 //     async deletedRoutes() {
@@ -164,6 +212,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.border {
+  border-style: solid;
+}
 html {
   height: 100%;
 }

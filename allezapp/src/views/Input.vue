@@ -145,7 +145,7 @@ export default {
     // and sets it as this.currentRoutes
     ///
     getRoutesAt(value) {
-      console.log('in getRoutesAt( ', value);
+      // console.log('in getRoutesAt( ', value);
       const toReturn = this.routes.filter((route) => {
         if (String(route.routeNum) === String(value)) {
           // console.log('  in filter, matched route:', route.routeNum);

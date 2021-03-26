@@ -16,8 +16,11 @@ const getters = {
 
 const actions = {
   async createRoute({ getters }, route) {
-    const result = db.collection('routes').doc(); // will create a document (record)
-    route.id = result.id;
+    console.log('in createRoute, id=', route.id);
+    if (!route.id) {
+      const result = db.collection('routes').doc(); // will create a document (record)
+      route.id = result.id;
+    }
     route.created_at = firebase.firestore.FieldValue.serverTimestamp();
     await db.collection('routes').doc(route.id).set(route)
       .then(() => {
@@ -29,7 +32,7 @@ const actions = {
     actions.updateLastUpdated();
   },
   async updateLastUpdated() {
-    console.log('in updateLastUpdated');
+    // console.log('in updateLastUpdated');
     
     const newUpdate = { 
       lastUpdate: firebase.firestore.FieldValue.serverTimestamp(),
