@@ -16,7 +16,6 @@ const getters = {
 
 const actions = {
   async createRoute({ getters }, route) {
-    console.log('in createRoute, id=', route.id);
     if (!route.id) {
       const result = db.collection('routes').doc(); // will create a document (record)
       route.id = result.id;
@@ -29,7 +28,6 @@ const actions = {
       }).catch((error) => {
         console.error('Error creating route: ', error);
       });
-    actions.updateLastUpdated();
   },
   async updateLastUpdated() {
     // console.log('in updateLastUpdated');

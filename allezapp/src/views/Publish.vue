@@ -174,7 +174,7 @@ export default {
   },
   watch: {
     async routes() {
-      console.log('.... in routes()=', this.routes);
+      // console.log('.... in routes()=', this.routes);
       if (this.routes.length > 0
         && this.profile[0]) { // if user is logged in
         // console.log('if (!this.happenedAlready &&  this.profile[0]: true');
@@ -183,7 +183,7 @@ export default {
       }
     },
     async routesReal() {
-      console.log('.... in routesReal()=', this.routesReal);
+      // console.log('.... in roustesReal()=', this.routesReal);
       if (this.routesReal.length > 0
         && this.profile[0]) { // if user is logged in
         // console.log('if (!this.happenedAlready &&  this.profile[0]: true');

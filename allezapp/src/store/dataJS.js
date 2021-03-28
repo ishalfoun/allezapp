@@ -11,7 +11,7 @@ import profileJS from './profile';
 ///
 
 const state = {
-  routes: [],
+  routesReal: [],
   profileroutes: [],
   lastUpdate: [],
 };
@@ -27,7 +27,7 @@ const state = {
 
 const actions = {
   initRoutes: firestoreAction(({ bindFirestoreRef }) => {
-    bindFirestoreRef('routes', db.collection('routes'));
+    bindFirestoreRef('routesReal', db.collection('routesReal'));
     bindFirestoreRef('lastUpdate', db.collection('lastUpdate'));
   }),
   initProfileRoutes: firestoreAction(({ bindFirestoreRef }, value) => {
@@ -35,8 +35,36 @@ const actions = {
       bindFirestoreRef('profileroutes', db.collection('profileroutes').where('profileId', '==', value));
     }
   }),
+  // eslint-disable-next-line
+  async setCompletedN({ getters }, row) {
+    console.log('in setCompN: row=', row.cmp);
+    await db
+      .collection('profileroutes')
+      .doc(row.id)
+      .update({ cmp: row.cmp })
+      .then(() => {
+        console.log('      updating profileroutes.cmp: success!');
+      })
+      .catch((error) => {
+        console.error('      updating profileroutes.cmp, error:!', error);
+      });
+  },
+  // eslint-disable-next-line
+  async setCompletedY({ getters }, row) {
+    console.log('in setCompY: row=', row.cmp);
+    await db
+      .collection('profileroutes')
+      .doc(row.id)
+      .update({ cmp: row.cmp })
+      .then(() => {
+        console.log('      updating profileroutes.cmp: success!');
+      })
+      .catch((error) => {
+        console.error('      updating profileroutes.cmp, error:!', error);
+      });
+  },
   ///
-  // Gets all new routes from server, to create your routes
+  // Gets all new routes from server, to create your profileroutes
   ///
   async getRoutes({ getters }, profile) {
     console.log('in getRoutes ', getters);
@@ -68,7 +96,7 @@ const actions = {
     // for each route found on db:
     // console.log('   state.routes=', state.routes);
     // console.log('   profileRsBelongingToMe', profileRsBelongingToMe);
-    state.routes.forEach(async (route) => {
+    state.routesReal.forEach(async (route) => {
       //  check if the route is is found in my profileR)
       profileRsBelongingToMe.forEach((value) => {
         // console.log(('value(' + value.routeId + ') === route.id(' + route.id + ')'));
@@ -142,7 +170,7 @@ const actions = {
     atLeastOneRouteFound = false;
     profileRsBelongingToMe.forEach(async (profileR) => {
       // console.log('   foreach1: profileR.routeId(' + profileR.routeId);
-      state.routes.forEach((route) => {
+      state.routesReal.forEach((route) => {
         // console.log('      foreach2: === route.id(' + route.id + ')');
         if (found === false) {
           if (route.id === profileR.routeId) {

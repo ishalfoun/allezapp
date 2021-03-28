@@ -43,8 +43,8 @@ const actions = {
     if (data.routes.length === 0 && data.routesReal.length === 0) {
       return;
     }
-    console.log('in getAdditions, routes=', data.routes.length);
-    console.log('         routesReal=', data.routesReal.length);
+    // console.log('in getAdditions, routes=', data.routes.length);
+    // console.log('         routesReal=', data.routesReal.length);
 
     let found = false;
     data.removals = [];
@@ -52,7 +52,7 @@ const actions = {
     data.routes.forEach((route) => {
       //  1 - loop through routes
       found = false;
-      console.log('  foreach1 ,', route.id);
+      // console.log('  foreach1 ,', route.id);
       data.routesReal.find((routeR) => {
         if (route.id === routeR.id) {
           // console.log('    match');
@@ -64,7 +64,7 @@ const actions = {
       // if a matching id was found do nothing
       if (!found) {
         //  2 - if doesnt exist in routesReal = addition
-        console.log('    nothing found, adding id(', route.id);
+        // console.log('    nothing found, adding id(', route.id);
         // only push if doesnt exist yet:
         if (!data.removals.find((element) => {
           if (element.id === route.id) {
@@ -81,7 +81,7 @@ const actions = {
     data.routesReal.forEach((routeR) => {
       found = false;
       //  3 - loop through routesReal
-      console.log('  foreach2 ,', routeR.id);
+      // console.log('  foreach2 ,', routeR.id);
       data.routes.find((route) => {
         if (routeR.id === route.id) {
           // console.log('    match');
@@ -93,7 +93,7 @@ const actions = {
       // if a matching id was found do nothing
       if (!found) {
         //  4 - if doesnt exist in routes = removal
-        console.log('    nothing found, adding(R) id(', routeR.id);
+        // console.log('    nothing found, adding(R) id(', routeR.id);
 
         // only push if doesnt exist yet:
         if (!data.removals.find((element) => {
@@ -116,22 +116,32 @@ const actions = {
   // 2. delete all removals (to routesReal)
   ///
   commit() {
+    let dbwaiting = 0;
     data.additions.forEach(async (element, index) => {
+      dbwaiting += 1;
       await db.collection('routesReal').doc(element.id).set(element)
         .then(() => {
-          console.log('      adding in commit: routesReal saved to DB!');
+          // console.log('      adding in commit: routesReal saved to DB!');
           data.additions.splice(index, 1);
+          dbwaiting -= 1;
+          if (dbwaiting < 1) { // if last db hit, update last updated
+            input.actions.updateLastUpdated();
+          }
         })
         .catch((error) => {
           console.error('      adding in commit: Error creating routesReal: ', error);
         });
     });
-
     data.removals.forEach(async (element, index) => {
+      dbwaiting += 1;
       await db.collection('routesReal').doc(element.id).delete()
         .then(() => {
           console.log('      deleting in commit: routesReal deleted/or never existed!');
-          data.removals.splice(index, 1);
+          data.additions.splice(index, 1);
+          dbwaiting -= 1;
+          if (dbwaiting < 1) { // if last db hit, update last updated
+            input.actions.updateLastUpdated();
+          }
         })
         .catch((error) => {
           console.error('      adddeletinging in commit: Error deleting routesReal: ', error);

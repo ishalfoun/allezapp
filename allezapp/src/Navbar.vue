@@ -1,95 +1,97 @@
 <template>
   <div id="app">
-    <nav id="navbar" class="navbar is-dark" role="navigation" aria-label="main navigation">
-      <div class="navbar-brand">
-        <router-link class="navbar-item" to="/#/">
-          AllezApp
-        </router-link>
-        <div class="navbar-item profile if-mobile" aria-expanded="false">
-          <template v-if="profile[0]">
-            <img class="image is-24x24 mr-2"
-              :src="user.image">
-              <span>{{user.name}}</span>
-          </template>
-        </div>
-        <a role="button" class="navbar-burger" aria-label="menu"
-          aria-expanded="false" data-target="navbarBasicExample"
-          @click="showNav = !showNav" :class="{ 'is-active': showNav }"
-          style="margin-right:0;margin-left:0">
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-        </a>
-      </div>
-      <div id="navbarBasicExample" class="navbar-menu" :class="{ 'is-active': showNav }">
-<!-- nav bar end for mobile: -->
-        <div class="navbar-end if-mobile">
-          <!-- <div class="navbar-item flexcontainer">
-            <a class="button is-primary" style="width:30%;">
-              nothing yet
-            </a>
-          </div> -->
-          <div class="navbar-item flexcontainer">
-            <a class="button is-danger is-small pl-2 pr-2"
-              v-if="isLoggedIn" @click="logout()">
-              Log Out
-            </a>
-          </div>
-          <router-link class="navbar-item" to="/input">
-            Input
+    <div id="spacer">
+      <nav id="navbar" class="navbar is-dark" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+          <router-link class="navbar-item" to="/#/">
+            AllezApp
           </router-link>
-          <router-link class="navbar-item" to="/publish">
-            Publish
-          </router-link>
-        </div>
-
-<!-- nav bar end for desktop: -->
-        <div class="navbar-end if-desktop">
-          <div class="navbar-item has-dropdown is-hoverable" id="navbarApps">
-          <!-- Menu dropdown  -->
-            <a class="navbar-link">
-              <!-- Menu dropdown link -->
-              Menu
-            </a>
-            <div class="navbar-dropdown" style="right: 0px;">
-              <router-link class="navbar-item" to="/input">
-                Input
-              </router-link>
-            </div>
+          <div class="navbar-item profile if-mobile" aria-expanded="false">
+            <template v-if="profile[0]">
+              <img class="image is-24x24 mr-2"
+                :src="user.image">
+                <span>{{user.name}}</span>
+            </template>
           </div>
-          <div class="navbar-item has-dropdown is-hoverable" id="navbarLogin" v-if="!isLoggedIn">
-          <!-- Login dropdown  -->
-            <a class="navbar-link">
-              <!-- Login dropdown link -->
-              Login
-            </a>
-            <div class="navbar-dropdown" style="right: 0px;left:auto">
-                <!-- Login dropdown menu -->
-              <a href="/quiz" class="navbar-item" @click="login()">
-                With Google
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </nav>
-
-    <section class="hero is-warning" v-if="!isLoggedIn">
-      <div class="hero-body">
-        <div class="container">
-          <h1 class="title">
-            Log In
-          </h1>
-          <h2 class="subtitle">
-            Log in to use this app
-          </h2>
-          <a class="navbar-item button is-success mb-2" id="hoverpurp" @click="login()">
-            Log in with Google
+          <a role="button" class="navbar-burger" aria-label="menu"
+            aria-expanded="false" data-target="navbarBasicExample"
+            @click="showNav = !showNav" :class="{ 'is-active': showNav }"
+            style="margin-right:0;margin-left:0">
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
           </a>
         </div>
-      </div>
-    </section>
-    <router-view id="content" class="ml-4 mr-4" v-if="isLoggedIn"/>
+        <div id="navbarBasicExample" class="navbar-menu" :class="{ 'is-active': showNav }">
+  <!-- nav bar end for mobile: -->
+          <div class="navbar-end if-mobile">
+            <!-- <div class="navbar-item flexcontainer">
+              <a class="button is-primary" style="width:30%;">
+                nothing yet
+              </a>
+            </div> -->
+            <div class="navbar-item flexcontainer">
+              <a class="button is-danger is-small pl-2 pr-2"
+                v-if="isLoggedIn" @click="logout()">
+                Log Out
+              </a>
+            </div>
+            <router-link class="navbar-item" to="/input">
+              Input
+            </router-link>
+            <router-link class="navbar-item" to="/publish">
+              Publish
+            </router-link>
+          </div>
+
+  <!-- nav bar end for desktop: -->
+          <div class="navbar-end if-desktop">
+            <div class="navbar-item has-dropdown is-hoverable" id="navbarApps">
+            <!-- Menu dropdown  -->
+              <a class="navbar-link">
+                <!-- Menu dropdown link -->
+                Menu
+              </a>
+              <div class="navbar-dropdown" style="right: 0px;">
+                <router-link class="navbar-item" to="/input">
+                  Input
+                </router-link>
+              </div>
+            </div>
+            <div class="navbar-item has-dropdown is-hoverable" id="navbarLogin" v-if="!isLoggedIn">
+            <!-- Login dropdown  -->
+              <a class="navbar-link">
+                <!-- Login dropdown link -->
+                Login
+              </a>
+              <div class="navbar-dropdown" style="right: 0px;left:auto">
+                  <!-- Login dropdown menu -->
+                <a href="/quiz" class="navbar-item" @click="login()">
+                  With Google
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <section class="hero is-warning" v-if="!isLoggedIn">
+        <div class="hero-body">
+          <div class="container">
+            <h1 class="title">
+              Log In
+            </h1>
+            <h2 class="subtitle">
+              Log in to use this app
+            </h2>
+            <a class="navbar-item button is-success mb-2" id="hoverpurp" @click="login()">
+              Log in with Google
+            </a>
+          </div>
+        </div>
+      </section>
+      <router-view id="content" class="ml-4 mr-4" v-if="isLoggedIn"/>
+    </div>
   </div>
 </template>
 
@@ -134,6 +136,13 @@ export default {
 </script>
 
 <style lang="scss">
+#content {
+  padding-top: 50px;
+}
+#navbar {
+  width: 100%;
+  position: fixed;
+}
 .navbar-link {
   padding-bottom: 5px;
 }
@@ -157,9 +166,6 @@ export default {
   height: -webkit-calc(100% - 54px);
   height:    -moz-calc(100% - 54px);
   height:         calc(100% - 54px);
-}
-#navbar {
-  width: 100%;
 }
 #navbarspace {
   margin-bottom: 56px;
