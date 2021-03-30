@@ -1,15 +1,6 @@
 <template>
-<div class='maincontainer' style="margin-top:0px!important">
+<div class='maincontainer' style="">
     <!-- <h1 class='title is-1 centered flex1'>Routes</h1> -->
-    <h5 v-if="profile[0] && profile[0].lastUpdate">
-      last update: {{
-        profile[0].lastUpdate.toDate().getUTCFullYear()
-        }}/{{
-        (profile[0].lastUpdate.toDate().getUTCMonth() + 1)
-        }}/{{
-        profile[0].lastUpdate.toDate().getUTCDate()
-        }}
-      </h5>
     <!-- {{routesReal}} -->
     <!-- <b-table
     :mobile-cards="false"
@@ -51,15 +42,45 @@
 
     <h1 class='title is-1 centered flex1'>ProfileRoutes</h1> -->
 
-    <div class="flexrow">
+    <!-- <div class="flexrow mt-3">
       <button id="filterbtn" @click="onFilter()" class="mr-4 button
         is-success">Filter</button>
+      <button id="filterbtn" @click="onSort()" class="mr-4 button
+        is-success">Sort</button>
+    </div> -->
+    <!-- <b-field label="">
+      <b-select placeholder=""
+        v-on:input="onChangeFilter(selectedFilter)"
+        v-model="selectedFilter"
+        class="mr-4 button
+        is-success">
+        <option disabled value="">Filter</option>
+        <option value="all">All</option>
+        <option value="miss">Missing</option>
+        <option value="cmp">Completed</option>
+      </b-select>
+    </b-field> -->
+    <div class="flexrow mt-3">
+      <b-dropdown aria-role="list">
+        <template #trigger="{ active }">
+          <b-button
+            label="Filter"
+            type="is-success"
+            :icon-right="active ? 'menu-up' : 'menu-down'" />
+        </template>
+        <b-dropdown-item aria-role="listitem"
+         @click="onShowAll()">Show All Routes</b-dropdown-item>
+        <b-dropdown-item aria-role="listitem"
+         @click="onShowMiss()">Show Missing Routes</b-dropdown-item>
+        <b-dropdown-item aria-role="listitem"
+         @click="onShowCmp()">Show Completed Routes</b-dropdown-item>
+      </b-dropdown>
     </div>
     <div>
       <b-table
       id="table"
       :mobile-cards="false"
-      :data="profileroutes"
+      :data="displayRoutes"
       ref="table2"
       sort-icon="arrow-up"
       sort-icon-size="is-small"
@@ -72,23 +93,49 @@
         <!-- <b-table-column field="profileId" label="ProfileId" sortable v-slot="props">
           {{props.row.profileId.substring(0,4)}} </b-table-column> -->
         <b-table-column field="routeNum" label="Location" sortable v-slot="props">
-          {{props.row.routeNum}} </b-table-column>
+          {{props.row.routeNum}}
+          <img class='icon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/triangle-xxl.png?alt=media&token=37986abe-878e-4b77-af1d-c0bfb8ce6ed7' />
+          <img class='icon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/leadclimbing.jpg?alt=media&token=26257ad8-ae6e-4b20-a611-f1f71cfb8be2' />
+        </b-table-column>
         <b-table-column field="rating" label="Rating" sortable v-slot="props">
-          {{props.row.rating}} </b-table-column>
+          {{props.row.rating}}
+        </b-table-column>
         <b-table-column field="cmp" label="Completed" v-slot="props">
-          <button @click="onCompleted(props.row)">{{props.row.cmp}}</button></b-table-column>
+          <!-- <button @click="onCompleted(props.row)">{{props.row.cmp}}</button> -->
+          <button @click="onCompleted(props.row)"><img class='icon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/leadclimb2.png?alt=media&token=d92b56c1-c1e8-4731-bc50-47b096143156' />
+          </button>
+          <!-- <img class='icon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/rope.png?alt=media&token=c8f1cf11-05ff-4367-a6d7-ead1426a48a1' />
+          <img class='icon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/rope%20(2).png?alt=media&token=24fe9813-1b76-4a9d-ace0-afebfc7e7d8d' />
+          <img class='icon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/rope%20(1).png?alt=media&token=b044feba-497a-45eb-9980-6b41c56eea63' />
+          <img class='icon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner.png?alt=media&token=94cf8933-f227-49bb-b5f1-7426c50f8bcf' />
+          <img class='icon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/leadclimb2.png?alt=media&token=d92b56c1-c1e8-4731-bc50-47b096143156' /> -->
+          <img class='icon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/rope3.png?alt=media&token=633842a5-deb3-49e6-b3b8-35848865829b' />
+        </b-table-column>
 
-        <template #footer v-if="(profileroutes.length < 1)">
-          <div class="has-text-right">No Records Found</div>
+        <template #footer v-if="(displayRoutes.length < 1)">
+          <div class="has-text-right">Connecting</div>
         </template>
       </b-table>
+      <div class="flexrow mt-3">
+        <h5 v-if="profile[0] && profile[0].lastUpdate">
+          last update: {{
+            profile[0].lastUpdate.toDate().getUTCFullYear()
+            }}/{{
+            (profile[0].lastUpdate.toDate().getUTCMonth() + 1)
+            }}/{{
+            profile[0].lastUpdate.toDate().getUTCDate()
+            }}
+        </h5>
+        <h5 @click="onLegend()">
+          Legend
+        </h5>
+        </div>
     </div>
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex';
-/* eslint-disable */
 
 export default {
   data: () => ({
@@ -96,73 +143,172 @@ export default {
     happenedAlready: false,
     happenedAlreadyGetRoutes: false,
     sortVar: 'route',
+    row: {},
+    selectedFilter: '',
+    displayRoutes: [],
   }),
   mounted() {
     this.initRoutes();
   },
   computed: {
-    ...mapState('dataJS', ['routesReal', 'profileroutes']),
+    ...mapState('dataJS', ['routesReal', 'profileroutes', 'lastUpdate']),
     ...mapState('profile', ['profile']),
     ...mapState('auth', ['user']),
   },
   methods: {
     ...mapActions('dataJS', ['initRoutes', 'initProfileRoutes', 'getRoutes', 'setCompletedY', 'setCompletedN']),
+    onLegend() {
+      this.$buefy.dialog.alert({
+        title: 'Legend',
+        message: 'I have a title, a custom button and <b>HTML</b>!',
+        confirmText: 'Cool',
+      });
+    },
     onGetRoutes() {
       this.getRoutes(this.profile[0]);
     },
+    onShowAll() {
+      this.displayRoutes = this.profileroutes;
+      console.log('in onShowAll, this.displayRoutes=', this.displayRoutes.length);
+    },
+    onShowMiss() {
+      this.displayRoutes = this.profileroutes.filter((element) => (element.cmp === 'N'));
+      console.log('in onShowMiss, this.displayRoutes=', this.displayRoutes.length);
+    },
+    onShowCmp() {
+      this.displayRoutes = this.profileroutes.filter((element) => (element.cmp === 'Y'));
+      console.log('in onShowCmp, this.displayRoutes=', this.displayRoutes);
+    },
     wait(timeout) { // await wait(500);
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         setTimeout(resolve, timeout);
       });
     },
     onCompleted(row) {
-      if (row.cmp === 'Y') {
-        row.cmp = 'N';
-        this.setCompletedY(row);
+      this.row = row;
+      if (this.row.cmp === 'Y') {
+        this.row.cmp = 'N';
+        this.setCompletedY(this.row);
       } else {
-        row.cmp = 'Y';
+        this.row.cmp = 'Y';
         this.setCompletedN(row);
       }
     },
     onFilter() {
-
+      console.log('2.         routesReal.length=', (this.routesReal.length));
     },
     onSort() {
       if (this.sortVar === 'route') {
-        this.sortVar = 'Rating'
+        this.sortVar = 'Rating';
       }
-    }
+    },
+    ///
+    // works together with watched vars:
+    // 1. if profile changes: call initProfileRoutes
+    // 2. if profileRoutes changes  call check
+    //     OR
+    // 3. if routesReal changes call check
+    //     OR
+    // 4. if lastUpdate changes call check
+    //
+    // check:
+    // (profileRoutes=true)
+    // (routesReal = true)
+    // (lastUpdate = true)
+    // if all true, call get routes and set to already called.
+    checkIfLoaded() {
+      console.log('in checkIfLoaded11');
+      if (!this.happenedAlreadyGetRoutes
+        && this.routesReal.length > 0
+        && this.lastUpdate.length > 0) {
+        console.log('   calling getRoutes');
+        this.happenedAlreadyGetRoutes = true;
+        this.getRoutes(this.profile[0]);
+        this.displayRoutes = this.profileroutes;
+      }
+    },
   },
+  // watch: {
+  //   ///
+  //   // first event to happen: user sign in.
+  //   // calls initProfileRoutes (gets the routes the user already had)
+  //   ///
+  //   async profile() {
+  //         console.log('1. in initProfileRoutes happened=', this.happenedAlready);
+  //     if (!this.happenedAlready) {
+  //       if (this.profile[0]) { // if user is logged in
+  //       // console.log('if (!this.happenedAlready &&  this.profile[0]: true');
+  //         this.initProfileRoutes(this.profile[0].id);
+  //         this.happenedAlready = true;
+  //       }
+  //     }
+  //   },
+  //   ///
+  //   // second event: profileroutes were created/set
+  //   // calls getRoutes (gets new routes from server)
+  //   ///
+  //   async profileroutes() {
+  //     console.log('2. in profileroutes(): happened=', this.happenedAlreadyGetRoutes);
+  //     if (!this.happenedAlreadyGetRoutes) {
+  //       console.log('2.         routesReal.length=', (this.routesReal.length ));
+  //       if (this.routesReal.length >0) {
+  //           this.getRoutes(this.profile[0]);
+  //           this.happenedAlreadyGetRoutes = true;
+  //         }
+  //       }
+  //   },
+  //   ///
+  //   // third event: do a secong check, in case routesReal took a longer time to fill
+  //   // if so, call getRoutes from here
+  //   ///
+  //   async routesReal() {
+  //     console.log('3. in routesReal(): happened=', this.happenedAlreadyGetRoutes);
+  //     if (!this.happenedAlreadyGetRoutes) {
+  //       console.log('3.         routesReal.length=', (this.routesReal.length ));
+  //       if (this.routesReal.length >0) {
+  //         // this.getRoutes(this.profile[0]);
+  //         this.happenedAlreadyGetRoutes = true;
+  //       }
+  //     }
+  //   },
+  //   async lastUpdate() {
+
+  //   },
+  // },
+
   watch: {
     async profile() {
-          // console.log('1. in initProfileRoutes happened=', this.happenedAlready);
+      console.log('1. in initProfileRoutes happened=', this.happenedAlready);
       if (!this.happenedAlready) {
         if (this.profile[0]) { // if user is logged in
         // console.log('if (!this.happenedAlready &&  this.profile[0]: true');
           this.initProfileRoutes(this.profile[0].id);
-          // this.getRoutes(this.profile[0]);
           this.happenedAlready = true;
-          // this.wait(3000).then(() => {
-          //   this.happenedAlready = false;
-          // });
-        } 
+        }
       }
     },
     async profileroutes() {
-      // console.log('2. in routesWatch(): happened=', this.happenedAlreadyGetRoutes);
-      if (!this.happenedAlreadyGetRoutes) {
-        // console.log('2.         routesReal.length=', (this.routesReal.length )); 
-        if (this.routesReal.length >0) {
-            this.getRoutes(this.profile[0]);
-            this.happenedAlreadyGetRoutes = true;
-          }
-        }
-    }
+      this.checkIfLoaded();
+    },
+    async routesReal() {
+      this.checkIfLoaded();
+    },
+    async lastUpdate() {
+      this.checkIfLoaded();
+    },
   },
 };
+
 </script>
 
 <style lang="scss" scoped>
+.icon {
+  width: 15px;
+  height: 15px;
+}
+/deep/.dropdown .background {
+  background-color: rgba(10, 10, 10, 0.65) !important;
+}
 /deep/.b-table .table-wrapper.has-sticky-header {
   height: 490px !important;
 }
@@ -177,6 +323,7 @@ export default {
 }
 /deep/ .table td, .table th{
   padding: 0px 0px 0px 0px !important;
+  font-weight: 800;
 }
 #filterbtn {
   padding-top: 0px;
@@ -191,7 +338,7 @@ export default {
 .flexrow {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
 }
 html {
   height: 100%;

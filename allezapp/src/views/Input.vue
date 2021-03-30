@@ -1,6 +1,12 @@
 <template>
-  <section class="main">
-    <h2 class='title mt-2'>Input Mode</h2>
+  <section class="main debug">
+    <template v-if="profile[0] && profile[0].id === 'aGyG5o6IaDZtnyK7ouOKmNU1UYP2'">
+    <div class='row title mt-2'>
+      <h2 class='title'>Input Mode</h2>
+      <router-link class="button" to="/publish">
+        Publish
+      </router-link>
+    </div>
     <!-- <form @submit.prevent="onCreateRoute()" class="ml-4 mr-4">
       <b-field label="Route Num">
         <b-input v-model="route.routeNum" required></b-input>
@@ -53,7 +59,8 @@
       <div class='button' @click="onBack()"> ◀ </div><!-- works -->
       <div class='button' disabled> {{currentRouteNum}} </div><!-- works -->
       <div class='button' @click="onNext()"> ▶ </div><!-- works -->
-      <div class='button' @click="onCreateRoute()"> + </div>
+      <div class='button' @click="onCreateRoute()"
+      :class="(inputRoute.plus)? 'is-success':''"> + </div>
       <div class='button' @click="onEnterNext()"> +▶ </div>
       <div class='button' @click="onDeleteAll()"> × </div>
     </div>
@@ -88,6 +95,10 @@
         </div>
       </template>
     </div>
+    </template>
+    <template v-else>
+      not accessible
+      </template>
   </section>
 </template>
 
@@ -120,6 +131,7 @@ export default {
       selectedb: false,
       selectedc: false,
       selectedd: false,
+      plus: false,
       showLetters: true,
     },
     nonfound: false,
@@ -134,6 +146,7 @@ export default {
   },
   computed: {
     ...mapState('input', ['routes', 'componentKey']),
+    ...mapState('profile', ['profile']),
   },
   methods: {
     ...mapActions('input', ['createRoute', 'initRoutes', 'deleteRoute', 'deleteAll']),
@@ -166,10 +179,15 @@ export default {
       if (this.route.rating.length > 3) {
         console.log('-----onCreate: rating above 9:', this.route.rating);
         if (this.route.rating2 === '') { // if no letter ("5.11")
-          console.log('-----rating 2 is empty');
-          this.route.rating2 = 'a'; // assume default a
+          console.log('-----rating 2 is empty'); // letter is missing
+          return;
         }
       }
+      if (this.route.rating.length < 1) {
+        console.log('###empty route added');
+        this.route.rating = '?';
+      }
+
       const toAdd = {
         routeNum: this.currentRouteNum,
         rating: `${this.route.rating}${this.route.rating2}`, // concat
@@ -178,6 +196,7 @@ export default {
       await this.createRoute(toAdd).then(() => { // pass route to save
         this.setAllSelectedFalse();
         this.setAllSelectedFalse2();
+        this.inputRoute.plus = false;
         this.componentKeyR += 1;
       });
     },
@@ -204,6 +223,14 @@ export default {
     onClickRoute(value) {
       this.setAllSelectedFalse();
       this.inputRoute.showLetters = true;
+      if (value === '6'
+      || value === '7'
+      || value === '8'
+      || value === '9') {
+        this.inputRoute.plus = true;
+      } else {
+        this.inputRoute.plus = false;
+      }
       switch (value) {
         case '6': this.inputRoute.selected6 = true; this.route.rating = '5.6';
           this.inputRoute.showLetters = false;
@@ -236,6 +263,7 @@ export default {
     },
     onClickRouteLetter(value) {
       this.setAllSelectedFalse2();
+      this.inputRoute.plus = true;
       if (this.inputRoute.showLetters) {
         switch (value) {
           case 'n': this.inputRoute.selectedn = true; this.route.rating2 = '';
@@ -324,6 +352,6 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
-  // justify-content: space-between;
+  justify-content: space-between;
 }
 </style>

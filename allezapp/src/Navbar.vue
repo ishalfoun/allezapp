@@ -3,9 +3,11 @@
     <div id="spacer">
       <nav id="navbar" class="navbar is-dark" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
-          <router-link class="navbar-item" to="/#/">
-            AllezApp
-          </router-link>
+          <div class="navbar-item" @click="closeNav()">
+            <router-link class="navbar-item logo" to="/#/" @click="closeNav()">
+              AllezApp
+            </router-link>
+          </div>
           <div class="navbar-item profile if-mobile" aria-expanded="false">
             <template v-if="profile[0]">
               <img class="image is-24x24 mr-2"
@@ -22,26 +24,30 @@
               <span aria-hidden="true"></span>
           </a>
         </div>
-        <div id="navbarBasicExample" class="navbar-menu" :class="{ 'is-active': showNav }">
+        <div id="navbarBasicExample" class="navbar-menu"
+         :class="{ 'is-active': showNav }"
+         @click="closeNav()">
   <!-- nav bar end for mobile: -->
           <div class="navbar-end if-mobile">
-            <!-- <div class="navbar-item flexcontainer">
-              <a class="button is-primary" style="width:30%;">
-                nothing yet
-              </a>
-            </div> -->
             <div class="navbar-item flexcontainer">
               <a class="button is-danger is-small pl-2 pr-2"
                 v-if="isLoggedIn" @click="logout()">
                 Log Out
               </a>
+              <a class="button is-success is-small pl-2 pr-2"
+                v-if="!isLoggedIn" @click="login()">
+                Log In
+              </a>
             </div>
-            <router-link class="navbar-item" to="/input">
-              Input
-            </router-link>
-            <router-link class="navbar-item" to="/publish">
-              Publish
-            </router-link>
+            <div class="navbar-item" @click="closeNav()"
+             v-if="profile[0] && profile[0].id === 'aGyG5o6IaDZtnyK7ouOKmNU1UYP2'">
+              <router-link class="button" to="/input">
+                Input
+              </router-link>
+              <router-link class="button" to="/publish">
+                Publish
+              </router-link>
+            </div>
           </div>
 
   <!-- nav bar end for desktop: -->
@@ -52,11 +58,11 @@
                 <!-- Menu dropdown link -->
                 Menu
               </a>
-              <div class="navbar-dropdown" style="right: 0px;">
-                <router-link class="navbar-item" to="/input">
-                  Input
-                </router-link>
-              </div>
+              <!-- <div class="navbar-dropdown" style="right: 0px;">
+              <router-link class="navbar-item" to="/input">
+                Input
+              </router-link>
+              </div> -->
             </div>
             <div class="navbar-item has-dropdown is-hoverable" id="navbarLogin" v-if="!isLoggedIn">
             <!-- Login dropdown  -->
@@ -75,7 +81,7 @@
         </div>
       </nav>
 
-      <section class="hero is-warning" v-if="!isLoggedIn">
+      <section class="hero is-warning pt-4" v-if="!isLoggedIn">
         <div class="hero-body">
           <div class="container">
             <h1 class="title">
@@ -90,6 +96,7 @@
           </div>
         </div>
       </section>
+
       <router-view id="content" class="ml-4 mr-4" v-if="isLoggedIn"/>
     </div>
   </div>
@@ -116,6 +123,10 @@ export default {
     // this.initSubreddit(this.$route.params.name);
     this.isLoading = false;
   },
+  mounted() {
+    console.log('in mounted:');
+    this.showNav = false;
+  },
   computed: { // makes it computed properties on this component, so we can use them.
     ...mapState('auth', ['user', 'isLoggedIn', 'sound']), // 'auth' is the module, the second is what you want
     ...mapState('profile', ['profile']),
@@ -124,6 +135,9 @@ export default {
   methods: {
     ...mapActions('auth', ['login', 'logout', 'guestLogin', 'soundToggle']),
     ...mapActions('profile', ['init']),
+    closeNav() {
+      this.showNav = false;
+    },
   },
   watch: {
     user() {
@@ -136,6 +150,9 @@ export default {
 </script>
 
 <style lang="scss">
+.logo {
+  color: #fff !important;
+}
 #content {
   padding-top: 50px;
 }
@@ -204,10 +221,12 @@ export default {
   background-color: rgb(49, 133, 49);
 }
 .navbar-item.profile{
-  width: 15%;
+  display: flex;
+  justify-content: flex-end;
   margin-left:auto;
   margin-right:0;
   position:relative;
+  padding: 0px 0px 0px 0px;
 }
 .progressbartext {
   position: absolute;
@@ -232,7 +251,7 @@ export default {
   flex-direction: column;
   align-items: center;
 }
-#app {
+#app, #spacer, #content{
   height: 100%;
 }
 html, body {

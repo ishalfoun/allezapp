@@ -1,31 +1,14 @@
 <template>
   <div class='maincontainer' style="margin-top:0px!important">
-    <!-- <h1 class='title is-1 centered flex1'>Added</h1> -->
-    <!-- <div>(route) (rating) (id)</div>
-    <div>(route) (rating) (id)</div>
-    <div>(route) (rating) (id)</div> -->
-    <!-- <h1 class='title is-1 centered flex1'>Removed</h1> -->
-    <!-- <div>(route) (rating) (id)</div>
-    <div>(route) (rating) (id)</div>
-    <div>(route) (rating) (id)</div> -->
+    <template v-if="profile[0] && profile[0].id === 'aGyG5o6IaDZtnyK7ouOKmNU1UYP2'">
 
-    <!-- routes: <br />
-    <template v-if="routes[0]">
-        {{routes[0].rating}} {{routes[0].routeNum}} <br />
-        {{routes[1].rating}} {{routes[1].routeNum}} <br />
-    </template>
-    routesReal: <br />
-    <template v-if="routesReal[0]">
-        {{routesReal[0].rating}} {{routesReal[0].routeNum}} <br />
-        {{routesReal[1].rating}} {{routesReal[1].routeNum}}
-    </template>
-    additions:  <br />
-    {{additions}} <br />
-    removals:  <br />
-    {{removals}} -->
-
-    <button @click="onCommit()" class="button is-fullwidth
+    <div class='row title mt-2'>
+      <button @click="onCommit()" class="button is-success is-fullwidth
         title is-4 flex1">Commit</button>
+      <router-link class="button ml-2" to="/input">
+        Input
+      </router-link>
+    </div>
     <!-- <h5 v-if="profile[0] && profile[0].lastUpdate">
       last update: {{
         profile[0].lastUpdate.toDate().getUTCFullYear()
@@ -133,6 +116,10 @@
         </div>
       </template>
     </b-table> -->
+    </template>
+    <template v-else>
+      not accessible
+      </template>
   </div>
 </template>
 
