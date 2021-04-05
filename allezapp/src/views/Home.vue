@@ -67,6 +67,7 @@
             label="Filter"
             type="is-success"
             :icon-right="active ? 'menu-up' : 'menu-down'" />
+            {{loading}}
         </template>
         <b-dropdown-item aria-role="listitem"
          @click="onShowAll()">Show All Routes</b-dropdown-item>
@@ -80,7 +81,7 @@
       <b-table
       id="table"
       :mobile-cards="false"
-      :data="displayRoutes"
+      :data="profileroutes"
       ref="table2"
       sort-icon="arrow-up"
       sort-icon-size="is-small"
@@ -94,26 +95,32 @@
           {{props.row.profileId.substring(0,4)}} </b-table-column> -->
         <b-table-column field="routeNum" label="Location" sortable v-slot="props">
           {{props.row.routeNum}}
-          <img class='icon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/triangle-xxl.png?alt=media&token=37986abe-878e-4b77-af1d-c0bfb8ce6ed7' />
-          <img class='icon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/leadclimbing.jpg?alt=media&token=26257ad8-ae6e-4b20-a611-f1f71cfb8be2' />
+          <template v-if="props.row.flag_autob"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/triangle-xxl.png?alt=media&token=37986abe-878e-4b77-af1d-c0bfb8ce6ed7' /></template>
+          <template v-if="props.row.flag_overh"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/leadclimbing.jpg?alt=media&token=26257ad8-ae6e-4b20-a611-f1f71cfb8be2' /></template>
+          <template v-else><div class='smallicon'></div></template>
+          <template v-if="props.row.flag_lead"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' /></template>
+          <template v-else><div class='smallicon'></div></template>
+          <template v-if="props.row.flag_topr"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/rope3.png?alt=media&token=633842a5-deb3-49e6-b3b8-35848865829b' /></template>
+          <template v-else><div class='smallicon'></div></template>
         </b-table-column>
         <b-table-column field="rating" label="Rating" sortable v-slot="props">
           {{props.row.rating}}
+          <template v-if="props.row.color"><div id="square"
+            :style="{'background-color': props.row.color}">&nbsp;</div></template>
         </b-table-column>
-        <b-table-column field="cmp" label="Completed" v-slot="props">
-          <!-- <button @click="onCompleted(props.row)">{{props.row.cmp}}</button> -->
-          <button @click="onCompleted(props.row)"><img class='icon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/leadclimb2.png?alt=media&token=d92b56c1-c1e8-4731-bc50-47b096143156' />
-          </button>
+        <b-table-column field="cmp" label="Completed" sortable v-slot="props">
+          <button @click="onCompleted(props.row)">{{props.row.cmp}}</button>
+          <img v-if="props.row.cmp === 'Y'" class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/leadclimb2.png?alt=media&token=d92b56c1-c1e8-4731-bc50-47b096143156' />
           <!-- <img class='icon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/rope.png?alt=media&token=c8f1cf11-05ff-4367-a6d7-ead1426a48a1' />
           <img class='icon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/rope%20(2).png?alt=media&token=24fe9813-1b76-4a9d-ace0-afebfc7e7d8d' />
           <img class='icon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/rope%20(1).png?alt=media&token=b044feba-497a-45eb-9980-6b41c56eea63' />
           <img class='icon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner.png?alt=media&token=94cf8933-f227-49bb-b5f1-7426c50f8bcf' />
           <img class='icon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/leadclimb2.png?alt=media&token=d92b56c1-c1e8-4731-bc50-47b096143156' /> -->
-          <img class='icon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/rope3.png?alt=media&token=633842a5-deb3-49e6-b3b8-35848865829b' />
+          <!-- <img class='icon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/rope3.png?alt=media&token=633842a5-deb3-49e6-b3b8-35848865829b' /> -->
         </b-table-column>
 
-        <template #footer v-if="(displayRoutes.length < 1)">
-          <div class="has-text-right">Connecting</div>
+        <template #footer v-if="(profileroutes.length < 1)">
+          <div class="has-text-right">Connecting to Server...</div>
         </template>
       </b-table>
       <div class="flexrow mt-3">
@@ -135,7 +142,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapGetters } from 'vuex';
 
 export default {
   data: () => ({
@@ -146,27 +153,57 @@ export default {
     row: {},
     selectedFilter: '',
     displayRoutes: [],
+    loadingComponent: {},
+    routesLoaded: false,
+    lastUpdateLoaded: false,
+    profileroutesLoaded: false,
+
   }),
   mounted() {
-    this.initRoutes();
+    this.initRoutes().then(() => {
+      console.log('   ------- initRoutes finished loading!');
+      this.routesLoaded = true;
+      this.checkIfLoaded();
+    })
+      .catch((error) => {
+        console.error('     ------  initRoutes ERROR loading!', error);
+      });
+    this.initLastUpdate().then(() => {
+      console.log('   -------  initLastUpdate finished loading!');
+      this.lastUpdateLoaded = true;
+      this.checkIfLoaded();
+    })
+      .catch((error) => {
+        console.error('     ------  initLastUpdate ERROR loading!', error);
+      });
   },
   computed: {
     ...mapState('dataJS', ['routesReal', 'profileroutes', 'lastUpdate']),
     ...mapState('profile', ['profile']),
     ...mapState('auth', ['user']),
+    ...mapGetters('dataJS', ['getLoading']),
+    loading: {
+      get() {
+        return this.getLoading;
+      },
+      set(newValue) {
+        this.$store.dispatch('dataJS/setLoading', newValue);
+      },
+    },
   },
   methods: {
-    ...mapActions('dataJS', ['initRoutes', 'initProfileRoutes', 'getRoutes', 'setCompletedY', 'setCompletedN']),
+    ...mapActions('dataJS', ['initRoutes', 'initLastUpdate', 'initProfileRoutes', 'getRoutes', 'setCompletedY', 'setCompletedN']),
     onLegend() {
-      this.$buefy.dialog.alert({
-        title: 'Legend',
-        message: 'I have a title, a custom button and <b>HTML</b>!',
-        confirmText: 'Cool',
-      });
+      this.loadingComponent = this.$buefy.loading.open();
+      // this.$buefy.dialog.alert({
+      //   title: 'Legend',
+      //   message: 'I have a title, a custom button and <b>HTML</b>!',
+      //   confirmText: 'Cool',
+      // });
     },
-    onGetRoutes() {
-      this.getRoutes(this.profile[0]);
-    },
+    // onGetRoutesManually() {
+    //   this.getRoutes(this.profile[0]);
+    // },
     onShowAll() {
       this.displayRoutes = this.profileroutes;
       console.log('in onShowAll, this.displayRoutes=', this.displayRoutes.length);
@@ -217,94 +254,70 @@ export default {
     // (lastUpdate = true)
     // if all true, call get routes and set to already called.
     checkIfLoaded() {
-      console.log('in checkIfLoaded11');
       if (!this.happenedAlreadyGetRoutes
-        && this.routesReal.length > 0
-        && this.lastUpdate.length > 0) {
-        console.log('   calling getRoutes');
-        this.happenedAlreadyGetRoutes = true;
+        && this.routesLoaded
+        && this.lastUpdateLoaded
+        && this.profileroutesLoaded) {
+        console.log('       calling getRoutes');
         this.getRoutes(this.profile[0]);
-        this.displayRoutes = this.profileroutes;
+        // this.displayRoutes = this.profileroutes;
+        this.happenedAlreadyGetRoutes = true;
       }
     },
   },
-  // watch: {
-  //   ///
-  //   // first event to happen: user sign in.
-  //   // calls initProfileRoutes (gets the routes the user already had)
-  //   ///
-  //   async profile() {
-  //         console.log('1. in initProfileRoutes happened=', this.happenedAlready);
-  //     if (!this.happenedAlready) {
-  //       if (this.profile[0]) { // if user is logged in
-  //       // console.log('if (!this.happenedAlready &&  this.profile[0]: true');
-  //         this.initProfileRoutes(this.profile[0].id);
-  //         this.happenedAlready = true;
-  //       }
-  //     }
-  //   },
-  //   ///
-  //   // second event: profileroutes were created/set
-  //   // calls getRoutes (gets new routes from server)
-  //   ///
-  //   async profileroutes() {
-  //     console.log('2. in profileroutes(): happened=', this.happenedAlreadyGetRoutes);
-  //     if (!this.happenedAlreadyGetRoutes) {
-  //       console.log('2.         routesReal.length=', (this.routesReal.length ));
-  //       if (this.routesReal.length >0) {
-  //           this.getRoutes(this.profile[0]);
-  //           this.happenedAlreadyGetRoutes = true;
-  //         }
-  //       }
-  //   },
-  //   ///
-  //   // third event: do a secong check, in case routesReal took a longer time to fill
-  //   // if so, call getRoutes from here
-  //   ///
-  //   async routesReal() {
-  //     console.log('3. in routesReal(): happened=', this.happenedAlreadyGetRoutes);
-  //     if (!this.happenedAlreadyGetRoutes) {
-  //       console.log('3.         routesReal.length=', (this.routesReal.length ));
-  //       if (this.routesReal.length >0) {
-  //         // this.getRoutes(this.profile[0]);
-  //         this.happenedAlreadyGetRoutes = true;
-  //       }
-  //     }
-  //   },
-  //   async lastUpdate() {
-
-  //   },
-  // },
-
   watch: {
+    loading(arg) {
+      console.log('loading watched!', arg);
+      if (arg) {
+        this.loadingComponent = this.$buefy.loading.open();
+      } else {
+        this.loadingComponent.close();
+        this.componentKey += 1;
+      }
+    },
     async profile() {
       console.log('1. in initProfileRoutes happened=', this.happenedAlready);
       if (!this.happenedAlready) {
         if (this.profile[0]) { // if user is logged in
         // console.log('if (!this.happenedAlready &&  this.profile[0]: true');
-          this.initProfileRoutes(this.profile[0].id);
+          this.initProfileRoutes(this.profile[0].id).then(() => {
+            console.log('   -------  profile routes finished loading!');
+            this.profileroutesLoaded = true;
+            this.checkIfLoaded();
+          })
+            .catch((error) => {
+              console.error('     ------  profile routes ERROR loading!', error);
+            });
           this.happenedAlready = true;
         }
       }
     },
-    async profileroutes() {
-      this.checkIfLoaded();
-    },
-    async routesReal() {
-      this.checkIfLoaded();
-    },
-    async lastUpdate() {
-      this.checkIfLoaded();
-    },
+    // async profileroutes() {
+    //   // if (this.profileroutes.length === 0) {
+    //   //   console.log('        loading will be set to true');
+    //   //   this.loading = true;
+    //   // }
+    //   console.log('    in checkIfLoaded (profileRoutes)');
+    //   this.checkIfLoaded();
+    // },
+    // async routesReal() {
+    //   console.log('    in checkIfLoaded (routesReal)');
+    //   this.checkIfLoaded();
+    // },
+    // async lastUpdate() {
+    //   console.log('    in checkIfLoaded (lastUpdate)');
+    //   this.checkIfLoaded();
+    // },
   },
 };
 
 </script>
 
 <style lang="scss" scoped>
-.icon {
+.smallicon {
   width: 15px;
   height: 15px;
+  display: inline-block;
 }
 /deep/.dropdown .background {
   background-color: rgba(10, 10, 10, 0.65) !important;

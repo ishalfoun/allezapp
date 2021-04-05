@@ -124,7 +124,7 @@ export default {
     this.isLoading = false;
   },
   mounted() {
-    console.log('in mounted:');
+    // console.log('in mounted:');
     this.showNav = false;
   },
   computed: { // makes it computed properties on this component, so we can use them.

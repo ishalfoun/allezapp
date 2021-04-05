@@ -26,18 +26,31 @@
       style="width=100%"
       :mobile-cards="false"
       :data="additions"
-      ref="table">
+      ref="table"
+      sort-icon="arrow-up"
+      sort-icon-size="is-small"
+      default-sort="routeNum"
+      default-sort-direction="asc">
 
         <b-table-column field="del" label="" v-slot="props">
           <div @click="onDeleteAddi(props.row)"> X </div>
         </b-table-column>
 
-        <b-table-column field="routeNum" label="Route" v-slot="props">
+        <b-table-column field="routeNum" label="Route" sortable v-slot="props">
           {{props.row.routeNum}}
+          <template v-if="props.row.color"><div id="square"
+            :style="{'background-color': props.row.color}">&nbsp;</div></template>
         </b-table-column>
 
-        <b-table-column field="rating" label="Rating" v-slot="props">
+        <b-table-column field="rating" label="Rating" sortable v-slot="props">
           {{props.row.rating}}
+        </b-table-column>
+
+        <b-table-column field="flags" label="" sortable v-slot="props">
+          <template v-if="props.row.flag_autob"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/triangle-xxl.png?alt=media&token=37986abe-878e-4b77-af1d-c0bfb8ce6ed7' /></template>
+          <template v-if="props.row.flag_overh"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/leadclimbing.jpg?alt=media&token=26257ad8-ae6e-4b20-a611-f1f71cfb8be2' /></template>
+          <template v-if="props.row.flag_lead"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' /></template>
+          <template v-if="props.row.flag_topr"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/rope3.png?alt=media&token=633842a5-deb3-49e6-b3b8-35848865829b' /></template>
         </b-table-column>
       </b-table>
       <template v-if="additions.length === 0">
@@ -53,18 +66,31 @@
       style="width=100%"
       :mobile-cards="false"
       :data="removals"
-      ref="table2">
+      ref="table2"
+      sort-icon="arrow-up"
+      sort-icon-size="is-small"
+      default-sort="routeNum"
+      default-sort-direction="asc">
 
         <b-table-column field="" label="" v-slot="props">
           <div @click="onDeleteRemo(props.row)"> X </div>
         </b-table-column>
 
-        <b-table-column field="routeNum" label="Route" v-slot="props">
+        <b-table-column field="routeNum" label="Route" sortable v-slot="props">
           {{props.row.routeNum}}
+          <template v-if="props.row.color"><div id="square"
+            :style="{'background-color': props.row.color}">&nbsp;</div></template>
         </b-table-column>
 
-        <b-table-column field="rating" label="Rating" v-slot="props">
+        <b-table-column field="rating" label="Rating" sortable v-slot="props">
           {{props.row.rating}}
+        </b-table-column>
+
+        <b-table-column field="flags" label="" sortable v-slot="props">
+          <template v-if="props.row.flag_autob"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/triangle-xxl.png?alt=media&token=37986abe-878e-4b77-af1d-c0bfb8ce6ed7' /></template>
+          <template v-if="props.row.flag_overh"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/leadclimbing.jpg?alt=media&token=26257ad8-ae6e-4b20-a611-f1f71cfb8be2' /></template>
+          <template v-if="props.row.flag_lead"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' /></template>
+          <template v-if="props.row.flag_topr"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/rope3.png?alt=media&token=633842a5-deb3-49e6-b3b8-35848865829b' /></template>
         </b-table-column>
       </b-table>
       <template v-if="removals.length === 0">

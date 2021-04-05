@@ -10,14 +10,16 @@ import profileJS from './profile';
 ///
 ///
 
-const state = {
+const data = {
   routesReal: [],
   profileroutes: [],
   lastUpdate: [],
+  loading: false,
 };
 
-// const getters = {
-// };
+const getters2 = {
+  getLoading: (state) => (state.loading ? state.loading : false),
+};
 
 // function wait(timeout) {
 //   return new Promise(resolve => {
@@ -26,14 +28,17 @@ const state = {
 // }
 
 const actions = {
-  initRoutes: firestoreAction(({ bindFirestoreRef }) => {
-    bindFirestoreRef('routesReal', db.collection('routesReal'));
-    bindFirestoreRef('lastUpdate', db.collection('lastUpdate'));
-  }),
+  setLoading(value) {
+    console.log('in loadingsetter', value);
+    data.loading = value;
+  },
+  initRoutes: firestoreAction(({ bindFirestoreRef }) => bindFirestoreRef('routesReal', db.collection('routesReal'))),
+  initLastUpdate: firestoreAction(({ bindFirestoreRef }) => bindFirestoreRef('lastUpdate', db.collection('lastUpdate'))),
   initProfileRoutes: firestoreAction(({ bindFirestoreRef }, value) => {
     if (value) {
-      bindFirestoreRef('profileroutes', db.collection('profileroutes').where('profileId', '==', value));
+      return bindFirestoreRef('profileroutes', db.collection('profileroutes').where('profileId', '==', value));
     }
+    return new Promise();
   }),
   // eslint-disable-next-line
   async setCompletedN({ getters }, row) {
@@ -72,18 +77,18 @@ const actions = {
     ///
     // only get Routes if your last update is not same as server
     ///
-    console.log('profile date: ', profile.lastUpdate.toDate());
-    console.log('server date: ', state.lastUpdate[0].lastUpdate.toDate());
-    if (profile.lastUpdate.toDate() >= state.lastUpdate[0].lastUpdate
+    console.log('   profile date: ', profile.lastUpdate.toDate());
+    console.log('   server date: ', data.lastUpdate[0].lastUpdate.toDate());
+    if (profile.lastUpdate.toDate() >= data.lastUpdate[0].lastUpdate
       .toDate()) {
-      // if your date is same (or later) than server's: do nothing.
-      console.log('date is sme or later, doing nothing');
+      console.log('date is same or later, =no new update, doing nothing');
       return;
     }
+    data.loading = true;
     //   - first filter the profileR belonging to me:
     //   - next loop through both routes and profileroutes
     //   - if route not found, add to newRoutes
-    const profileRsBelongingToMe = state.profileroutes.filter((value) => {
+    const profileRsBelongingToMe = data.profileroutes.filter((value) => {
       // filter out only those pf's belonging to me:
       if (value.profileId === profile.id) {
         return true;
@@ -94,9 +99,9 @@ const actions = {
     let found = false;
     let atLeastOneRouteFound = false;
     // for each route found on db:
-    // console.log('   state.routes=', state.routes);
+    // console.log('   data.routes=', data.routes);
     // console.log('   profileRsBelongingToMe', profileRsBelongingToMe);
-    state.routesReal.forEach(async (route) => {
+    data.routesReal.forEach(async (route) => {
       //  check if the route is is found in my profileR)
       profileRsBelongingToMe.forEach((value) => {
         // console.log(('value(' + value.routeId + ') === route.id(' + route.id + ')'));
@@ -114,6 +119,11 @@ const actions = {
           rating: route.rating,
           routeNum: route.routeNum,
           cmp: 'N',
+          flag_overh: (route.flag_overh) ? route.flag_overh : false,
+          flag_lead: (route.flag_lead) ? route.flag_lead : false,
+          flag_topr: (route.flag_topr) ? route.flag_topr : false,
+          flag_autob: (route.flag_autob) ? route.flag_autob : false,
+          color: (route.color) ? route.color : false,
         };
 
         await db.collection('profileroutes').doc().set(profileRouteEntry)
@@ -155,6 +165,9 @@ const actions = {
       await db.collection('profileroutes').doc(duplicate.id).delete()
         .then(() => {
           console.log('      duplicate profileR deleted');
+          // if (data.loading) {
+          //   data.loading = false;
+          // }
         })
         .catch((error) => {
           console.error('      error while deleting dup profileR: ', error);
@@ -170,7 +183,7 @@ const actions = {
     atLeastOneRouteFound = false;
     profileRsBelongingToMe.forEach(async (profileR) => {
       // console.log('   foreach1: profileR.routeId(' + profileR.routeId);
-      state.routesReal.forEach((route) => {
+      data.routesReal.forEach((route) => {
         // console.log('      foreach2: === route.id(' + route.id + ')');
         if (found === false) {
           if (route.id === profileR.routeId) {
@@ -200,7 +213,7 @@ const actions = {
     ///
     // once you got all routes, update your profile's lastUpdate field:
     ///
-    // appData.timestamp = moment(appData.timestamp.toDate()).format('lll')
+    // appdata.timestamp = moment(appdata.timestamp.toDate()).format('lll')
     // firebase.firestore.FieldValue.serverTimestamp()
     // console.log('timestamp1: ', firebase.firestore.Timestamp.now().toDate());
     console.log('timestamp2: ', firebase.firestore.FieldValue
@@ -209,9 +222,12 @@ const actions = {
     await db
       .collection('profiles')
       .doc(profileJS.state.profile[0].id)
-      .update({ lastUpdate: state.lastUpdate[0].lastUpdate.toDate() })
+      .update({ lastUpdate: data.lastUpdate[0].lastUpdate.toDate() })
       .then(() => {
         console.log('   profile.lastUpdate write success');
+        if (data.loading) {
+          data.loading = false;
+        }
       })
       .catch((error) => {
         console.error('   profile.lastUpdate write error: ', error);
@@ -220,13 +236,13 @@ const actions = {
 };
 
 // const mutations = {
-//   checkServer(state, setProfile) {
+//   checkServer(data, setProfile) {
 
 //   },
 // };
 export default {
   namespaced: true,
-  state,
+  state: data,
   actions,
-  // getters,
+  getters: getters2,
 };
