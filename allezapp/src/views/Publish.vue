@@ -39,7 +39,12 @@
         <b-table-column field="routeNum" label="Route" sortable v-slot="props">
           {{props.row.routeNum}}
           <template v-if="props.row.color"><div id="square"
-            :style="{'background-color': props.row.color}">&nbsp;</div></template>
+            :style="{
+              'background-color': props.row.color,
+              'border-color': (props.row.color === 'white' ? 'black' : ''),
+              'border-width': (props.row.color === 'white' ? '1px' : ''),
+              'border-style': (props.row.color === 'white' ? 'solid' : ''),
+              }">&nbsp;</div></template>
         </b-table-column>
 
         <b-table-column field="rating" label="Rating" sortable v-slot="props">
@@ -79,7 +84,12 @@
         <b-table-column field="routeNum" label="Route" sortable v-slot="props">
           {{props.row.routeNum}}
           <template v-if="props.row.color"><div id="square"
-            :style="{'background-color': props.row.color}">&nbsp;</div></template>
+            :style="{
+              'background-color': props.row.color,
+              'border-color': (props.row.color === 'white' ? 'black' : ''),
+              'border-width': (props.row.color === 'white' ? '1px' : ''),
+              'border-style': (props.row.color === 'white' ? 'solid' : ''),
+              }">&nbsp;</div></template>
         </b-table-column>
 
         <b-table-column field="rating" label="Rating" sortable v-slot="props">
@@ -87,8 +97,8 @@
         </b-table-column>
 
         <b-table-column field="flags" label="" sortable v-slot="props">
-          <template v-if="props.row.flag_autob"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/triangle-xxl.png?alt=media&token=37986abe-878e-4b77-af1d-c0bfb8ce6ed7' /></template>
-          <template v-if="props.row.flag_overh"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/leadclimbing.jpg?alt=media&token=26257ad8-ae6e-4b20-a611-f1f71cfb8be2' /></template>
+          <template v-if="props.row.flag_autob"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' /></template>
+          <template v-if="props.row.flag_overh"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' /></template>
           <template v-if="props.row.flag_lead"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' /></template>
           <template v-if="props.row.flag_topr"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/rope3.png?alt=media&token=633842a5-deb3-49e6-b3b8-35848865829b' /></template>
         </b-table-column>

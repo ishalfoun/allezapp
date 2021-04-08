@@ -58,10 +58,10 @@
     <div class='row'>
       <div class='button' @click="onAutob()"
         :class="(inputRoute.selectedAutob)? 'is-warning':''">
-        <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/triangle-xxl.png?alt=media&token=37986abe-878e-4b77-af1d-c0bfb8ce6ed7' /></div>
+        <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' /></div>
       <div class='button' @click="onOverh()"
         :class="(inputRoute.selectedOverh)? 'is-warning':''">
-        <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/leadclimbing.jpg?alt=media&token=26257ad8-ae6e-4b20-a611-f1f71cfb8be2' /></div>
+        <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' /></div>
       <div class='button' @click="onLead()"
         :class="(inputRoute.selectedLead)? 'is-warning':''">
         <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' /></div>
@@ -94,9 +94,14 @@
         :style="(inputRoute.selectedPink)?
         'border-color:black;':'border-color:white;'"
          @click="onColor('deeppink')"> &nbsp; </div>
-      <div class='button color' style="background-color: white"
-        :style="(inputRoute.selectedWhite)?
+      <div class='button color' style="background-color: indigo"
+        :style="(inputRoute.selectedPurple)?
         'border-color:black;':'border-color:white;'"
+         @click="onColor('indigo')"> &nbsp; </div>
+      <div class='button color' style="background-color: white;
+        border-color:black;border-style:solid;"
+        :style="(inputRoute.selectedWhite)?
+        'border-width:4px;':'border-width:1px;'"
          @click="onColor('white')"> &nbsp; </div>
       <div class='button color' style="background-color: black"
         :style="(inputRoute.selectedBlack)?
@@ -129,7 +134,12 @@
         <b-table-column field="routeNum" label="Route" v-slot="props">
           {{props.row.routeNum}}
           <template v-if="props.row.color"><div id="square"
-            :style="{'background-color': props.row.color}">&nbsp;</div></template>
+            :style="{
+              'background-color': props.row.color,
+              'border-color': (props.row.color === 'white' ? 'black' : ''),
+              'border-width': (props.row.color === 'white' ? '1px' : ''),
+              'border-style': (props.row.color === 'white' ? 'solid' : ''),
+              }">&nbsp;</div></template>
         </b-table-column>
 
         <b-table-column field="rating" label="Rating" v-slot="props">
@@ -209,6 +219,7 @@ export default {
       selectedPink: false,
       selectedOrange: false,
       selectedBlack: false,
+      selectedPurple: false,
     },
     nonfound: false,
     currentRoutes: [],
@@ -289,24 +300,29 @@ export default {
       };
       console.log('in Add: ', toAdd);
       await this.createRoute(toAdd).then(() => { // pass route to save
-        this.setAllSelectedFalse();
-        this.setAllSelectedFalse2();
-        this.setAllColorsFalse();
+        this.clearForm();
         this.inputRoute.plus = false;
         this.componentKeyR += 1;
       });
     },
+    clearForm() {
+      this.setAllNumbersFalse();
+      this.setAllNumbersFalse2();
+      this.setAllColorsFalse();
+      this.setAllFlagsFalse();
+    },
     setAllFlagsFalse() {
       this.route.flag_autob = false;
-      this.route.flag_topr = false;
-      this.route.flag_lead = false;
-      this.route.flag_overh = false;
+      // this.route.flag_topr = false;
+      // this.route.flag_lead = false;
+      // this.route.flag_overh = false;
       this.inputRoute.selectedAutob = false;
-      this.inputRoute.selectedTopr = false;
-      this.inputRoute.selectedLead = false;
-      this.inputRoute.selectedOverh = false;
+      // this.inputRoute.selectedTopr = false;
+      // this.inputRoute.selectedLead = false;
+      // this.inputRoute.selectedOverh = false;
     },
-    setAllSelectedFalse() {
+    setAllNumbersFalse() {
+      this.route.rating = '';
       this.inputRoute.selected6 = false;
       this.inputRoute.selected7 = false;
       this.inputRoute.selected8 = false;
@@ -316,32 +332,29 @@ export default {
       this.inputRoute.selected12 = false;
       this.inputRoute.selected13 = false;
       this.inputRoute.selected14 = false;
-      this.route.rating = '';
     },
-    setAllSelectedFalse2() {
+    setAllNumbersFalse2() {
+      this.route.rating2 = '';
       this.inputRoute.selectedn = false;
       this.inputRoute.selecteda = false;
       this.inputRoute.selectedb = false;
       this.inputRoute.selectedc = false;
       this.inputRoute.selectedd = false;
-      this.route.rating2 = '';
     },
     setAllColorsFalse() {
-      this.inputRoute.selectedAutob = false;
-      this.inputRoute.selectedOverh = false;
-      this.inputRoute.selectedLead = false;
-      this.inputRoute.selectedTopr = false;
       this.inputRoute.selectedRed = false;
       this.inputRoute.selectedGreen = false;
       this.inputRoute.selectedBlue = false;
       this.inputRoute.selectedYellow = false;
       this.inputRoute.selectedWhite = false;
       this.inputRoute.selectedPink = false;
+      this.inputRoute.selectedPurple = false;
       this.inputRoute.selectedOrange = false;
       this.inputRoute.selectedBlack = false;
+      this.route.color = '';
     },
     onClickRoute(value) {
-      this.setAllSelectedFalse();
+      this.setAllNumbersFalse();
       this.inputRoute.showLetters = true;
       if (value === '6' || value === '7' || value === '8' || value === '9') {
         this.inputRoute.plus = true;
@@ -351,19 +364,19 @@ export default {
       switch (value) {
         case '6': this.inputRoute.selected6 = true; this.route.rating = '5.6';
           this.inputRoute.showLetters = false;
-          this.setAllSelectedFalse2();
+          this.setAllNumbersFalse2();
           break;
         case '7': this.inputRoute.selected7 = true; this.route.rating = '5.7';
           this.inputRoute.showLetters = false;
-          this.setAllSelectedFalse2();
+          this.setAllNumbersFalse2();
           break;
         case '8': this.inputRoute.selected8 = true; this.route.rating = '5.8';
           this.inputRoute.showLetters = false;
-          this.setAllSelectedFalse2();
+          this.setAllNumbersFalse2();
           break;
         case '9': this.inputRoute.selected9 = true; this.route.rating = '5.9';
           this.inputRoute.showLetters = false;
-          this.setAllSelectedFalse2();
+          this.setAllNumbersFalse2();
           break;
         case '10': this.inputRoute.selected10 = true; this.route.rating = '5.10';
           break;
@@ -379,7 +392,7 @@ export default {
       }
     },
     onClickRouteLetter(value) {
-      this.setAllSelectedFalse2();
+      this.setAllNumbersFalse2();
       // if a 6-14 is selected, put plus to green
       if (this.route.rating !== '') {
         this.inputRoute.plus = true;
@@ -412,7 +425,7 @@ export default {
         case 'blue':
           this.inputRoute.selectedBlue = true; this.route.color = 'blue';
           break;
-        case 'orange':
+        case 'darkorange':
           this.inputRoute.selectedOrange = true; this.route.color = 'orange';
           break;
         case 'white':
@@ -423,6 +436,9 @@ export default {
           break;
         case 'deeppink':
           this.inputRoute.selectedPink = true; this.route.color = 'deeppink';
+          break;
+        case 'indigo':
+          this.inputRoute.selectedPurple = true; this.route.color = 'indigo';
           break;
         case 'gold':
           this.inputRoute.selectedYellow = true; this.route.color = 'gold';
@@ -436,8 +452,8 @@ export default {
         this.currentRouteNum = 81;
       }
       this.getRoutesAt(this.currentRouteNum);
-      this.setAllSelectedFalse();
-      this.setAllSelectedFalse2();
+      this.setAllNumbersFalse();
+      this.setAllNumbersFalse2();
       this.inputRoute.plus = false;
     },
     onNext() {
@@ -446,8 +462,8 @@ export default {
         this.currentRouteNum = 10;
       }
       this.getRoutesAt(this.currentRouteNum);
-      this.setAllSelectedFalse();
-      this.setAllSelectedFalse2();
+      this.setAllNumbersFalse();
+      this.setAllNumbersFalse2();
       this.inputRoute.plus = false;
     },
     async onDelete(row) {

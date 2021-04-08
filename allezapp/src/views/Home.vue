@@ -1,5 +1,132 @@
 <template>
 <div class='maincontainer' style="">
+  <b-modal v-model="modalEditRoute" :width="640" scroll="keep">
+    <div class="card">
+      <div class="card-content">
+          <!-- <div class="media">
+              <div class="media-left">
+                  <figure class="image is-48x48">
+                      <img src="/static/img/placeholder-1280x960.png" alt="Image">
+                  </figure>
+              </div>
+              <div class="media-content">
+                  <p class="title is-4">color:{{modalProps.color}}</p>
+                  <p class="subtitle is-6">@johnsmith</p>
+              </div>
+          </div> -->
+          <div class="content">
+              <div class="title is-4 flexrow">
+                <div>
+                  #{{modalProps.routeNum}}
+                </div>
+                <div>
+                  <template v-if="modalProps.color">
+                    <div id="square" :style="{
+                      'background-color': modalProps.color,
+                      'border-color': (modalProps.color === 'white' ? 'black' : ''),
+                      'border-width': (modalProps.color === 'white' ? '1px' : ''),
+                      'border-style': (modalProps.color === 'white' ? 'solid' : ''),
+                      }"
+                      style="border-radius: 5px;">&nbsp;
+                    </div>
+                  </template>
+                  {{modalProps.rating}}
+                </div>
+                <div>
+                </div>
+              </div>
+          </div>
+          <div class="content">
+            <div class="flexrow">
+              <b-field>
+                <b-switch v-model="modalSwitchTopr">Toprope</b-switch>
+              </b-field>
+              <b-field>
+                <b-switch v-model="modalSwitchLead">Lead</b-switch>
+              </b-field>
+              <div></div>
+            </div>
+            <div>
+              <b-field label="Personal Notes"
+                label-position="on-border">
+                <b-input maxlength="200" v-model="modalNote"
+                  placeholder="Enter Personal Notes here..."></b-input>
+              </b-field>
+            </div>
+            <div class="content-left">
+              <b-field label="Date"
+                label-position="on-border">
+                <b-input v-model="modalDate" placeholder="" style="width:100px"></b-input>
+              </b-field>
+            </div>
+            <div class="flexrow mt-4">
+              <b-field>
+                <b-button class="is-warning">Attempted</b-button>
+              </b-field>
+              <b-field>
+                <b-button class="is-success">Completed</b-button>
+              </b-field>
+              <div></div>
+            </div>
+            <!-- <div class="flexrow">
+              <div class="content-left">
+                <b-field label="">
+                  <b-input v-model="modalPctCmp" placeholder="100" style="width:50px"></b-input>
+                </b-field>
+                <div class="modal-label">% Cmp</div>
+              </div>
+              <div class="content-left">
+                <b-button class="is-success">Completed</b-button>
+              </div>
+            </div>
+            <div class="flexrow">
+              <div class="content-left">
+                <b-field label="">
+                  <b-input v-model="modalFalls" placeholder="0" style="width:50px"></b-input>
+                </b-field>
+                <div class="modal-label"> Falls/Takes</div>
+              </div>
+              <div class="content-left">
+                <b-button class="is-warning">Attempted</b-button>
+              </div>
+            </div> -->
+          </div>
+      </div>
+  </div>
+</b-modal>
+
+  <b-modal v-model="modalViewRoute" :width="640" scroll="keep">
+    <div class="card">
+      <div class="card-content">
+          <div class="content">
+              <div class="title is-4 flexrow">
+                <div>
+                  #{{modalProps.routeNum}}
+                </div>
+                <div>
+                  <template v-if="modalProps.color">
+                    <div id="square" :style="{
+                      'background-color': modalProps.color,
+                      'border-color': (modalProps.color === 'white' ? 'black' : ''),
+                      'border-width': (modalProps.color === 'white' ? '1px' : ''),
+                      'border-style': (modalProps.color === 'white' ? 'solid' : ''),
+                      }"
+                      style="border-radius: 5px;">&nbsp;
+                    </div>
+                  </template>
+                  {{modalProps.rating}}
+                </div>
+                <div>
+                </div>
+              </div>
+          </div>
+          <div class="content">
+            {{modalProps.rating}}
+          </div>
+      </div>
+  </div>
+</b-modal>
+
     <!-- <h1 class='title is-1 centered flex1'>Routes</h1> -->
     <!-- {{routesReal}} -->
     <!-- <b-table
@@ -60,7 +187,7 @@
         <option value="cmp">Completed</option>
       </b-select>
     </b-field> -->
-    <div class="flexrow mt-3">
+    <!-- <div class="flexrow mt-3">
       <b-dropdown aria-role="list">
         <template #trigger="{ active }">
           <b-button
@@ -76,8 +203,8 @@
         <b-dropdown-item aria-role="listitem"
          @click="onShowCmp()">Show Completed Routes</b-dropdown-item>
       </b-dropdown>
-    </div>
-    <div>
+    </div> -->
+    <div class="mt-3">
       <b-table
       id="table"
       :mobile-cards="false"
@@ -95,8 +222,8 @@
           {{props.row.profileId.substring(0,4)}} </b-table-column> -->
         <b-table-column field="routeNum" label="Location" sortable v-slot="props">
           {{props.row.routeNum}}
-          <template v-if="props.row.flag_autob"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/triangle-xxl.png?alt=media&token=37986abe-878e-4b77-af1d-c0bfb8ce6ed7' /></template>
-          <template v-if="props.row.flag_overh"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/leadclimbing.jpg?alt=media&token=26257ad8-ae6e-4b20-a611-f1f71cfb8be2' /></template>
+          <template v-if="props.row.flag_autob"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' /></template>
+          <template v-if="props.row.flag_overh"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' /></template>
           <template v-else><div class='smallicon'></div></template>
           <template v-if="props.row.flag_lead"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' /></template>
           <template v-else><div class='smallicon'></div></template>
@@ -104,13 +231,28 @@
           <template v-else><div class='smallicon'></div></template>
         </b-table-column>
         <b-table-column field="rating" label="Rating" sortable v-slot="props">
-          {{props.row.rating}}
           <template v-if="props.row.color"><div id="square"
-            :style="{'background-color': props.row.color}">&nbsp;</div></template>
+            :style="{
+              'background-color': props.row.color,
+              'border-color': (props.row.color === 'white' ? 'black' : ''),
+              'border-width': (props.row.color === 'white' ? '1px' : ''),
+              'border-style': (props.row.color === 'white' ? 'solid' : ''),
+              }"
+              style="border-radius: 5px;">&nbsp;</div></template>
+              {{props.row.rating}}
         </b-table-column>
         <b-table-column field="cmp" label="Completed" sortable v-slot="props">
-          <button @click="onCompleted(props.row)">{{props.row.cmp}}</button>
-          <img v-if="props.row.cmp === 'Y'" class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/leadclimb2.png?alt=media&token=d92b56c1-c1e8-4731-bc50-47b096143156' />
+          <div class="flexrow">
+            <div class="smallicon" @click="onCompleted(props.row)">
+              <img v-if="props.row.cmp === 'Y'" class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' />
+            </div>
+            <div>
+              <button @click="onViewRoute(props.row)"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_edit.png?alt=media&token=6eaa64b0-50e0-4c82-b8a0-ad6aa1627219' /></button>
+            </div>
+            <div>
+              <button @click="onEditRoute(props.row)"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_edit.png?alt=media&token=6eaa64b0-50e0-4c82-b8a0-ad6aa1627219' /></button>
+            </div>
+          </div>
           <!-- <img class='icon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/rope.png?alt=media&token=c8f1cf11-05ff-4367-a6d7-ead1426a48a1' />
           <img class='icon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/rope%20(2).png?alt=media&token=24fe9813-1b76-4a9d-ace0-afebfc7e7d8d' />
           <img class='icon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/rope%20(1).png?alt=media&token=b044feba-497a-45eb-9980-6b41c56eea63' />
@@ -143,9 +285,25 @@
 
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex';
+import firebase from '@/firebase';
 
 export default {
   data: () => ({
+    modalPctCmp: '100',
+    modalFalls: 0,
+    modalNote: '',
+    modalSwitchTopr: false,
+    modalSwitchLead: true,
+    modalEditRoute: false,
+    modalViewRoute: false,
+    modalDate: '',
+    modalProps: {
+      rating: '',
+      color: '',
+      route: '',
+      id: '',
+      comments: [],
+    },
     componentKey: 0,
     happenedAlready: false,
     happenedAlreadyGetRoutes: false,
@@ -193,13 +351,36 @@ export default {
   },
   methods: {
     ...mapActions('dataJS', ['initRoutes', 'initLastUpdate', 'initProfileRoutes', 'getRoutes', 'setCompletedY', 'setCompletedN']),
+    onSwitchTopr() {
+      this.modalSwitchLead = !this.modalSwitchTopr;
+    },
+    onSwitchLead() {
+      this.modalSwitchTopr = !this.modalSwitchLead;
+    },
+    onViewRoute(row) {
+      this.modalProps = row;
+      this.modalViewRoute = true;
+    },
+    onEditRoute(row) {
+      this.modalProps = row;
+      this.modalEditRoute = true;
+      // this.modalDate = firebase.firestore.FieldValue.serverTimestamp().toString();
+      // this.modalDate = firebase.firestore.Timestamp.now().toDate().getMonth()+1;
+      const now = firebase.firestore.Timestamp.now().toDate();
+      // this.modalDate = now
+      //   .toLocaleString('default', { month: 'long' }).toString()
+      //   .substring(0, 3)
+      //   .concat('.'); // Apr.
+      this.modalDate = now.getFullYear().toString().concat('/');
+      this.modalDate = this.modalDate.concat(now.getMonth() + 1).concat('/');
+      this.modalDate = this.modalDate.concat(now.getDate());
+    },
     onLegend() {
-      this.loadingComponent = this.$buefy.loading.open();
-      // this.$buefy.dialog.alert({
-      //   title: 'Legend',
-      //   message: 'I have a title, a custom button and <b>HTML</b>!',
-      //   confirmText: 'Cool',
-      // });
+      this.$buefy.dialog.alert({
+        title: 'Legend',
+        message: 'I have a title, a custom button and <b>HTML</b>!',
+        confirmText: 'Cool',
+      });
     },
     // onGetRoutesManually() {
     //   this.getRoutes(this.profile[0]);
@@ -266,6 +447,12 @@ export default {
     },
   },
   watch: {
+    modalSwitchTopr() {
+      this.onSwitchTopr();
+    },
+    modalSwitchLead() {
+      this.onSwitchLead();
+    },
     loading(arg) {
       console.log('loading watched!', arg);
       if (arg) {
@@ -314,6 +501,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.modal-label {
+  align-self: center;
+  margin-bottom: 0.75rem;
+}
+.content-left {
+  display: flex;
+}
+#square {
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+  position: relative;
+  top: 10%;
+  border-radius: 5px;
+}
 .smallicon {
   width: 15px;
   height: 15px;
@@ -325,6 +527,9 @@ export default {
 /deep/.b-table .table-wrapper.has-sticky-header {
   height: 490px !important;
 }
+// /deep/.b-table td {
+//   text-align: right;
+// }
 #table {
   border-style: solid;
   border-color: red;
@@ -336,7 +541,8 @@ export default {
 }
 /deep/ .table td, .table th{
   padding: 0px 0px 0px 0px !important;
-  font-weight: 800;
+  font-weight: 600;
+  font-size: 1.2em;
 }
 #filterbtn {
   padding-top: 0px;

@@ -2,8 +2,32 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /{document=**} {
-      allow read, write: if
-          request.time < timestamp.date(2021, 4, 15);
+      allow read: if true; //everyone can read
+    }
+    match /users/{user_id} {
+    	allow write: if request.auth.uid == user_id;
+    }
+    match /profiles/{user_id} {
+    // works since profiles have the same id as users
+    	allow write: if request.auth.uid == user_id;  // allow write if it's your profile
+    }
+    match /profileroutes/{profileroutes_id} {
+    // works since the profileroutes have a profileId
+    	allow write: if request.auth.uid == request.resource.data.profileId; // allow write if yours
+      allow delete: if request.auth.uid == resource.data.profileId; // allow delete if yours
+    }
+    match /routesReal/{profileroutes_id} {
+    // works since the routesReal have a profileId
+    	allow write: if request.auth.uid == "aGyG5o6IaDZtnyK7ouOKmNU1UYP2"; // allow write if my id
+      allow delete: if request.auth.uid == "aGyG5o6IaDZtnyK7ouOKmNU1UYP2"; // allow delete if my id
+    }
+    match /lastUpdate/{lastUpdate_id} {
+    	allow write: if request.auth.uid == "aGyG5o6IaDZtnyK7ouOKmNU1UYP2"; // allow write if my id
+      allow delete: if request.auth.uid == "aGyG5o6IaDZtnyK7ouOKmNU1UYP2"; // allow delete if my id
+    }
+    match /routes/{route_id} {
+    	allow write: if request.auth.uid == "aGyG5o6IaDZtnyK7ouOKmNU1UYP2"; // allow write if my id
+      allow delete: if request.auth.uid == "aGyG5o6IaDZtnyK7ouOKmNU1UYP2"; // allow delete if my id
     }
   }
 }
