@@ -1,6 +1,6 @@
 <template>
 <div class='maincontainer' style="">
-  <b-modal v-model="modalEditRoute" :width="640" scroll="keep">
+  <b-modal v-model="modalEditVisible" :width="640" scroll="keep">
     <div class="card">
       <div class="card-content">
           <!-- <div class="media">
@@ -49,29 +49,29 @@
             <div>
               <b-field label="Personal Notes"
                 label-position="on-border">
-                <b-input maxlength="200" v-model="modalNote"
+                <b-input maxlength="200" v-model="modalProps.notes"
                   placeholder="Enter Personal Notes here..."></b-input>
               </b-field>
             </div>
             <div class="content-left">
               <b-field label="Date"
                 label-position="on-border">
-                <b-input v-model="modalDate" placeholder="" style="width:100px"></b-input>
+                <b-input v-model="modalProps.date" placeholder="" style="width:100px"></b-input>
               </b-field>
             </div>
             <div class="flexrow mt-4">
               <b-field>
-                <b-button class="is-warning">Attempted</b-button>
+                <b-button class="is-warning" @click="onModalAttempted()">Attempted</b-button>
               </b-field>
               <b-field>
-                <b-button class="is-success">Completed</b-button>
+                <b-button class="is-success" @click="onModalCompleted()">Completed</b-button>
               </b-field>
               <div></div>
             </div>
             <!-- <div class="flexrow">
               <div class="content-left">
                 <b-field label="">
-                  <b-input v-model="modalPctCmp" placeholder="100" style="width:50px"></b-input>
+                  <b-input v-model="modal.pctCmp" placeholder="100" style="width:50px"></b-input>
                 </b-field>
                 <div class="modal-label">% Cmp</div>
               </div>
@@ -82,7 +82,7 @@
             <div class="flexrow">
               <div class="content-left">
                 <b-field label="">
-                  <b-input v-model="modalFalls" placeholder="0" style="width:50px"></b-input>
+                  <b-input v-model="modal.falls" placeholder="0" style="width:50px"></b-input>
                 </b-field>
                 <div class="modal-label"> Falls/Takes</div>
               </div>
@@ -95,7 +95,7 @@
   </div>
 </b-modal>
 
-  <b-modal v-model="modalViewRoute" :width="640" scroll="keep">
+  <b-modal v-model="modalViewVisible" :width="640" scroll="keep">
     <div class="card">
       <div class="card-content">
           <div class="content">
@@ -120,8 +120,10 @@
                 </div>
               </div>
           </div>
-          <div class="content">
-            {{modalProps.rating}}
+          <div class="content-left" v-for="(entry) in entries" :key="entry.id">
+            <div style="width: 10%" class="">{{entry.cmp}}</div>
+            <div style="width: 30%" class="">{{entry.date}}</div>
+            <div style="width: 60%" class="">{{entry.notes}}</div>
           </div>
       </div>
   </div>
@@ -207,6 +209,7 @@
     <div class="mt-3">
       <b-table
       id="table"
+      :key="componentKey"
       :mobile-cards="false"
       :data="profileroutes"
       ref="table2"
@@ -289,20 +292,18 @@ import firebase from '@/firebase';
 
 export default {
   data: () => ({
-    modalPctCmp: '100',
-    modalFalls: 0,
-    modalNote: '',
+    modalEditVisible: false,
+    modalViewVisible: false,
     modalSwitchTopr: false,
     modalSwitchLead: true,
-    modalEditRoute: false,
-    modalViewRoute: false,
-    modalDate: '',
     modalProps: {
       rating: '',
       color: '',
       route: '',
       id: '',
       comments: [],
+      date: '',
+      notes: '',
     },
     componentKey: 0,
     happenedAlready: false,
@@ -315,7 +316,6 @@ export default {
     routesLoaded: false,
     lastUpdateLoaded: false,
     profileroutesLoaded: false,
-
   }),
   mounted() {
     this.initRoutes().then(() => {
@@ -336,10 +336,18 @@ export default {
       });
   },
   computed: {
-    ...mapState('dataJS', ['routesReal', 'profileroutes', 'lastUpdate']),
+    ...mapState('dataJS', ['routesReal', 'profileroutes', 'lastUpdate', 'entries']),
     ...mapState('profile', ['profile']),
     ...mapState('auth', ['user']),
-    ...mapGetters('dataJS', ['getLoading']),
+    ...mapGetters('dataJS', ['getLoading', 'getComponentKey2']),
+    componentKey2: {
+      get() {
+        return this.getComponentKey2;
+      },
+      set(newValue) {
+        this.$store.dispatch('dataJS/setComponentKey2', newValue);
+      },
+    },
     loading: {
       get() {
         return this.getLoading;
@@ -350,53 +358,71 @@ export default {
     },
   },
   methods: {
-    ...mapActions('dataJS', ['initRoutes', 'initLastUpdate', 'initProfileRoutes', 'getRoutes', 'setCompletedY', 'setCompletedN']),
+    ...mapActions('dataJS', ['initRoutes', 'initLastUpdate', 'initProfileRoutes', 'getRoutes', 'setCompleted', 'modalComplete', 'modalAttempted', 'initEntries']),
+    onModalCompleted() {
+      console.log('onModalCMP', this.modalProps);
+      // 1. create a newrecord in statistics table with all props and date
+      // 2. also set the records flag to the appropriate ( heck if topr or lead)
+      this.modalComplete(this.modalProps);
+    },
+    onModalAttempted() {
+      this.modalAttempted(this.modalProps);
+    },
     onSwitchTopr() {
-      this.modalSwitchLead = !this.modalSwitchTopr;
+      this.modalProps.switchLead = !this.modalProps.switchTopr;
     },
     onSwitchLead() {
-      this.modalSwitchTopr = !this.modalSwitchLead;
+      this.modalProps.switchTopr = !this.modalProps.switchLead;
     },
     onViewRoute(row) {
       this.modalProps = row;
-      this.modalViewRoute = true;
+      // this.modalProps.entries = this.getEntries(row);
+      this.modalViewVisible = true;
+      // passing row.id to initentries because the id's are shared
+      // between profileroutes.id and stats.doc(id).entries
+      this.initEntries(row.id).then(() => {
+        console.log('finished loading entries: ', this.entries);
+      });
     },
     onEditRoute(row) {
       this.modalProps = row;
-      this.modalEditRoute = true;
-      // this.modalDate = firebase.firestore.FieldValue.serverTimestamp().toString();
-      // this.modalDate = firebase.firestore.Timestamp.now().toDate().getMonth()+1;
+      this.modalProps.notes = '';
+      this.modalEditVisible = true;
+      // this.modalProps.date = firebase.firestore.FieldValue.serverTimestamp().toString();
+      // this.modalProps.date = firebase.firestore.Timestamp.now().toDate().getMonth()+1;
       const now = firebase.firestore.Timestamp.now().toDate();
-      // this.modalDate = now
+      // this.modalProps.date = now
       //   .toLocaleString('default', { month: 'long' }).toString()
       //   .substring(0, 3)
       //   .concat('.'); // Apr.
-      this.modalDate = now.getFullYear().toString().concat('/');
-      this.modalDate = this.modalDate.concat(now.getMonth() + 1).concat('/');
-      this.modalDate = this.modalDate.concat(now.getDate());
+      this.modalProps.date = now.getFullYear().toString().concat('/');
+      this.modalProps.date = this.modalProps.date.concat(now.getMonth() + 1).concat('/');
+      this.modalProps.date = this.modalProps.date.concat(now.getDate());
     },
     onLegend() {
-      this.$buefy.dialog.alert({
-        title: 'Legend',
-        message: 'I have a title, a custom button and <b>HTML</b>!',
-        confirmText: 'Cool',
-      });
+      this.componentKey += 1;
+      console.log('component ket = ', this.componentKey);
+      // this.$buefy.dialog.alert({
+      //   title: 'Legend',
+      //   message: 'I have a title, a custom button and <b>HTML</b>!',
+      //   confirmText: 'Cool',
+      // });
     },
     // onGetRoutesManually() {
     //   this.getRoutes(this.profile[0]);
     // },
-    onShowAll() {
-      this.displayRoutes = this.profileroutes;
-      console.log('in onShowAll, this.displayRoutes=', this.displayRoutes.length);
-    },
-    onShowMiss() {
-      this.displayRoutes = this.profileroutes.filter((element) => (element.cmp === 'N'));
-      console.log('in onShowMiss, this.displayRoutes=', this.displayRoutes.length);
-    },
-    onShowCmp() {
-      this.displayRoutes = this.profileroutes.filter((element) => (element.cmp === 'Y'));
-      console.log('in onShowCmp, this.displayRoutes=', this.displayRoutes);
-    },
+    // onShowAll() {
+    //   this.displayRoutes = this.profileroutes;
+    //   console.log('in onShowAll, this.displayRoutes=', this.displayRoutes.length);
+    // },
+    // onShowMiss() {
+    //   this.displayRoutes = this.profileroutes.filter((element) => (element.cmp === 'N'));
+    //   console.log('in onShowMiss, this.displayRoutes=', this.displayRoutes.length);
+    // },
+    // onShowCmp() {
+    //   this.displayRoutes = this.profileroutes.filter((element) => (element.cmp === 'Y'));
+    //   console.log('in onShowCmp, this.displayRoutes=', this.displayRoutes);
+    // },
     wait(timeout) { // await wait(500);
       return new Promise((resolve) => {
         setTimeout(resolve, timeout);
@@ -406,11 +432,10 @@ export default {
       this.row = row;
       if (this.row.cmp === 'Y') {
         this.row.cmp = 'N';
-        this.setCompletedY(this.row);
       } else {
         this.row.cmp = 'Y';
-        this.setCompletedN(row);
       }
+      this.setCompleted(this.row);
     },
     onFilter() {
       console.log('2.         routesReal.length=', (this.routesReal.length));
@@ -459,8 +484,15 @@ export default {
         this.loadingComponent = this.$buefy.loading.open();
       } else {
         this.loadingComponent.close();
-        this.componentKey += 1;
       }
+    },
+    ///
+    // if componenkey2 is changed in backend, also update here.
+    ///
+    componentKey2(arg) {
+      console.log('componentKey2 watched!', arg);
+      this.componentKey += 1;
+      this.modalEditVisible = false;
     },
     async profile() {
       console.log('1. in initProfileRoutes happened=', this.happenedAlready);
