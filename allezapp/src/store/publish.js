@@ -1,5 +1,5 @@
 import { firestoreAction } from 'vuexfire';
-// import firebase from '@/firebase';
+import firebase from '@/firebase';
 import db from '@/db';
 import input from './input';
 
@@ -142,7 +142,7 @@ const actions = {
       await db.collection('routesReal').doc(element.id).delete()
         .then(() => {
           console.log('      deleting in commit: routesReal deleted/or never existed!');
-          data.additions.splice(index, 1);
+          data.removals.splice(index, 1);
           dbwaiting -= 1;
           if (dbwaiting < 1) { // if last db hit, update last updated
             input.actions.updateLastUpdated();

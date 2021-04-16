@@ -85,6 +85,7 @@ const actions = {
     if (newStatsRecord.cmp !== 'Y') { // change flag only if it is not cmp
       newStatsRecord.cmp = 'A';
     }
+    newStatsRecord.dateAdded = firebase.firestore.FieldValue.serverTimestamp();
     console.log('newStatsRecord: ', newStatsRecord);
     // create stats rec which is linked to a profileroute
     // this stats record has a sub collection of records (each line in stats)
@@ -96,6 +97,14 @@ const actions = {
       })
       .catch((error) => {
         console.error('      Error creating newStatsRecord: ', error);
+      });
+    await db.collection('stats').doc(newStatsRecord.id)
+      .set({ profileId: newStatsRecord.profileId })
+      .then(() => {
+        console.log('      StatsRecord-profileid saved to DB!');
+      })
+      .catch((error) => {
+        console.error('      Error StatsRecord-profileid: ', error);
       });
     data.componentKey2 += 1; // this refreshes table and closes the modal
   },
@@ -185,6 +194,7 @@ const actions = {
           flag_topr: (route.flag_topr) ? route.flag_topr : false,
           flag_autob: (route.flag_autob) ? route.flag_autob : false,
           color: (route.color) ? route.color : false,
+          created_at: (route.created_at) ? route.created_at : false,
         };
 
         await db.collection('profileroutes').doc().set(profileRouteEntry)

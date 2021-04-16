@@ -32,31 +32,44 @@
                   </template>
                   {{modalProps.rating}}
                 </div>
-                <div>
-                </div>
               </div>
           </div>
           <div class="content">
-            <div class="flexrow">
+            <div class="flexrow mb-5">
               <b-field>
-                <b-switch v-model="modalSwitchTopr">Toprope</b-switch>
+                <b-radio-button v-model="modalProps.switchTopLeadAuto"
+                  native-value="top"
+                  type="is-warning is-outlined">
+                  <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' />
+                  <span class="ml-2">Toprope</span>
+                </b-radio-button>
+
+                <b-radio-button v-model="modalProps.switchTopLeadAuto"
+                  native-value="lead"
+                  type="is-danger is-outlined">
+                  <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' />
+                  <span class="ml-2">Lead</span>
+                </b-radio-button>
+
+                <b-radio-button v-model="modalProps.switchTopLeadAuto"
+                    native-value="auto"
+                    disabled>
+                    AutoBelay
+                </b-radio-button>
               </b-field>
-              <b-field>
-                <b-switch v-model="modalSwitchLead">Lead</b-switch>
-              </b-field>
-              <div></div>
             </div>
             <div>
               <b-field label="Personal Notes"
                 label-position="on-border">
-                <b-input maxlength="200" v-model="modalProps.notes"
+                <b-input maxlength="70" v-model="modalProps.notes"
                   placeholder="Enter Personal Notes here..."></b-input>
               </b-field>
             </div>
             <div class="content-left">
               <b-field label="Date"
                 label-position="on-border">
-                <b-input v-model="modalProps.date" placeholder="" style="width:100px"></b-input>
+                <b-input maxlength="13" v-model="modalProps.date"
+                  placeholder="" style="width:130px"></b-input>
               </b-field>
             </div>
             <div class="flexrow mt-4">
@@ -67,6 +80,9 @@
                 <b-button class="is-success" @click="onModalCompleted()">Completed</b-button>
               </b-field>
               <div></div>
+            </div>
+            <div>
+              <sup class="date">Route added: {{getShortDate(modalProps.created_at)}}</sup>
             </div>
             <!-- <div class="flexrow">
               <div class="content-left">
@@ -226,11 +242,11 @@
         <b-table-column field="routeNum" label="Location" sortable v-slot="props">
           {{props.row.routeNum}}
           <template v-if="props.row.flag_autob"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' /></template>
-          <template v-if="props.row.flag_overh"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' /></template>
+          <template v-if="props.row.flag_overh"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_overh.png?alt=media&token=b6f36953-6baf-49e1-b47e-c2691fbc150b' /></template>
           <template v-else><div class='smallicon'></div></template>
           <template v-if="props.row.flag_lead"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' /></template>
           <template v-else><div class='smallicon'></div></template>
-          <template v-if="props.row.flag_topr"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/rope3.png?alt=media&token=633842a5-deb3-49e6-b3b8-35848865829b' /></template>
+          <template v-if="props.row.flag_topr"><img class='smallicon ml-1' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' /></template>
           <template v-else><div class='smallicon'></div></template>
         </b-table-column>
         <b-table-column field="rating" label="Rating" sortable v-slot="props">
@@ -261,7 +277,7 @@
           <img class='icon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/rope%20(1).png?alt=media&token=b044feba-497a-45eb-9980-6b41c56eea63' />
           <img class='icon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner.png?alt=media&token=94cf8933-f227-49bb-b5f1-7426c50f8bcf' />
           <img class='icon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/leadclimb2.png?alt=media&token=d92b56c1-c1e8-4731-bc50-47b096143156' /> -->
-          <!-- <img class='icon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/rope3.png?alt=media&token=633842a5-deb3-49e6-b3b8-35848865829b' /> -->
+          <!-- <img class='icon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' /> -->
         </b-table-column>
 
         <template #footer v-if="(profileroutes.length < 1)">
@@ -294,8 +310,6 @@ export default {
   data: () => ({
     modalEditVisible: false,
     modalViewVisible: false,
-    modalSwitchTopr: false,
-    modalSwitchLead: true,
     modalProps: {
       rating: '',
       color: '',
@@ -304,6 +318,8 @@ export default {
       comments: [],
       date: '',
       notes: '',
+      create_at: '',
+      switchTopLeadAuto: 'lead',
     },
     componentKey: 0,
     happenedAlready: false,
@@ -359,6 +375,26 @@ export default {
   },
   methods: {
     ...mapActions('dataJS', ['initRoutes', 'initLastUpdate', 'initProfileRoutes', 'getRoutes', 'setCompleted', 'modalComplete', 'modalAttempted', 'initEntries']),
+    // onClickSwitch(arg) {
+    //   console.log('in onClick', arg);
+    //   if (arg === 'topr') {
+    //     this.modalProps.switchLead = !this.modalProps.switchLead;
+    //   } else if (arg === 'lead') {
+    //     this.modalProps.switchTopr = !this.modalProps.switchTopr;
+    //   }
+    //   // this.modalProps.switchTopr = this.modalProps.switchTopr
+    // },
+    getShortDate(arg) {
+      if (arg) {
+        const toReturn = arg.toDate();
+        return toReturn
+          .getFullYear().toString().concat('/')
+          .concat(toReturn.getMonth() + 1)
+          .concat('/')
+          .concat(toReturn.getDate());
+      }
+      return arg;
+    },
     onModalCompleted() {
       console.log('onModalCMP', this.modalProps);
       // 1. create a newrecord in statistics table with all props and date
@@ -367,12 +403,6 @@ export default {
     },
     onModalAttempted() {
       this.modalAttempted(this.modalProps);
-    },
-    onSwitchTopr() {
-      this.modalProps.switchLead = !this.modalProps.switchTopr;
-    },
-    onSwitchLead() {
-      this.modalProps.switchTopr = !this.modalProps.switchLead;
     },
     onViewRoute(row) {
       this.modalProps = row;
@@ -385,19 +415,16 @@ export default {
       });
     },
     onEditRoute(row) {
+      console.log('in edit row: ', row);
       this.modalProps = row;
       this.modalProps.notes = '';
       this.modalEditVisible = true;
       // this.modalProps.date = firebase.firestore.FieldValue.serverTimestamp().toString();
       // this.modalProps.date = firebase.firestore.Timestamp.now().toDate().getMonth()+1;
-      const now = firebase.firestore.Timestamp.now().toDate();
-      // this.modalProps.date = now
-      //   .toLocaleString('default', { month: 'long' }).toString()
-      //   .substring(0, 3)
-      //   .concat('.'); // Apr.
-      this.modalProps.date = now.getFullYear().toString().concat('/');
-      this.modalProps.date = this.modalProps.date.concat(now.getMonth() + 1).concat('/');
-      this.modalProps.date = this.modalProps.date.concat(now.getDate());
+      // const now = firebase.firestore.Timestamp.now().toDate();
+      // this.modalProps.date = now.getFullYear().toString().concat('/');
+      // this.modalProps.date = this.modalProps.date.concat(now.getMonth() + 1).concat('/');
+      this.modalProps.date = this.getShortDate(firebase.firestore.Timestamp.now());
     },
     onLegend() {
       this.componentKey += 1;
@@ -472,12 +499,18 @@ export default {
     },
   },
   watch: {
-    modalSwitchTopr() {
-      this.onSwitchTopr();
-    },
-    modalSwitchLead() {
-      this.onSwitchLead();
-    },
+    // modalSwitchTopr() {
+    //   console.log('modalSwitchTopr watched!', this.modalProps.switchTopr);
+    //   // this.modalSwitchLead = !this.modalSwitchLead;
+    //   // this.modalProps.switchTopr = !this.modalProps.switchTopr;
+    //   // this.modalProps.switchLead = !this.modalProps.switchTopr;
+    // },
+    // modalSwitchLead() {
+    //   console.log('modalSwitchLead watched!', this.modalProps.switchLead);
+    //   // this.modalSwitchTopr = !this.modalSwitchTopr;
+    //   // this.modalProps.switchLead = !this.modalProps.switchLead;
+    //   // this.modalProps.switchTopr = !this.modalProps.switchLead;
+    // },
     loading(arg) {
       console.log('loading watched!', arg);
       if (arg) {
@@ -533,6 +566,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.date{
+  align-self: center;
+  width: 100%;
+}
 .modal-label {
   align-self: center;
   margin-bottom: 0.75rem;
