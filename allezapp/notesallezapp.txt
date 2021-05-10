@@ -1,0 +1,333 @@
+
+[new proj instructions]
+-create new folder, git init, create git, link and push
+-npm install -g @vue/cli
+-vue create allezapp
+	-vue 2
+	-babel, router, vuex, css, linter
+	-history:no
+	-sass/scss (node)
+	-eslint+airbnb
+	-lint on save
+	-in package.json
+-cd allezapp
+-npm run serve
+-had to change the firebase.json fle:
+hosting: public
+to:
+hosting: dist
+
+
+setup firebase db + auth + hosting
+plan:
+[x] -set up firebase db
+[x]-create each file for {user/profile/Navbar}
+[x]	-login + st
+	
+-----------------
+
+[todo]
+[x] -so new routes adding works
+[x] -old routes deleting works
+[x] -make the profileroutes init with the profile
+[x] -pRs also include rating and route
+[x] 	-test by creating new routes and sync
+
+[x]  profile needs last-updated field
+[x]		-this is set when getRoutes succeeds
+[x]  input: table called 'last-update'
+[x] 	- when I add a route, last-update
+		  gets filled in with 19.3.2020 6:32
+[x]  check:
+		-when logging in, compared last-u
+		-if same do nothing
+		-if diff: sync.
+[x] Input Mode:
+[x]	(pictured)
+	-back, clear, enter/New, enter/Next
+
+
+publish:
+-make a new page, here all changes are compiled
+[x] Publish.vue
+	-all additions i made
+	-all deletions i made
+	-(check each routeNum and Rating to see diffs)
+	-commit button
+		-this will save changes to routes_real
+		-update the old file to get things from routes_real
+[x] what if i duplicated a route by accident.
+[x] what if they replace a route by the same rating..... and it doesnt show on either addition or removal
+
+
+-maybe we dont need the whole big if statements
+	- just get all literal additions
+	- and get all literal deletions
+	- and show.
+	-if i overwrite, its my bad and will be a new route.
+		-thats why i must check what i delete and add.
+		-if add and rem show same
+			-then i decide:
+				if replaced: leave it as is
+				if my mistake: undo both.
+				
+    // old:
+    // 1 - loop through routes
+    // 2 - if it doesnt exist in routesReal, = an addition i made
+    // 3 - if it exists, check if it is at it's own first found index
+    //   - if not, it is a duplicate.
+    //    -check how often it exists.
+    //      -if twice
+    //        -check if routesReal also has it twice....
+    //          - if more than twice = a deletion I made +(flag it)
+    //          - if less = an addition I made +(flag it for del)
+    //          - if yes = do nothing.
+    // 4 - loop through routesReal
+    // 5 - if it doesnt exist in routes, = a removal i made
+    // 6 - if it exists, check if it is at it's own first found index (dupe)
+    // 7 -  if not, its a dupe that is now single = a removal i made
+
+[plan]
+[x] additions:
+	-check by id (routes:routesReal)
+[x] del 
+	-check by id (routes:routesReal)
+[x] disply with indiv del btn
+[x] have a final commit button:
+	-commits myroutes:
+		-adds all additi./del all del's
+		-to routesReal
+	-make sure both are in sync
+		-then clear add/del's
+		
+if hey dont have it for 2019
+or i have to make a anonymous.
+
+
+[problems now:]
+publish:
+[x]	-when fresh loading, its perfect.
+[x]	-commit refreshing the table no works
+[x]	-input: delete rec's, doesnt update
+[x]	-input: add rec's, doesnt update
+[x]	-when switching page, not update
+	
+	
+routes = what i edit in input
+routesreal = edits after commit
+profileroutes: takes from routesreal
+
+todo:
+profileroutes:
+[x] change original db to routesReal
+[x] hide profiles from normal user.	
+
+things i need to bring home:
+laundry
+bag
+laptop
+weed
+
+TODO::
+[x] fix navbar in mobile view (name overlaps)
+[x] fix when rerouting, navbar menu should close.
+[x] can add empty routes!!
+[x] only accessible by me
+	-put a rule: if profileid = ...
+[x] when clicking 8 or 9, disable a-d
+[x] 	  allow empty 5.10s?(otherwise {a-d} req'd)
+[x] make + button green when you selected two things.
+[x] dont accepta PLUS if no letter is selct'd
+[NB] if last update is returning nothing, show on screen 'no new update'
+[NB] make the 'get from server' force the update even if last upd is no good, in sidemenu
+[X] make sure deleting in input does not update last updated
+[x] its not checking for updates when clicking 'allezApp' at the top (rerouting problem)
+
+DESIGN:
+[x] color everything in th esame
+[x] number is location !!!
+[NB] sort button says Rating/Number
+[x] filter: dropdownappears with 3 choices 
+btncentered
+[x] in menu:legend : pops up a closable legend
+[x] make the navbar and top part not scroll
+	
+	
+	
+
+
+
+[x] check if when hosting via firebase, if the rules get updated to allow all
+	-do at end, when uploading
+[x] - add icons (autobelay, etc)
+	- check which roues are auto (10-14)
+	- these routes will 
+	
+
+method 1:
+[x]  -input: 
+		buttons for all those
+[x]	-routes has 
+		'flag_autob: true'
+		'flag_overh: true'
+		'flag_lead: true'
+		'flag_topr: true'
+	-this goes to all records.
+[x]		-commit -> routesReal
+[x]		-watch.profile() -> profileRoutes
+	
+
+[NB] whle profile is loading shit
+	-set to loading
+	-loading done when profle.lastUpdate write success
+[x] bug: input; if only licking a letter, + lights up, and a ?c can be added
+[x] bug input: if clicking left or right arrows, plus stays light up
+[x] input: when clicking anything, it turns yellow, and plus btn is green.
+    add colors of routes!!!!
+[x]  -input: 
+		buttons for all those
+[x]	-routes has 
+		color: [red, blue, green, white, black, orange, pink]
+	-this goes to all records.
+[x]		-commit -> routesReal
+[x]		-watch.profile() -> profileRoutes
+[x] see it in input, publish, home
+[x] home: make b-table sortable for column completed
+
+
+todo:
+
+Statistics:
+-a new page:
+-h1: routes i did today:
+-h1 previous routes: (sort by date)
+
+(When you check off a route, it gets saved to statistics table
+Fields:
+(Route/rating/flags) (dayCompleted) (profile id)
+
+at end you view:
+	-routes climbied today:
+	-# climbed this weeek...
+
+[x] when opening edit modal, reset notes
+[x] in edit modal:
+[x]	btn func: attempted+ completed
+[x]	they create an entry as a string in an array?
+[x] view modal:
+	8/21: (L) {notes)
+[x] New way to Complete:
+	- clicking the entire row opens a popup
+	- here you can ceheck 'did it on lead/tr'
+	- comment secion
+	
+	
+	
+todo
+
+[x] editmode:
+	-have date input limit of 9 chars.
+[x] each route needs a date added orig
+	-view it in edit and modal
+	-may need to set it at time of setting the route
+		
+[x] edit btn: change onclick to whole row
+[x] add icon
+[] titles
+[] in edit modal: disable tr if no tr, lead if no lead.
+[] on autobelay routes: in edit modal: autoB option should be gone.
+[] on non autob routes: in edit modal: topr and lead should be gone, unless if allowed.
+
+[] center the route set date in editmodal
+[] 		completed btn: centerd
+		icons in middle
+[] fix toprop swich 
+		
+[] fix db redundancy:
+-have the stats entry be 1-1 with profile routes:
+	-stats have profileroutesid
+	-profile id
+	-route id
+	-flags,color,etc
+[] stats.entries[]:
+	-has entries of:
+		-cmp date notes dateAd (what is already only disp anyways)
+[] make sure attempt works as well.
+[] route added in editmodal: show actual date (not working)
+
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+[] in viewmodal:
+	-have a table instead of v-for
+	sortable by date, then by dateAd
+	-table is filled by entries obv.
+[] have a delete btn.
+[] in viewmodal: make icons
+	-need a yellow icon for attempt
+	-this for cmp=A. cmp=Y is carab.
+	
+
+
+
+
+[] edit & view modal:
+	additional button 'public coments'
+	-you can write a comment to a new table: routeComments
+	-it shows this table, where the route id matches to show all comments
+		-display pic, name, msg
+
+[] if youc omplee a autob, the icon is a autob
+	-edit modal also changes for autob
+	
+[] FILTER BUTTON
+[] another button beside filter: called settings:
+[]   - choose between easy-medium-hard
+[]   - chose to disclude autobelays ... etc
+[] show at bottom 35/75 cmp
+[] statistics page:
+	-see % or routes completed
+	-see which routes you did per day
+
+
+
+
+
+
+
+
+
+
+
+[] make the hard reset posible in side menu
+this  manually refresh all profileroutes:
+	-this function resets your profile date so you refresh for sure.
+[] input mode: implem a delete lock (if on, the delete all btn also moves to right)
+
+input colors + icons
+
+
+
+
+[] at flags in edit modal
+[] add back the div at top of home.vue for the filter btn func
+[] Sort by completed
+[] Cmp option: attempted (yellow)
+[] Input mode: top rope, lead, etx
+[] Click next: keep selected fields
+[] Put a question mark possiblity
+[] Add autobelays/ toprope only to entry
+[] Have a shifter in input:
+[] Autobelays - lead/top - top  - lead
+[] bug: dont resort when cmp a route?
+
+
+
+
