@@ -1,6 +1,6 @@
 <template>
 <div class='maincontainer' style="">
-  <b-modal v-model="modalEditVisible" :width="640" scroll="keep">
+  <b-modal v-model="modalEditVisible" width="90%" scroll="keep">
     <div class="card">
       <div class="card-content">
           <!-- <div class="media">
@@ -14,27 +14,51 @@
                   <p class="subtitle is-6">@johnsmith</p>
               </div>
           </div> -->
+          <!-- <div class="modalHeader">
+            header
+            </div> -->
           <div class="content">
-              <div class="title is-4 flexrow">
-                <div>
-                  #{{modalProps.routeNum}}
-                </div>
-                <div>
-                  <template v-if="modalProps.color">
-                    <div id="square" :style="{
-                      'background-color': modalProps.color,
-                      'border-color': (modalProps.color === 'white' ? 'black' : ''),
-                      'border-width': (modalProps.color === 'white' ? '1px' : ''),
-                      'border-style': (modalProps.color === 'white' ? 'solid' : ''),
-                      }"
-                      style="border-radius: 5px;">&nbsp;
-                    </div>
-                  </template>
-                  {{modalProps.rating}}
-                </div>
+            <div class="flexcenter">
+              <div>
+                <sup>Add Attempt</sup>
               </div>
+            </div>
+            <div class="title is-4 flexrow">
+              <div>
+                #{{modalProps.routeNum}}
+              </div>
+              <div>
+                <template v-if="modalProps.flag_autob"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' /></template>
+                <template v-if="modalProps.flag_overh"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_overh.png?alt=media&token=b6f36953-6baf-49e1-b47e-c2691fbc150b' /></template>
+                <template v-else><div class='smallicon'></div></template>
+                <template v-if="modalProps.flag_lead"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' /></template>
+                <template v-else><div class='smallicon'></div></template>
+                <template v-if="modalProps.flag_topr"><img class='smallicon ml-1' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' /></template>
+                <template v-else><div class='smallicon'></div></template>
+              </div>
+              <div>
+                <template v-if="modalProps.color">
+                  <div id="square" :style="{
+                    'background-color': modalProps.color,
+                    'border-color': (modalProps.color === 'white' ? 'black' : ''),
+                    'border-width': (modalProps.color === 'white' ? '1px' : ''),
+                    'border-style': (modalProps.color === 'white' ? 'solid' : ''),
+                    }"
+                    style="border-radius: 5px;">&nbsp;
+                  </div>
+                </template>
+                {{modalProps.rating}}
+              </div>
+            </div>
           </div>
           <div class="content">
+            <div class="field">
+              <input class="is-checkradio has-background-color"
+               id="exampleCheckboxBackgroundColorDefault" type="checkbox"
+               name="exampleCheckboxBackgroundColorDefault" checked="checked">
+              <label for="exampleCheckboxBackgroundColorDefault">Checkbox</label>
+            </div>
+            {{modalProps.switchTopLeadAuto}}
             <div class="flexrow mb-5">
               <b-field>
                 <b-radio-button v-model="modalProps.switchTopLeadAuto"
@@ -54,7 +78,8 @@
                 <b-radio-button v-model="modalProps.switchTopLeadAuto"
                     native-value="auto"
                     disabled>
-                    AutoBelay
+                    <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' />
+                    <span class="ml-2">AutoB</span>
                 </b-radio-button>
               </b-field>
             </div>
@@ -72,17 +97,18 @@
                   placeholder="" style="width:130px"></b-input>
               </b-field>
             </div>
-            <div class="flexrow mt-4">
+            <div class="flexrow mt-2">
               <b-field>
                 <b-button class="is-warning" @click="onModalAttempted()">Attempted</b-button>
               </b-field>
               <b-field>
                 <b-button class="is-success" @click="onModalCompleted()">Completed</b-button>
               </b-field>
-              <div></div>
             </div>
-            <div>
-              <sup class="date">Route added: {{getShortDate(modalProps.created_at)}}</sup>
+            <div class="flexcenter">
+              <div>
+                <sub>Route added: {{getShortDate(modalProps.created_at)}}</sub>
+              </div>
             </div>
             <!-- <div class="flexrow">
               <div class="content-left">
@@ -111,37 +137,49 @@
   </div>
 </b-modal>
 
-  <b-modal v-model="modalViewVisible" :width="640" scroll="keep">
+  <b-modal v-model="modalViewVisible" width="90%" scroll="keep">
     <div class="card">
       <div class="card-content">
-          <div class="content">
-              <div class="title is-4 flexrow">
-                <div>
-                  #{{modalProps.routeNum}}
-                </div>
-                <div>
-                  <template v-if="modalProps.color">
-                    <div id="square" :style="{
-                      'background-color': modalProps.color,
-                      'border-color': (modalProps.color === 'white' ? 'black' : ''),
-                      'border-width': (modalProps.color === 'white' ? '1px' : ''),
-                      'border-style': (modalProps.color === 'white' ? 'solid' : ''),
-                      }"
-                      style="border-radius: 5px;">&nbsp;
-                    </div>
-                  </template>
-                  {{modalProps.rating}}
-                </div>
-                <div>
-                </div>
+        <div class="content">
+            <div class="flexcenter">
+              <div>
+                <sup>View Attempt</sup>
               </div>
+            </div>
+            <div class="title is-4 flexrow">
+              <div>
+                #{{modalProps.routeNum}}
+              </div>
+              <div>
+                <template v-if="modalProps.flag_autob"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' /></template>
+                <template v-if="modalProps.flag_overh"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_overh.png?alt=media&token=b6f36953-6baf-49e1-b47e-c2691fbc150b' /></template>
+                <template v-else><div class='smallicon'></div></template>
+                <template v-if="modalProps.flag_lead"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' /></template>
+                <template v-else><div class='smallicon'></div></template>
+                <template v-if="modalProps.flag_topr"><img class='smallicon ml-1' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' /></template>
+                <template v-else><div class='smallicon'></div></template>
+              </div>
+              <div>
+                <template v-if="modalProps.color">
+                  <div id="square" :style="{
+                    'background-color': modalProps.color,
+                    'border-color': (modalProps.color === 'white' ? 'black' : ''),
+                    'border-width': (modalProps.color === 'white' ? '1px' : ''),
+                    'border-style': (modalProps.color === 'white' ? 'solid' : ''),
+                    }"
+                    style="border-radius: 5px;">&nbsp;
+                  </div>
+                </template>
+                {{modalProps.rating}}
+              </div>
+            </div>
           </div>
-          <div class="content-left" v-for="(entry) in entries" :key="entry.id">
-            <div style="width: 10%" class="">{{entry.cmp}}</div>
-            <div style="width: 30%" class="">{{entry.date}}</div>
-            <div style="width: 60%" class="">{{entry.notes}}</div>
-          </div>
-      </div>
+        <div class="content-left" v-for="(entry) in entries" :key="entry.id">
+          <div style="width: 10%" class="">{{entry.cmp}}</div>
+          <div style="width: 30%" class="">{{entry.date}}</div>
+          <div style="width: 60%" class="">{{entry.notes}}</div>
+        </div>
+    </div>
   </div>
 </b-modal>
 
@@ -240,36 +278,43 @@
         <!-- <b-table-column field="profileId" label="ProfileId" sortable v-slot="props">
           {{props.row.profileId.substring(0,4)}} </b-table-column> -->
         <b-table-column field="routeNum" label="Location" sortable v-slot="props">
-          {{props.row.routeNum}}
-          <template v-if="props.row.flag_autob"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' /></template>
-          <template v-if="props.row.flag_overh"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_overh.png?alt=media&token=b6f36953-6baf-49e1-b47e-c2691fbc150b' /></template>
-          <template v-else><div class='smallicon'></div></template>
-          <template v-if="props.row.flag_lead"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' /></template>
-          <template v-else><div class='smallicon'></div></template>
-          <template v-if="props.row.flag_topr"><img class='smallicon ml-1' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' /></template>
-          <template v-else><div class='smallicon'></div></template>
+          <div @click="onViewRoute(props.row)">
+            <span class="routeNum">{{props.row.routeNum}}</span>
+            <template v-if="props.row.flag_autob"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' /></template>
+            <template v-if="props.row.flag_overh"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_overh.png?alt=media&token=b6f36953-6baf-49e1-b47e-c2691fbc150b' /></template>
+            <template v-else><div class='smallicon'></div></template>
+            <template v-if="props.row.flag_lead"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' /></template>
+            <template v-else><div class='smallicon'></div></template>
+            <template v-if="props.row.flag_topr"><img class='smallicon ml-1' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' /></template>
+            <template v-else><div class='smallicon'></div></template>
+          </div>
         </b-table-column>
         <b-table-column field="rating" label="Rating" sortable v-slot="props">
-          <template v-if="props.row.color"><div id="square"
-            :style="{
-              'background-color': props.row.color,
-              'border-color': (props.row.color === 'white' ? 'black' : ''),
-              'border-width': (props.row.color === 'white' ? '1px' : ''),
-              'border-style': (props.row.color === 'white' ? 'solid' : ''),
-              }"
-              style="border-radius: 5px;">&nbsp;</div></template>
-              {{props.row.rating}}
+          <div @click="onViewRoute(props.row)">
+            <template v-if="props.row.color">
+              <div id="square"
+                :style="{
+                  'background-color': props.row.color,
+                  'border-color': (props.row.color === 'white' ? 'black' : ''),
+                  'border-width': (props.row.color === 'white' ? '1px' : ''),
+                  'border-style': (props.row.color === 'white' ? 'solid' : ''),
+                  }"
+                  style="border-radius: 5px;">&nbsp;
+              </div>
+            </template>
+            {{props.row.rating}}
+          </div>
         </b-table-column>
         <b-table-column field="cmp" label="Completed" sortable v-slot="props">
-          <div class="flexrow">
+          <div class="flexrow" @click="onViewRoute(props.row)">
             <div class="smallicon" @click="onCompleted(props.row)">
               <img v-if="props.row.cmp === 'Y'" class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' />
             </div>
+            <!-- <div>
+              <button><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_edit.png?alt=media&token=6eaa64b0-50e0-4c82-b8a0-ad6aa1627219' /></button>
+            </div> -->
             <div>
-              <button @click="onViewRoute(props.row)"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_edit.png?alt=media&token=6eaa64b0-50e0-4c82-b8a0-ad6aa1627219' /></button>
-            </div>
-            <div>
-              <button @click="onEditRoute(props.row)"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_edit.png?alt=media&token=6eaa64b0-50e0-4c82-b8a0-ad6aa1627219' /></button>
+              <button v-on:click.stop="onEditRoute(props.row)"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_edit.png?alt=media&token=6eaa64b0-50e0-4c82-b8a0-ad6aa1627219' /></button>
             </div>
           </div>
           <!-- <img class='icon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/rope.png?alt=media&token=c8f1cf11-05ff-4367-a6d7-ead1426a48a1' />
@@ -319,7 +364,7 @@ export default {
       date: '',
       notes: '',
       create_at: '',
-      switchTopLeadAuto: 'lead',
+      switchTopLeadAuto: '',
     },
     componentKey: 0,
     happenedAlready: false,
@@ -398,14 +443,14 @@ export default {
     onModalCompleted() {
       console.log('onModalCMP', this.modalProps);
       // 1. create a newrecord in statistics table with all props and date
-      // 2. also set the records flag to the appropriate ( heck if topr or lead)
+      // 2. also set the records flag to the appropriate ( check if topr or lead)
       this.modalComplete(this.modalProps);
     },
     onModalAttempted() {
       this.modalAttempted(this.modalProps);
     },
     onViewRoute(row) {
-      this.modalProps = row;
+      this.modalProps = row; // wherever the user clicked, set the modal to that data
       // this.modalProps.entries = this.getEntries(row);
       this.modalViewVisible = true;
       // passing row.id to initentries because the id's are shared
@@ -415,9 +460,11 @@ export default {
       });
     },
     onEditRoute(row) {
+      // event.stopPropagation();
       console.log('in edit row: ', row);
       this.modalProps = row;
       this.modalProps.notes = '';
+      // this.modalProps.switchTopLeadAuto = 'lead'; // TODO#1: dont have this hardcoded
       this.modalEditVisible = true;
       // this.modalProps.date = firebase.firestore.FieldValue.serverTimestamp().toString();
       // this.modalProps.date = firebase.firestore.Timestamp.now().toDate().getMonth()+1;
@@ -566,9 +613,27 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.date{
-  align-self: center;
-  width: 100%;
+.modalHeader {
+  position: absolute;
+  left: 1em;
+  font-size: calc(1rem * 3 / 4);
+  background-color: transparent;
+  z-index: 5;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 2em);
+  overflow: hidden;
+  // top: -0.775em;
+  //   padding-left: 0.125em;
+  //   padding-right: 0.125em;
+}
+.card-content {
+  padding-bottom: 0.5em;
+  padding-top: 6px;
+}
+.flexcenter {
+  display: flex;
+  justify-content: center;
 }
 .modal-label {
   align-self: center;
@@ -584,6 +649,10 @@ export default {
   position: relative;
   top: 10%;
   border-radius: 5px;
+}
+.routeNum {
+  width: 23px;
+  display: inline-block;
 }
 .smallicon {
   width: 15px;

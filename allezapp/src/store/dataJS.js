@@ -49,6 +49,8 @@ const actions = {
     const newStatsRecord = arg;
     newStatsRecord.cmp = 'Y';
     newStatsRecord.dateAdded = firebase.firestore.FieldValue.serverTimestamp();
+    // if (newStatsRecord) {
+    // }
     console.log('newStatsRecord: ', newStatsRecord);
     // create stats rec which is linked to a profileroute
     // this stats record has a sub collection of records (each line in stats)
