@@ -52,13 +52,39 @@
             </div>
           </div>
           <div class="content">
-            <div class="field">
+            <!-- <div class="field">
               <input class="is-checkradio has-background-color"
                id="exampleCheckboxBackgroundColorDefault" type="checkbox"
                name="exampleCheckboxBackgroundColorDefault" checked="checked">
               <label for="exampleCheckboxBackgroundColorDefault">Checkbox</label>
             </div>
-            {{modalProps.switchTopLeadAuto}}
+            {{modalProps.switchTopLeadAuto}} -->
+            <div class="flexcenter">
+              <label class="radiobtncontainer flexcenter button">
+                <span class="radioLabel">
+                  <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' />
+                  Toprope
+                </span>
+                <input type="radio" checked="checked" name="radio">
+                <span class="radioBg"></span>
+              </label>
+              <label class="radiobtncontainer flexcenter button">
+                <span class="radioLabel">
+                  <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' />
+                  Lead
+                </span>
+                <input type="radio" name="radio">
+                <span class="radioBg red"></span>
+              </label>
+               <label class="radiobtncontainer flexcenter button">
+                <span class="radioLabel">
+                  <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' />
+                  AutoB
+                </span>
+                <input type="radio" name="radio">
+                <span class="radioBg blue"></span>
+              </label>
+            </div>
             <div class="flexrow mb-5">
               <b-field>
                 <b-radio-button v-model="modalProps.switchTopLeadAuto"
@@ -342,7 +368,7 @@
         <h5 @click="onLegend()">
           Legend
         </h5>
-        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -635,6 +661,86 @@ export default {
   display: flex;
   justify-content: center;
 }
+/* The radiobtn container */
+.radiobtncontainer {
+  display: block;
+  position: relative;
+  margin-bottom: 12px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default radio button */
+.radiobtncontainer input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Create a custom background box aka checkbox*/
+.radioBg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: white;
+  z-index: 41;
+  /*border-radius: 50%;*/
+}
+
+/* On mouse-over, add a grey background color */
+/* dont need a mouse over yet
+.radiobtncontainer:hover input ~ .radioBg {
+  background-color: #white;
+}*/
+
+/* When the radio button is checked, add a yellow background */
+.radiobtncontainer input:checked ~ .radioBg {
+  background-color: #fadb60;
+}
+.radiobtncontainer input:checked ~ .radioBg.red {
+  background-color: rgb(253, 114, 114);
+}
+.radiobtncontainer input:checked ~ .radioBg.blue {
+  background-color: #1d34ff8e;
+}
+.radioLabel {
+  z-index: 42;
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+// .radioBg:after {
+//   content: "";
+//   position: absolute;
+//   display: none;
+// }
+
+/* Show the indicator (dot/circle) when checked */
+// .radiobtncontainer input:checked ~ .radioBg:after {
+//   display: block;
+// }
+
+/* Style the indicator (dot/circle) */
+/*.radiobtncontainer .radioBg:after {
+  top: 9px;
+  left: 9px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: white;
+}*/
+//
+// end radio button
+//
+
+.date{
+  align-self: center;
+  width: 100%;
+}
 .modal-label {
   align-self: center;
   margin-bottom: 0.75rem;
@@ -696,6 +802,11 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+.flexcenter {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 html {
   height: 100%;
