@@ -33,6 +33,20 @@ const getters2 = {
 
 const actions = {
   initEntries: firestoreAction(({ bindFirestoreRef }, profileRouteId) => bindFirestoreRef('entries', db.collection('stats').doc(profileRouteId).collection('entries'))),
+
+  // eslint-disable-next-line
+  async deleteStat({ getters }, arg) {
+    const toDeleteStatsRecord = arg;
+    await db.collection('stats').doc(toDeleteStatsRecord.id)
+      .collection('entries').doc()
+      .set(toDeleteStatsRecord)
+      .then(() => {
+        console.log('      toDeleteStatsRecord saved to DB!');
+      })
+      .catch((error) => {
+        console.error('      Error creating toDeleteStatsRecord: ', error);
+      });
+  },
   // eslint-disable-next-line
   async getEntries({ getters }, arg) {
     // const newStatsRecord = arg;
@@ -47,6 +61,7 @@ const actions = {
   },
   // eslint-disable-next-line
   async modalComplete({getters}, arg) {
+
     const newStatsRecord = arg;
     newStatsRecord.cmp = 'Y';
     newStatsRecord.dateAdded = firebase.firestore.FieldValue.serverTimestamp();
@@ -55,7 +70,7 @@ const actions = {
     console.log('newStatsRecord: ', newStatsRecord);
     // create stats rec which is linked to a profileroute
     // this stats record has a sub collection of records (each line in stats)
-    await db.collection('stats').doc(newStatsRecord.id)
+    await db.collection('stats').doc(newStatsRecord.profileRoutesId)
       .collection('entries').doc()
       .set(newStatsRecord)
       .then(() => {
@@ -64,7 +79,7 @@ const actions = {
       .catch((error) => {
         console.error('      Error creating newStatsRecord: ', error);
       });
-    await db.collection('stats').doc(newStatsRecord.id)
+    await db.collection('stats').doc(newStatsRecord.profileRoutesId)
       .set({ profileId: newStatsRecord.profileId })
       .then(() => {
         console.log('      StatsRecord-profileid saved to DB!');
@@ -72,6 +87,39 @@ const actions = {
       .catch((error) => {
         console.error('      Error StatsRecord-profileid: ', error);
       });
+    //
+    //
+    // old:
+    //
+    // const newStatsRecord = arg;
+    // newStatsRecord.cmp = 'Y';
+    // newStatsRecord.dateAdded = firebase.firestore.FieldValue.serverTimestamp();
+    // // if (newStatsRecord) {
+    // // }
+    // console.log('newStatsRecord: ', newStatsRecord);
+    // // create stats rec which is linked to a profileroute
+    // // this stats record has a sub collection of records (each line in stats)
+    // await db.collection('stats').doc(newStatsRecord.profileRoutesId)
+    //   .collection('entries').doc()
+    //   .set(newStatsRecord)
+    //   .then(() => {
+    //     console.log('      newStatsRecord saved to DB!');
+    //   })
+    //   .catch((error) => {
+    //     console.error('      Error creating newStatsRecord: ', error);
+    //   });
+    // await db.collection('stats').doc(newStatsRecord.profileRoutesId)
+    //   .set({ profileId: newStatsRecord.profileId })
+    //   .then(() => {
+    //     console.log('      StatsRecord-profileid saved to DB!');
+    //   })
+    //   .catch((error) => {
+    //     console.error('      Error StatsRecord-profileid: ', error);
+    //   });
+    //
+    //
+    //
+    //
     // set this profile route to cmp in db
     actions.setCompleted({ getters }, newStatsRecord);
     // set this profile route to cmp in UI

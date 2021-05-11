@@ -202,11 +202,15 @@
                 {{modalProps.rating}}
               </div>
             </div>
-          </div>
+          </div>*
         <div class="content-left" v-for="(entry) in entries" :key="entry.id">
           <div style="width: 10%" class="">{{entry.cmp}}</div>
           <div style="width: 30%" class="">{{entry.date}}</div>
           <div style="width: 60%" class="">{{entry.notes}}</div>
+          <a class="button is-ghost is-small pl-2 pr-2 extrasmall"
+          @click="onModalViewDelete(entry)">
+            X
+          </a>
         </div>
     </div>
   </div>
@@ -449,7 +453,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('dataJS', ['initRoutes', 'initLastUpdate', 'initProfileRoutes', 'getRoutes', 'setCompleted', 'modalComplete', 'modalAttempted', 'initEntries']),
+    ...mapActions('dataJS', ['initRoutes', 'initLastUpdate', 'initProfileRoutes', 'getRoutes', 'setCompleted', 'modalComplete', 'modalAttempted', 'initEntries', 'deleteStat']),
     // onClickSwitch(arg) {
     //   console.log('in onClick', arg);
     //   if (arg === 'topr') {
@@ -459,6 +463,10 @@ export default {
     //   }
     //   // this.modalProps.switchTopr = this.modalProps.switchTopr
     // },
+    onModalViewDelete(arg) {
+      console.log('arg: ', arg);
+      this.deleteStat(arg);
+    },
     getShortDate(arg) {
       if (arg) {
         const toReturn = arg.toDate();
@@ -495,7 +503,7 @@ export default {
       this.modalProps = row;
       this.modalProps.notes = '';
       this.modalProps.switchTopLeadAuto = this.profile[0].default;
-      // 'lead'; // TODO#1: dont have this hardcoded
+      this.modalProps.profileRoutesId = row.id;
       this.modalEditVisible = true;
       // this.modalProps.date = firebase.firestore.FieldValue.serverTimestamp().toString();
       // this.modalProps.date = firebase.firestore.Timestamp.now().toDate().getMonth()+1;
@@ -650,6 +658,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.extrasmall {
+  margin: 2px;
+  font-size: 0.50rem;
+}
 .modalHeader {
   position: absolute;
   left: 1em;

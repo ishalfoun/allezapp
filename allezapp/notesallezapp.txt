@@ -260,12 +260,15 @@ at end you view:
 [x] make sure attempt works.
 [x] route added in editmodal: show actual date (not working)
 
+9:30 arrive
+
+3:30 leave
 	
-[] in viewmodal:
-	-have a table instead of v-for
-	sortable by date, then by dateAd
-	-table is filled by entries obv.
-[] have a delete btn.
+[NB] in viewmodal:
+nb	-have a table instead of v-for
+nb	sortable by date, then by dateAd
+nb	-table is filled by entries obv.
+[] have a delete btn
 [] in viewmodal: make icons
 	-need a yellow icon for attempt
 	-this for cmp=A. cmp=Y is carab.
@@ -315,10 +318,20 @@ input colors + icons
 
 [] fix db redundancy:
 -have the stats entry be 1-1 with profile routes:
-	[] -stats have profileroutesid
+	[x] -stats have profileroutesid
 	[x] -profile id
-	[] -route id
-	[] -flags,color,etc
+	[x] -route id
+	[x] -flags,color,etc
+	
+todo:
+dataJS.js: 64:
+rewrite the whole thing:
+-parent stats record has:
+	-flags,color, ids
+-child stats record has:
+	-cmp, date, notes
+	-no flags
+
 [] stats.entries[]:
 	-has entries of:
 	[x]	-cmp date notes dateAd (what is already only disp anyways)
