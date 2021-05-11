@@ -31,9 +31,9 @@
                 <template v-if="modalProps.flag_autob"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' /></template>
                 <template v-if="modalProps.flag_overh"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_overh.png?alt=media&token=b6f36953-6baf-49e1-b47e-c2691fbc150b' /></template>
                 <template v-else><div class='smallicon'></div></template>
-                <template v-if="modalProps.flag_lead"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' /></template>
-                <template v-else><div class='smallicon'></div></template>
                 <template v-if="modalProps.flag_topr"><img class='smallicon ml-1' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' /></template>
+                <template v-else><div class='smallicon'></div></template>
+                <template v-if="modalProps.flag_lead"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' /></template>
                 <template v-else><div class='smallicon'></div></template>
               </div>
               <div>
@@ -52,40 +52,43 @@
             </div>
           </div>
           <div class="content">
-            <!-- <div class="field">
-              <input class="is-checkradio has-background-color"
-               id="exampleCheckboxBackgroundColorDefault" type="checkbox"
-               name="exampleCheckboxBackgroundColorDefault" checked="checked">
-              <label for="exampleCheckboxBackgroundColorDefault">Checkbox</label>
-            </div>
-            {{modalProps.switchTopLeadAuto}} -->
+            {{modalProps.switchTopLeadAuto}} asd
             <div class="flexcenter">
-              <label class="radiobtncontainer flexcenter button">
-                <span class="radioLabel">
-                  <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' />
-                  Toprope
+              <label class="radiobtncontainer flexcenter button"
+               :disabled="!modalProps.flag_topr">
+                <span class="radioLabel flexcenter">
+                  <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' />
+                  <span class="ml-1">Toprope</span>
                 </span>
-                <input type="radio" checked="checked" name="radio">
+                <input type="radio" name="radio"
+                 :checked="((modalProps.flag_topr) && (modalProps.switchTopLeadAuto==='Toprope'))"
+                 :disabled="!modalProps.flag_topr">
                 <span class="radioBg"></span>
               </label>
-              <label class="radiobtncontainer flexcenter button">
-                <span class="radioLabel">
-                  <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' />
-                  Lead
+              <label class="radiobtncontainer flexcenter button"
+               :disabled="!modalProps.flag_lead">
+                <span class="radioLabel flexcenter">
+                  <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' />
+                  <span class="ml-1">Lead</span>
                 </span>
-                <input type="radio" name="radio">
+                <input type="radio" name="radio"
+                 :checked="((modalProps.flag_lead) && (modalProps.switchTopLeadAuto==='Lead'))"
+                 :disabled="!modalProps.flag_lead">
                 <span class="radioBg red"></span>
               </label>
-               <label class="radiobtncontainer flexcenter button">
-                <span class="radioLabel">
-                  <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' />
-                  AutoB
+               <label class="radiobtncontainer flexcenter button"
+                :disabled="!modalProps.flag_autob">
+                <span class="radioLabel flexcenter">
+                  <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' />
+                  <span class="ml-1">AutoB</span>
                 </span>
-                <input type="radio" name="radio">
+                <input type="radio" name="radio"
+                :checked="(modalProps.flag_autob)"
+                 :disabled="!modalProps.flag_autob">
                 <span class="radioBg blue"></span>
               </label>
             </div>
-            <div class="flexrow mb-5">
+            <!-- <div class="flexrow mb-5">
               <b-field>
                 <b-radio-button v-model="modalProps.switchTopLeadAuto"
                   native-value="top"
@@ -108,7 +111,7 @@
                     <span class="ml-2">AutoB</span>
                 </b-radio-button>
               </b-field>
-            </div>
+            </div> -->
             <div>
               <b-field label="Personal Notes"
                 label-position="on-border">
@@ -123,7 +126,7 @@
                   placeholder="" style="width:130px"></b-input>
               </b-field>
             </div>
-            <div class="flexrow mt-2">
+            <div class="flexrow mt-2" style="justify-content:space-evenly">
               <b-field>
                 <b-button class="is-warning" @click="onModalAttempted()">Attempted</b-button>
               </b-field>
@@ -169,7 +172,7 @@
         <div class="content">
             <div class="flexcenter">
               <div>
-                <sup>View Attempt</sup>
+                <sup>View Attempts</sup>
               </div>
             </div>
             <div class="title is-4 flexrow">
@@ -309,9 +312,9 @@
             <template v-if="props.row.flag_autob"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' /></template>
             <template v-if="props.row.flag_overh"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_overh.png?alt=media&token=b6f36953-6baf-49e1-b47e-c2691fbc150b' /></template>
             <template v-else><div class='smallicon'></div></template>
-            <template v-if="props.row.flag_lead"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' /></template>
-            <template v-else><div class='smallicon'></div></template>
             <template v-if="props.row.flag_topr"><img class='smallicon ml-1' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' /></template>
+            <template v-else><div class='smallicon'></div></template>
+            <template v-if="props.row.flag_lead"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' /></template>
             <template v-else><div class='smallicon'></div></template>
           </div>
         </b-table-column>
@@ -357,7 +360,8 @@
       </b-table>
       <div class="flexrow mt-3">
         <h5 v-if="profile[0] && profile[0].lastUpdate">
-          last update: {{
+          last update:
+            {{
             profile[0].lastUpdate.toDate().getUTCFullYear()
             }}/{{
             (profile[0].lastUpdate.toDate().getUTCMonth() + 1)
@@ -490,7 +494,8 @@ export default {
       console.log('in edit row: ', row);
       this.modalProps = row;
       this.modalProps.notes = '';
-      // this.modalProps.switchTopLeadAuto = 'lead'; // TODO#1: dont have this hardcoded
+      this.modalProps.switchTopLeadAuto = this.profile[0].default;
+      // 'lead'; // TODO#1: dont have this hardcoded
       this.modalEditVisible = true;
       // this.modalProps.date = firebase.firestore.FieldValue.serverTimestamp().toString();
       // this.modalProps.date = firebase.firestore.Timestamp.now().toDate().getMonth()+1;
@@ -564,7 +569,7 @@ export default {
         && this.routesLoaded
         && this.lastUpdateLoaded
         && this.profileroutesLoaded) {
-        console.log('       calling getRoutes');
+        // console.log('       calling getRoutes', this.profile[0]);
         this.getRoutes(this.profile[0]);
         // this.displayRoutes = this.profileroutes;
         this.happenedAlreadyGetRoutes = true;
@@ -601,7 +606,7 @@ export default {
       this.modalEditVisible = false;
     },
     async profile() {
-      console.log('1. in initProfileRoutes happened=', this.happenedAlready);
+      // console.log('1. in profileWatch, happened=', this.happenedAlready);
       if (!this.happenedAlready) {
         if (this.profile[0]) { // if user is logged in
         // console.log('if (!this.happenedAlready &&  this.profile[0]: true');
@@ -615,6 +620,12 @@ export default {
             });
           this.happenedAlready = true;
         }
+      }
+      // also set the default toprope/lead when user logs in (profile changes)
+      console.log(' profile default in db is: ', this.profile[0].default);
+      if (this.profile[0].default) {
+        this.modalProps.switchTopLeadAuto = this.profile[0].default;
+        console.log(' profile default in modalProps is: ', this.modalProps.switchTopLeadAuto);
       }
     },
     // async profileroutes() {
@@ -660,6 +671,7 @@ export default {
 .flexcenter {
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 /* The radiobtn container */
 .radiobtncontainer {
@@ -764,6 +776,7 @@ export default {
   width: 15px;
   height: 15px;
   display: inline-block;
+  margin: 2px;
 }
 /deep/.dropdown .background {
   background-color: rgba(10, 10, 10, 0.65) !important;

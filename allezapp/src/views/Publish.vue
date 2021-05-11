@@ -9,7 +9,7 @@
         Input
       </router-link>
     </div>
-    <!-- <h5 v-if="profile[0] && profile[0].lastUpdate">
+    <h5 v-if="profile[0] && profile[0].lastUpdate">
       last update: {{
         profile[0].lastUpdate.toDate().getUTCFullYear()
         }}/{{
@@ -17,7 +17,7 @@
         }}/{{
         profile[0].lastUpdate.toDate().getUTCDate()
         }}
-      </h5> -->
+      </h5>
     <!-- {{addedRoutes}} -->
     <h1 class='title is-1 centered flex1'>Additions {{additions.length}}</h1>
     <div class="border">

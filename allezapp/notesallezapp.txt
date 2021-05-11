@@ -100,8 +100,6 @@ publish:
 	-make sure both are in sync
 		-then clear add/del's
 		
-if hey dont have it for 2019
-or i have to make a anonymous.
 
 
 [problems now:]
@@ -121,12 +119,6 @@ todo:
 profileroutes:
 [x] change original db to routesReal
 [x] hide profiles from normal user.	
-
-things i need to bring home:
-laundry
-bag
-laptop
-weed
 
 TODO::
 [x] fix navbar in mobile view (name overlaps)
@@ -220,11 +212,7 @@ at end you view:
 	- clicking the entire row opens a popup
 	- here you can ceheck 'did it on lead/tr'
 	- comment secion
-	
-	
-	
-todo
-
+		
 [x] editmode:
 	-have date input limit of 9 chars.
 [x] each route needs a date added orig
@@ -233,38 +221,46 @@ todo
 		
 [x] edit btn: change onclick to whole row
 [x] add icon
-[] titles
-[] in edit modal: disable tr if no tr, lead if no lead.
-[] on autobelay routes: in edit modal: autoB option should be gone.
-[] on non autob routes: in edit modal: topr and lead should be gone, unless if allowed.
 
-[] center the route set date in editmodal
-[] 		completed btn: centerd
+[x] titles
+[x] in edit modal: disable tr if no tr, lead if no lead.
+	-modalProps has the route flags
+	-make the radio btns disabled if flags
+[x] on non autobelay routes: in edit modal: autoB option should be gone.
+[x] on autob routes: in edit modal: topr and lead should be gone, unless if allowed.
+
+[x] center the route set date in editmodal
+[x] 		completed btn: centerd
 		icons in middle
-[] fix toprop swich 
 		
-[] fix db redundancy:
--have the stats entry be 1-1 with profile routes:
-	-stats have profileroutesid
-	-profile id
-	-route id
-	-flags,color,etc
-[] stats.entries[]:
-	-has entries of:
-		-cmp date notes dateAd (what is already only disp anyways)
-[] make sure attempt works as well.
-[] route added in editmodal: show actual date (not working)
+[x] add the setting for default climbing:
+	-in menu
+	-top: yellow (left)
+	-lead: red (right)
+	
+	
+	
+[x] when you log in it gets the value
+[x]	1. make it so when you refresh, the t/l persist in navbar
+[x]	2. make the modal use the value 
+[x] when you change it, it persists.
 
+[x] fix profile bug
+	problem:
+	when logging in and calling 'getRoutes',
+		in the first check, profile.lastupdate=0
+		1. trying to not save in db as .toDate
+		-nvm, there was no update bc no new routes added
+	[] why is the profile.lastUpdate = 0 at start of getRoutes()?
+	[x] before calling getroutes, also 0
+	[x] profile in db has correct date. (being saved)
+	!! profile lvl is also always 0!!
+	fix is doc.data() in profile.js
+	
+[x] make sure attempt works.
+[x] route added in editmodal: show actual date (not working)
 
-		
-		
-		
-		
-		
-		
-		
-		
-		
+	
 [] in viewmodal:
 	-have a table instead of v-for
 	sortable by date, then by dateAd
@@ -274,10 +270,6 @@ todo
 	-need a yellow icon for attempt
 	-this for cmp=A. cmp=Y is carab.
 	
-
-
-
-
 [] edit & view modal:
 	additional button 'public coments'
 	-you can write a comment to a new table: routeComments
@@ -296,25 +288,12 @@ todo
 	-see % or routes completed
 	-see which routes you did per day
 
-
-
-
-
-
-
-
-
-
-
 [] make the hard reset posible in side menu
 this  manually refresh all profileroutes:
 	-this function resets your profile date so you refresh for sure.
 [] input mode: implem a delete lock (if on, the delete all btn also moves to right)
 
 input colors + icons
-
-
-
 
 [] at flags in edit modal
 [] add back the div at top of home.vue for the filter btn func
@@ -327,7 +306,24 @@ input colors + icons
 [] Have a shifter in input:
 [] Autobelays - lead/top - top  - lead
 [] bug: dont resort when cmp a route?
+[] fix desktop sizes
+[] defaults in edit modal: 
+	-add default setting in menu
+	-this is saved in profile
+	-retrieved during edit modal.
 
 
-
-
+[] fix db redundancy:
+-have the stats entry be 1-1 with profile routes:
+	[] -stats have profileroutesid
+	[x] -profile id
+	[] -route id
+	[] -flags,color,etc
+[] stats.entries[]:
+	-has entries of:
+	[x]	-cmp date notes dateAd (what is already only disp anyways)
+	[] remove the flags
+[] input mode:
+	-two icons are the same (overhang missing)
+[] close navbar menu when clicking on navbar as well
+[] navbar: close navbar 2 seconds after changing default (fade out?)

@@ -1,6 +1,7 @@
 import { firestoreAction } from 'vuexfire';
 import firebase from '@/firebase';
 import db from '@/db';
+// eslint-disable-next-line
 import profileJS from './profile';
 
 ///
@@ -143,19 +144,23 @@ const actions = {
   ///
   // Gets all new routes from server, to create your profileroutes
   ///
+  // eslint-disable-next-line
   async getRoutes({ getters }, profile) {
-    console.log('in getRoutes ', getters);
+    // console.log(' ', getters);
 
     ///
     // only get Routes if your last update is not same as server
     ///
-    console.log('   profile date: ', profile.lastUpdate.toDate());
-    console.log('   server date: ', data.lastUpdate[0].lastUpdate.toDate());
+
+    // console.log('   server date: ', data.lastUpdate[0].lastUpdate.toDate());
+    // console.log('   profile date: ', profile.lastUpdate.toDate());
     if (profile.lastUpdate.toDate() >= data.lastUpdate[0].lastUpdate
       .toDate()) {
-      console.log('date is same or later, =no new update, doing nothing');
+      console.log('        date is same or later, =no new update, doing nothing');
       return;
     }
+    console.log('        date is different, getting new routes');
+
     data.loading = true;
     //   - first filter the profileR belonging to me:
     //   - next loop through both routes and profileroutes
@@ -292,12 +297,15 @@ const actions = {
     console.log('timestamp2: ', firebase.firestore.FieldValue
       .serverTimestamp());
 
+    // console.log('before profiles.save: data.lastUpdate[0]:',
+    // data.lastUpdate[0].lastUpdate.toDate());
+
     await db
       .collection('profiles')
       .doc(profileJS.state.profile[0].id)
       .update({ lastUpdate: data.lastUpdate[0].lastUpdate.toDate() })
       .then(() => {
-        console.log('   profile.lastUpdate write success');
+        console.log('   profile.lastUpdate write success:', data.lastUpdate[0].lastUpdate.toDate());
         if (data.loading) {
           data.loading = false;
         }

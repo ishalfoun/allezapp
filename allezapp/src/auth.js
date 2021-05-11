@@ -9,7 +9,7 @@ async function getOrCreateProfileThenStore(profile) {
     db.collection('profiles').doc(profile.id).get().then(async (doc) => {
       if (doc.exists) {
         // console.log('profile exists!, saving to store.', doc.data());
-        store.commit('profile/setProfile', profile); // save profile to store
+        store.commit('profile/setProfile', doc.data()); // save profile to store
         // store.dispatch('data/getRoutes', profile);
       } else {
         // console.log('profile doesnt exist...creating now', profile);

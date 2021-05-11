@@ -39,6 +39,18 @@
                 Log In
               </a>
             </div>
+            <div v-if="isLoggedIn" class="navbar-item flexcontainer"
+            v-on:click.stop="onSwitchDefault(switchDefaultClimb)">
+              Default:
+              <b-field >
+                <span class='mr-3'>{{ switchDefaultClimb }}</span>
+                <b-switch v-model="switchDefaultClimb"
+                  type="is-danger"
+                  true-value="Lead"
+                  false-value="Toprope">
+                </b-switch>
+              </b-field>
+            </div>
             <div class="navbar-item" @click="closeNav()"
              v-if="profile[0] && profile[0].id === 'aGyG5o6IaDZtnyK7ouOKmNU1UYP2'">
               <router-link class="button" to="/input">
@@ -114,6 +126,7 @@ export default {
     showForm: false,
     showAcc: false,
     isLoading: true,
+    switchDefaultClimb: 'Toprope',
   }),
   created() { // When this component is mounted, we want to call the init
     // console.log(this.$store);
@@ -134,7 +147,10 @@ export default {
   },
   methods: {
     ...mapActions('auth', ['login', 'logout', 'guestLogin', 'soundToggle']),
-    ...mapActions('profile', ['init']),
+    ...mapActions('profile', ['init', 'switchDefault']),
+    onSwitchDefault(arg) {
+      this.switchDefault((arg === 'Toprope' ? 'Lead' : 'Toprope'));
+    },
     closeNav() {
       this.showNav = false;
     },
@@ -145,11 +161,21 @@ export default {
         this.init(this.user.id);
       }
     },
+    async profile() {
+      console.log('navbar. profileWatch ahppened', this.profile[0]);
+      if (this.profile[0].default) {
+        console.log('       default in db is: ', this.profile[0].default);
+        this.switchDefaultClimb = this.profile[0].default;
+      }
+    },
   },
 };
 </script>
 
 <style lang="scss">
+.switch input[type=checkbox] + .check {
+  background: #ffdd57;
+}
 .logo {
   color: #fff !important;
 }
