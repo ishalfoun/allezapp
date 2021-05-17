@@ -204,8 +204,16 @@
             </div>
           </div>*
         <div class="content-left" v-for="(entry) in entries" :key="entry.id">
-          <div style="width: 10%" class="">{{entry.cmp}}</div>
-          <div style="width: 30%" class="">{{entry.date}}</div>
+          <div style="width: 10%" class="">{{entry.cmpOrAttempt}}</div>
+          <div style="width: 30%" class="">
+            {{
+            entry.dateDone.toDate().getUTCFullYear()
+            }}/{{
+            (entry.dateDone.toDate().getUTCMonth() + 1)
+            }}/{{
+            entry.dateDone.toDate().getUTCDate()
+            }}
+          </div>
           <div style="width: 60%" class="">{{entry.notes}}</div>
           <a class="button is-ghost is-small pl-2 pr-2 extrasmall"
           @click="onModalViewDelete(entry)">
@@ -340,8 +348,9 @@
         </b-table-column>
         <b-table-column field="cmp" label="Completed" sortable v-slot="props">
           <div class="flexrow" @click="onViewRoute(props.row)">
-            <div class="smallicon" @click="onCompleted(props.row)">
-              <img v-if="props.row.cmp === 'Y'" class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' />
+            <div>
+                <img v-if="props.row.cmp === 'A'" class='smallicon attempt' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' />
+                <img v-if="props.row.cmp === 'Y'" class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' />
             </div>
             <!-- <div>
               <button><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_edit.png?alt=media&token=6eaa64b0-50e0-4c82-b8a0-ad6aa1627219' /></button>
@@ -453,7 +462,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('dataJS', ['initRoutes', 'initLastUpdate', 'initProfileRoutes', 'getRoutes', 'setCompleted', 'modalComplete', 'modalAttempted', 'initEntries', 'deleteStat']),
+    ...mapActions('dataJS', ['initRoutes', 'initLastUpdate', 'initProfileRoutes', 'getRoutes', 'setCompleted', 'modalComplete', 'modalAttempted', 'deleteStat', 'initEntries']),
     // onClickSwitch(arg) {
     //   console.log('in onClick', arg);
     //   if (arg === 'topr') {
@@ -491,8 +500,9 @@ export default {
       this.modalProps = row; // wherever the user clicked, set the modal to that data
       // this.modalProps.entries = this.getEntries(row);
       this.modalViewVisible = true;
-      // passing row.id to initentries because the id's are shared
-      // between profileroutes.id and stats.doc(id).entries
+      console.log(' onViewRoute: modalProps= ', this.modalProps);
+      // entries are not showing up yet, using this function to load them.
+      // (links to profileroutes table, key is id (profileroutesid))
       this.initEntries(row.id).then(() => {
         console.log('finished loading entries: ', this.entries);
       });
@@ -541,14 +551,14 @@ export default {
         setTimeout(resolve, timeout);
       });
     },
-    onCompleted(row) {
-      this.row = row;
-      if (this.row.cmp === 'Y') {
-        this.row.cmp = 'N';
-      } else {
-        this.row.cmp = 'Y';
-      }
-      this.setCompleted(this.row);
+    onCompleted() {
+      // this.row = row;
+      // if (this.row.cmp === 'Y') {
+      //   this.row.cmp = 'N';
+      // } else {
+      //   this.row.cmp = 'Y';
+      // }
+      // this.setCompleted(this.row);
     },
     onFilter() {
       console.log('2.         routesReal.length=', (this.routesReal.length));
@@ -789,6 +799,9 @@ export default {
   height: 15px;
   display: inline-block;
   margin: 2px;
+}
+.attempt {
+  opacity: 30%;
 }
 /deep/.dropdown .background {
   background-color: rgba(10, 10, 10, 0.65) !important;

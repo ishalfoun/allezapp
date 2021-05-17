@@ -32,7 +32,7 @@ const getters2 = {
 // }
 
 const actions = {
-  initEntries: firestoreAction(({ bindFirestoreRef }, profileRouteId) => bindFirestoreRef('entries', db.collection('stats').doc(profileRouteId).collection('entries'))),
+  initEntries: firestoreAction(({ bindFirestoreRef }, profileRouteId) => bindFirestoreRef('entries', db.collection('profileroutes').doc(profileRouteId).collection('entries'))),
 
   // eslint-disable-next-line
   async deleteStat({ getters }, arg) {
@@ -61,33 +61,39 @@ const actions = {
   },
   // eslint-disable-next-line
   async modalComplete({getters}, arg) {
+    const modalProps = arg;
+    const newEntryRec = {};
+    newEntryRec.cmpOrAttempt = 'C';
+    newEntryRec.dateDone = firebase.firestore.FieldValue.serverTimestamp();
+    newEntryRec.notes = modalProps.notes;
 
-    const newStatsRecord = arg;
-    newStatsRecord.cmp = 'Y';
-    newStatsRecord.dateAdded = firebase.firestore.FieldValue.serverTimestamp();
-    // if (newStatsRecord) {
-    // }
-    console.log('newStatsRecord: ', newStatsRecord);
-    // create stats rec which is linked to a profileroute
-    // this stats record has a sub collection of records (each line in stats)
-    await db.collection('stats').doc(newStatsRecord.profileRoutesId)
+    console.log('modalProps: ', modalProps);
+    console.log('newEntryRec: ', newEntryRec);
+
+    // update profileroutes record
+    //    it has a sub collection of records (entries)
+    // add the current attempt.
+    await db.collection('profileroutes').doc(modalProps.profileRoutesId)
       .collection('entries').doc()
-      .set(newStatsRecord)
+      .set(newEntryRec)
       .then(() => {
-        console.log('      newStatsRecord saved to DB!');
+        console.log('      profileroutes.entries updated in DB!');
       })
       .catch((error) => {
-        console.error('      Error creating newStatsRecord: ', error);
+        console.error('      Error profileroutes.entries updated in DB! ', error);
       });
-    await db.collection('stats').doc(newStatsRecord.profileRoutesId)
-      .set({ profileId: newStatsRecord.profileId })
+
+    // also update profileroute.cmp == 'Y'
+    await db.collection('profileroutes').doc(modalProps.profileRoutesId)
+      .update({ cmp: 'Y' })
       .then(() => {
-        console.log('      StatsRecord-profileid saved to DB!');
+        console.log('      profileroutes.cmp updated in DB!');
       })
       .catch((error) => {
-        console.error('      Error StatsRecord-profileid: ', error);
+        console.error('      Error profileroutes.cmp updated in DB! ', error);
       });
-    //
+
+    data.componentKey2 += 1; // this refreshes table and closes the modal
     //
     // old:
     //
@@ -120,45 +126,58 @@ const actions = {
     //
     //
     //
-    // set this profile route to cmp in db
-    actions.setCompleted({ getters }, newStatsRecord);
     // set this profile route to cmp in UI
-    const index = data.profileroutes.findIndex(
-      (element) => element.routeId === newStatsRecord.routeId,
-    );
-    console.log('index at is: ', data.profileroutes[index]);
-    data.profileroutes[index].cmp = 'Y';
-    data.componentKey2 += 1; // this refreshes table and closes the modal
+    // const index = data.profileroutes.findIndex(
+    //   (element) => element.routeId === modalProps.routeId,
+    // );
+    // console.log('index of profileroute in UI is: ', data.profileroutes[index]);
+    // data.profileroutes[index].cmp = 'Y';
+    // data.componentKey2 += 1; // this refreshes table and closes the modal
   },
   // eslint-disable-next-line
   async modalAttempted({ getters }, arg) {
-    const newStatsRecord = arg;
-    if (newStatsRecord.cmp !== 'Y') { // change flag only if it is not cmp
-      newStatsRecord.cmp = 'A';
-    }
-    newStatsRecord.dateAdded = firebase.firestore.FieldValue.serverTimestamp();
-    console.log('newStatsRecord: ', newStatsRecord);
-    // create stats rec which is linked to a profileroute
-    // this stats record has a sub collection of records (each line in stats)
-    await db.collection('stats').doc(newStatsRecord.id)
+
+    const modalProps = arg;
+    const newEntryRec = {};
+    newEntryRec.cmpOrAttempt = 'A';
+    newEntryRec.dateDone = firebase.firestore.FieldValue.serverTimestamp();
+    newEntryRec.notes = modalProps.notes;
+
+    console.log('modalProps: ', modalProps);
+    console.log('newEntryRec: ', newEntryRec);
+
+    // update profileroutes record
+    //    it has a sub collection of records (entries)
+    // add the current attempt.
+    await db.collection('profileroutes').doc(modalProps.profileRoutesId)
       .collection('entries').doc()
-      .set(newStatsRecord)
+      .set(newEntryRec)
       .then(() => {
-        console.log('      newStatsRecord saved to DB!');
+        console.log('      profileroutes.entries updated in DB!');
       })
       .catch((error) => {
-        console.error('      Error creating newStatsRecord: ', error);
+        console.error('      Error profileroutes.entries updated in DB! ', error);
       });
-    await db.collection('stats').doc(newStatsRecord.id)
-      .set({ profileId: newStatsRecord.profileId })
-      .then(() => {
-        console.log('      StatsRecord-profileid saved to DB!');
-      })
-      .catch((error) => {
-        console.error('      Error StatsRecord-profileid: ', error);
-      });
+
+    // also update profileroute.cmp == 'A'
+    // but only if:
+    //    if route was not completed yet
+    if (modalProps.cmp !== 'Y') {
+      // set cmp to 'A'
+      await db.collection('profileroutes').doc(modalProps.profileRoutesId)
+        .update({ cmp: 'A' })
+        .then(() => {
+          console.log('      profileroutes.cmp updated in DB!');
+        })
+        .catch((error) => {
+          console.error('      Error profileroutes.cmp updated in DB! ', error);
+        });
+    }
+
     data.componentKey2 += 1; // this refreshes table and closes the modal
   },
+  //
+  //
   setLoading(value) {
     console.log('in loadingsetter', value);
     data.loading = value;
@@ -175,20 +194,23 @@ const actions = {
     }
     return new Promise();
   }),
+  //
+  // No longer needed, as the new way to complete, is through modal.
+  //
   // eslint-disable-next-line
-  async setCompleted({ getters }, row) {
-    console.log('in setCompY: row=', row.cmp);
-    await db
-      .collection('profileroutes')
-      .doc(row.id)
-      .update({ cmp: row.cmp })
-      .then(() => {
-        console.log('      updating profileroutes.cmp: success!');
-      })
-      .catch((error) => {
-        console.error('      updating profileroutes.cmp, error:!', error);
-      });
-  },
+  // async setCompleted({ getters }, row) {
+  //   console.log('in setCompY: row=', row.cmp);
+  //   await db
+  //     .collection('profileroutes')
+  //     .doc(row.id)
+  //     .update({ cmp: row.cmp })
+  //     .then(() => {
+  //       console.log('      updating profileroutes.cmp: success!');
+  //     })
+  //     .catch((error) => {
+  //       console.error('      updating profileroutes.cmp, error:!', error);
+  //     });
+  // },
   ///
   // Gets all new routes from server, to create your profileroutes
   ///

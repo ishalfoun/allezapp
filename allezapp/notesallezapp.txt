@@ -260,10 +260,6 @@ at end you view:
 [x] make sure attempt works.
 [x] route added in editmodal: show actual date (not working)
 
-9:30 arrive
-
-3:30 leave
-	
 [NB] in viewmodal:
 nb	-have a table instead of v-for
 nb	sortable by date, then by dateAd
