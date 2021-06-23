@@ -442,18 +442,11 @@ right now:
 	-only set profile.name if user requests it
 		-or at first login
 [x] 2. show the name and pic again in navbar
-[] 3. put the name and pic in the comment
-[] 4. show this.
+[x] 3. put the name and pic in the comment
+[x] 4. show this.
 	
-green 11c: 58
-white 11b: 58
-black 10c: 59
-blue 12c: 60
-yrll 5.9 (60)
-black 10c: 61
-red 12a: 61
-green 11b: 62
-	
+
+[] show in entries if autob
 []	shows this table, where the route id matches with route id to show all comments for that route
 		-show real records
 [] rate a route with stars?
@@ -536,3 +529,4 @@ rewrite the whole thing:
 [] dataJS.js fix code: put the firestore fuctions in a function, to not repeat them.
 []input mode: when clicking autob, disclick all other types
 [] if you did the route in autob, and its only autob/able, then set it cmp
+[] stars rating in add 

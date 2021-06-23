@@ -157,12 +157,7 @@
   <div class="card">
     <div class="card-content">
       <div class="content">
-          <div class="flexcenter">
-            <div>
-              <sup>Your Attempts:</sup>
-            </div>
-          </div>
-          <div class="title is-4 flexrow">
+          <div class="title is-4 flexrow mt-2">
             <div>
               #{{modalProps.routeNum}}
             </div>
@@ -189,10 +184,15 @@
               {{modalProps.rating}}
             </div>
           </div>
+          <div class="flexcenter">
+            <div>
+              <sup>Private Log:</sup>
+            </div>
+          </div>
         </div>
       <div class="content-left" v-for="(entry) in entries" :key="entry.id">
         <!-- <div style="width: 10%" class="">{{entry.cmpOrAttempt}}</div> -->
-        <div style="width: 20%" class="">
+        <div style="width: 20%" class="flexcenter">
           <template v-if="entry.doneAs === 'Toprope'">
             <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' />
           </template>
@@ -206,7 +206,7 @@
             <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_check.png?alt=media&token=a9528343-ea49-424c-9114-94b50447ab32' />
           </template>
         </div>
-        <div style="width: 30%" class="">
+        <div style="width: 30%" class="mr-2">
           <template v-if="entry.dateDone">
             {{
             entry.dateDone.toDate().getUTCFullYear()
@@ -214,7 +214,7 @@
             (entry.dateDone.toDate().getUTCMonth() + 1)
             }}/{{
             entry.dateDone.toDate().getUTCDate()
-            }}
+            }}:
           </template>
         </div>
         <div style="width: 60%" class="ml-2">{{entry.notes}}</div>
@@ -233,41 +233,42 @@
       </div>
       <div class="media" v-for="(comment) in comments" :key="comment.id">
         <div class="media-left">
-          <figure class="image is-32x32">
+          <figure class="image is-32x32 is-centered">
             <img :src="comment.image" alt="Placeholder image">
           </figure>
         </div>
         <div class="media-content">
           <div class="content">
-            <p>
-              <strong>{{comment.username}}</strong>
-              <small>
-                <template v-if="comment.dateDone">                --
+            <div class="flexendcontainer">
+              <span><strong>{{comment.username}}</strong></span>
+              <span><small>
+                <template v-if="comment.dateDone">
                   {{
                     Math.round((new Date() - comment.dateDone.toDate()) / (1000 * 3600 * 24))
                   }} days ago
                 </template>
-              </small>
-              <span style="" class="">
-                <template v-if="comment.doneAs === 'AutoB'">
-                  <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' />
-                </template>
-                <template v-if="comment.doneAs === 'Toprope'">
-                  <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' />
-                </template>
-                <template v-else-if="comment.doneAs === 'Lead'">
-                  <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' />
-                </template>
-                <template v-if="comment.cmpOrAttempt === 'A'">
-                  <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_warn.png?alt=media&token=a7d50e59-fc66-4cf1-99c4-e40eac2edd6b' />
-                </template>
-                <template v-else-if="comment.cmpOrAttempt === 'Y'">
-                  <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_check.png?alt=media&token=a9528343-ea49-424c-9114-94b50447ab32' />
-                </template>
+              </small></span>
+              <span class='flexendcontainer' >
+              <template v-if="comment.doneAs === 'AutoB'">
+                <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' />
+              </template>
+              <template v-if="comment.doneAs === 'Toprope'">
+                <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' />
+              </template>
+              <template v-else-if="comment.doneAs === 'Lead'">
+                <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' />
+              </template>
+              <template v-if="comment.cmpOrAttempt === 'A'">
+                <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_warn.png?alt=media&token=a7d50e59-fc66-4cf1-99c4-e40eac2edd6b' />
+              </template>
+              <template v-else-if="comment.cmpOrAttempt === 'Y'">
+                <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_check.png?alt=media&token=a9528343-ea49-424c-9114-94b50447ab32' />
+              </template>
               </span>
-              <br>
+            </div>
+            <div>
               {{comment.notes}}
-            </p>
+            </div>
           </div>
         </div>
       </div>
@@ -431,7 +432,8 @@
           </div>
         </b-table-column>
         <b-table-column field="rating" label="Rating" sortable v-slot="props">
-          <div @click="onViewRoute(props.row)">
+          <div class="flexcontainer"
+           style="align-items:center;justify-content: flex-start;" @click="onViewRoute(props.row)">
             <template v-if="props.row.color">
               <div id="square"
                 :style="{
@@ -440,14 +442,17 @@
                   'border-width': (props.row.color === 'white' ? '1px' : ''),
                   'border-style': (props.row.color === 'white' ? 'solid' : ''),
                   }"
-                  style="border-radius: 5px;">&nbsp;
+                  style="border-radius: 5px"
+                  class="mr-2">&nbsp;
               </div>
             </template>
-            {{props.row.rating}}
+            <div>{{props.row.rating}}
+              </div>
           </div>
         </b-table-column>
         <b-table-column field="cmp" label="Completed" sortable v-slot="props">
-          <div class="flexrow" @click="onViewRoute(props.row)">
+          <div class="flexrow"
+           style="align-items:center;padding-left:2px" @click="onViewRoute(props.row)">
             <template v-if="props.row.toprope_cmp === 'A'"><img class='smallicon attempt' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' /></template>
             <template v-else-if="props.row.toprope_cmp === 'Y'"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' /></template>
             <template v-else><div class='smallicon'></div></template>
@@ -784,6 +789,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.flexendcontainer{
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.media {
+  align-items: center;
+}
 .extrasmall {
   margin: 2px;
   font-size: 0.50rem;

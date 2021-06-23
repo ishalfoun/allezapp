@@ -14,9 +14,24 @@ service cloud.firestore {
     match /profileroutes/{profileroutes_id} {
     // works since the profileroutes have a profileId
     	allow write: if request.auth.uid == request.resource.data.profileId; // allow write if yours
-      allow delete: if request.auth.uid == resource.data.profileId; // allow delete if yours
+    	allow delete: if request.auth.uid == resource.data.profileId; // allow delete if yours
+    }
+    match /profileroutes/{profileroutes_id} {
+    // works since the profileroutes have a profileId
+    	allow write: if request.auth.uid == request.resource.data.profileId; // allow write if yours
+    	allow delete: if request.auth.uid == resource.data.profileId; // allow delete if yours
+    }
+    match /profileroutes/{profileroutes_id}/{document=**} {
+    // works since the profileroutes have a profileId
+    	allow write: if request.auth.uid == request.resource.data.profileId; // allow write if yours
+    	allow delete: if request.auth.uid == resource.data.profileId; // allow delete if yours
     }
     match /routesReal/{profileroutes_id} {
+    // works since the routesReal have a profileId
+    	allow write: if request.auth.uid == "aGyG5o6IaDZtnyK7ouOKmNU1UYP2"; // allow write if my id
+      allow delete: if request.auth.uid == "aGyG5o6IaDZtnyK7ouOKmNU1UYP2"; // allow delete if my id
+    }
+    match /routesReal/{profileroutes_id}/{document=**} {
     // works since the routesReal have a profileId
     	allow write: if request.auth.uid == "aGyG5o6IaDZtnyK7ouOKmNU1UYP2"; // allow write if my id
       allow delete: if request.auth.uid == "aGyG5o6IaDZtnyK7ouOKmNU1UYP2"; // allow delete if my id
