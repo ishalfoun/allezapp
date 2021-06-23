@@ -18,6 +18,7 @@ const data = {
   loading: false,
   componentKey2: 0,
   entries: [],
+  comments: [],
 };
 
 const getters2 = {
@@ -33,6 +34,8 @@ const getters2 = {
 
 const actions = {
   initEntries: firestoreAction(({ bindFirestoreRef }, profileRouteId) => bindFirestoreRef('entries', db.collection('profileroutes').doc(profileRouteId).collection('entries'))),
+
+  initComments: firestoreAction(({ bindFirestoreRef }, routeId) => bindFirestoreRef('comments', db.collection('routesReal').doc(routeId).collection('comments'))),
 
   // eslint-disable-next-line
   async deleteStat({ getters }, arg) {
@@ -59,96 +62,46 @@ const actions = {
     //     console.error('      Error getting stats: ', error);
     //   });
   },
-  // eslint-disable-next-line
-  async modalComplete({getters}, arg) {
-    const modalProps = arg;
-    const newEntryRec = {};
-    newEntryRec.cmpOrAttempt = 'C';
-    newEntryRec.dateDone = firebase.firestore.FieldValue.serverTimestamp();
-    newEntryRec.notes = modalProps.notes;
-
-    console.log('modalProps: ', modalProps);
-    console.log('newEntryRec: ', newEntryRec);
-
-    // update profileroutes record
-    //    it has a sub collection of records (entries)
-    // add the current attempt.
-    await db.collection('profileroutes').doc(modalProps.profileRoutesId)
-      .collection('entries').doc()
-      .set(newEntryRec)
+  async postPublicComment(arg) {
+    // const newEntryRec = {};
+    // newEntryRec.profileId = modalProps.profileId;
+    // newEntryRec.profileId = modalProps.profileId;
+    // newEntryRec.profileId = modalProps.profileId;
+    console.log('in post public, arg=', arg);
+    await db.collection('routesReal').doc(arg.routeId)
+      .collection('comments').doc()
+      .set(arg)
       .then(() => {
-        console.log('      profileroutes.entries updated in DB!');
+        console.log('      routesReal.comments updated in DB!, arg', arg);
       })
       .catch((error) => {
-        console.error('      Error profileroutes.entries updated in DB! ', error);
+        console.error('      Error routesReal.comments updated in DB! ', error);
       });
-
-    // also update profileroute.cmp == 'Y'
-    await db.collection('profileroutes').doc(modalProps.profileRoutesId)
-      .update({ cmp: 'Y' })
-      .then(() => {
-        console.log('      profileroutes.cmp updated in DB!');
-      })
-      .catch((error) => {
-        console.error('      Error profileroutes.cmp updated in DB! ', error);
-      });
-
-    data.componentKey2 += 1; // this refreshes table and closes the modal
-    //
-    // old:
-    //
-    // const newStatsRecord = arg;
-    // newStatsRecord.cmp = 'Y';
-    // newStatsRecord.dateAdded = firebase.firestore.FieldValue.serverTimestamp();
-    // // if (newStatsRecord) {
-    // // }
-    // console.log('newStatsRecord: ', newStatsRecord);
-    // // create stats rec which is linked to a profileroute
-    // // this stats record has a sub collection of records (each line in stats)
-    // await db.collection('stats').doc(newStatsRecord.profileRoutesId)
-    //   .collection('entries').doc()
-    //   .set(newStatsRecord)
-    //   .then(() => {
-    //     console.log('      newStatsRecord saved to DB!');
-    //   })
-    //   .catch((error) => {
-    //     console.error('      Error creating newStatsRecord: ', error);
-    //   });
-    // await db.collection('stats').doc(newStatsRecord.profileRoutesId)
-    //   .set({ profileId: newStatsRecord.profileId })
-    //   .then(() => {
-    //     console.log('      StatsRecord-profileid saved to DB!');
-    //   })
-    //   .catch((error) => {
-    //     console.error('      Error StatsRecord-profileid: ', error);
-    //   });
-    //
-    //
-    //
-    //
-    // set this profile route to cmp in UI
-    // const index = data.profileroutes.findIndex(
-    //   (element) => element.routeId === modalProps.routeId,
-    // );
-    // console.log('index of profileroute in UI is: ', data.profileroutes[index]);
-    // data.profileroutes[index].cmp = 'Y';
-    // data.componentKey2 += 1; // this refreshes table and closes the modal
   },
   // eslint-disable-next-line
-  async modalAttempted({ getters }, arg) {
-
+  async modalSubmit({getters}, arg) {
     const modalProps = arg;
     const newEntryRec = {};
-    newEntryRec.cmpOrAttempt = 'A';
     newEntryRec.dateDone = firebase.firestore.FieldValue.serverTimestamp();
     newEntryRec.notes = modalProps.notes;
+    newEntryRec.doneAs = modalProps.switchTopLeadAuto;
+    newEntryRec.profileId = modalProps.profileId;
+    newEntryRec.routeId = modalProps.routeId;
+    newEntryRec.cmpOrAttempt = modalProps.cmpOrAttempt;
+    newEntryRec.username = modalProps.username;
+    newEntryRec.image = modalProps.image;
+    // modalProps.lead_cmp
 
     console.log('modalProps: ', modalProps);
     console.log('newEntryRec: ', newEntryRec);
 
+    if (modalProps.checkboxPostPublic === 'Yes') {
+      actions.postPublicComment(newEntryRec);
+    }
+
     // update profileroutes record
     //    it has a sub collection of records (entries)
-    // add the current attempt.
+    //    add the current attempt.
     await db.collection('profileroutes').doc(modalProps.profileRoutesId)
       .collection('entries').doc()
       .set(newEntryRec)
@@ -159,21 +112,89 @@ const actions = {
         console.error('      Error profileroutes.entries updated in DB! ', error);
       });
 
-    // also update profileroute.cmp == 'A'
-    // but only if:
-    //    if route was not completed yet
-    if (modalProps.cmp !== 'Y') {
-      // set cmp to 'A'
-      await db.collection('profileroutes').doc(modalProps.profileRoutesId)
-        .update({ cmp: 'A' })
-        .then(() => {
-          console.log('      profileroutes.cmp updated in DB!');
-        })
-        .catch((error) => {
-          console.error('      Error profileroutes.cmp updated in DB! ', error);
-        });
-    }
+    // logic for setting icons dependng on
+    // CMP/Attempted, lead/toprope, and previous values
+    //
+    // if attempt
+    //   if lead
+    //     if prev=''
+    //       PUT 'A'@L
+    //   if top
+    //     if prev=''
+    //       PUT 'A'@T
+    // if cmp
+    //   if lead
+    //     if prev='A'
+    //     or if prev=''
+    //       PUT 'Y'@L
+    //   if top
+    //     if prev='A'
+    //     or if prev=''
+    //   PUT 'Y'@T
+    const nr = newEntryRec;
 
+    console.log('  nr.cmpOrAttempt ', nr.cmpOrAttempt);
+    console.log('  nr.doneAs ', nr.doneAs);
+    console.log('  modalProps.lead_cmp ', modalProps.lead_cmp);
+    console.log('  modalProps.toprope_cmp ', modalProps.toprope_cmp);
+
+    if (nr.cmpOrAttempt === 'A') { // if attempt
+      if (nr.doneAs === 'Lead') { //   if lead
+        if (!modalProps.lead_cmp || modalProps.lead_cmp === '') { //     if prev=''
+          console.log('    update: lead_cmp = A'); //      PUT 'A'@L
+          await db.collection('profileroutes').doc(modalProps.profileRoutesId)
+            .update({ lead_cmp: 'A' })
+            .then(() => {
+              console.log('      profileroutes.lead_cmp=A updated in DB!');
+            })
+            .catch((error) => {
+              console.error('      Error profileroutes.lead_cmp=A updated in DB! ', error);
+            });
+        }
+      } else if (nr.doneAs === 'Toprope') { //   if top
+        if (!modalProps.toprope_cmp || modalProps.toprope_cmp === '') { //     if prev=''
+          console.log('    update: toprope_cmp = A'); //       PUT 'A'@T
+          await db.collection('profileroutes').doc(modalProps.profileRoutesId)
+            .update({ toprope_cmp: 'A' })
+            .then(() => {
+              console.log('      profileroutes.toprope_cmp=A updated in DB!');
+            })
+            .catch((error) => {
+              console.error('      Error profileroutes.toprope_cmp=A updated in DB! ', error);
+            });
+        }
+      }
+    } else if (nr.cmpOrAttempt === 'Y') { // if cmp
+      if (nr.doneAs === 'Lead') { //   if lead
+        if (!modalProps.lead_cmp
+         || modalProps.lead_cmp === 'A' //     if prev='A'
+         || modalProps.lead_cmp === '') { //   or if prev=' '
+          console.log('     update: lead_cmp = Y'); //    PUT 'Y'@L
+          await db.collection('profileroutes').doc(modalProps.profileRoutesId)
+            .update({ lead_cmp: 'Y' })
+            .then(() => {
+              console.log('      profileroutes.lead_cmp=C updated in DB!');
+            })
+            .catch((error) => {
+              console.error('      Error profileroutes.lead_cmp=C updated in DB! ', error);
+            });
+        }
+      } else if (nr.doneAs === 'Toprope') {
+        if (!modalProps.toprope_cmp
+         || modalProps.toprope_cmp === 'A' //     if prev='A'
+         || modalProps.toprope_cmp === '') { //   or if prev=' '
+          console.log('     update: toprope_cmp = Y'); //   PUT 'Y'@T
+          await db.collection('profileroutes').doc(modalProps.profileRoutesId)
+            .update({ toprope_cmp: 'Y' })
+            .then(() => {
+              console.log('      profileroutes.toprope_cmp=C updated in DB!');
+            })
+            .catch((error) => {
+              console.error('      Error profileroutes.toprope_cmp=C updated in DB! ', error);
+            });
+        }
+      }
+    }
     data.componentKey2 += 1; // this refreshes table and closes the modal
   },
   //
@@ -224,7 +245,7 @@ const actions = {
 
     // console.log('   server date: ', data.lastUpdate[0].lastUpdate.toDate());
     // console.log('   profile date: ', profile.lastUpdate.toDate());
-    if (profile.lastUpdate.toDate() >= data.lastUpdate[0].lastUpdate
+    if (profile.lastUpdate && profile.lastUpdate.toDate() >= data.lastUpdate[0].lastUpdate
       .toDate()) {
       console.log('        date is same or later, =no new update, doing nothing');
       return;

@@ -47,8 +47,8 @@ firebase.auth().onAuthStateChanged((user) => {
 
     const setProfile = { // take profile properties
       id: setUser.id,
-      userfk: setUser.name, // TODO: check if this can be removed
-      avatar: 1,
+      username: setUser.name,
+      image: setUser.image,
       xp: 1,
       level: 1,
       lastUpdate: 0,

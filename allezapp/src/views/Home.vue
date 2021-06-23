@@ -16,7 +16,7 @@
           </div> -->
           <!-- <div class="modalHeader">
             header
-            </div> -->
+          </div> -->
           <div class="content">
             <div class="flexcenter">
               <div>
@@ -52,7 +52,6 @@
             </div>
           </div>
           <div class="content">
-            {{modalProps.switchTopLeadAuto}} asd
             <div class="flexcenter">
               <label class="radiobtncontainer flexcenter button"
                :disabled="!modalProps.flag_topr">
@@ -61,8 +60,9 @@
                   <span class="ml-1">Toprope</span>
                 </span>
                 <input type="radio" name="radio"
-                 :checked="((modalProps.flag_topr) && (modalProps.switchTopLeadAuto==='Toprope'))"
-                 :disabled="!modalProps.flag_topr">
+                  :disabled="!modalProps.flag_topr"
+                  v-model="switchTopLeadAuto"
+                  value="Toprope">
                 <span class="radioBg"></span>
               </label>
               <label class="radiobtncontainer flexcenter button"
@@ -72,8 +72,9 @@
                   <span class="ml-1">Lead</span>
                 </span>
                 <input type="radio" name="radio"
-                 :checked="((modalProps.flag_lead) && (modalProps.switchTopLeadAuto==='Lead'))"
-                 :disabled="!modalProps.flag_lead">
+                 :disabled="!modalProps.flag_lead"
+                 v-model="switchTopLeadAuto"
+                 value="Lead">
                 <span class="radioBg red"></span>
               </label>
                <label class="radiobtncontainer flexcenter button"
@@ -83,40 +84,26 @@
                   <span class="ml-1">AutoB</span>
                 </span>
                 <input type="radio" name="radio"
-                :checked="(modalProps.flag_autob)"
-                 :disabled="!modalProps.flag_autob">
+                 :disabled="!modalProps.flag_autob"
+                 v-model="switchTopLeadAuto"
+                 value="AutoB">
                 <span class="radioBg blue"></span>
               </label>
             </div>
-            <!-- <div class="flexrow mb-5">
-              <b-field>
-                <b-radio-button v-model="modalProps.switchTopLeadAuto"
-                  native-value="top"
-                  type="is-warning is-outlined">
-                  <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' />
-                  <span class="ml-2">Toprope</span>
-                </b-radio-button>
-
-                <b-radio-button v-model="modalProps.switchTopLeadAuto"
-                  native-value="lead"
-                  type="is-danger is-outlined">
-                  <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' />
-                  <span class="ml-2">Lead</span>
-                </b-radio-button>
-
-                <b-radio-button v-model="modalProps.switchTopLeadAuto"
-                    native-value="auto"
-                    disabled>
-                    <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' />
-                    <span class="ml-2">AutoB</span>
-                </b-radio-button>
+            <div class="mb-2">
+              <b-field class="checkbox">
+                  <b-checkbox v-model="modalProps.checkboxPostPublic"
+                      true-value="Yes"
+                      false-value="No">
+                      Post Public
+                  </b-checkbox>
               </b-field>
-            </div> -->
+            </div>
             <div>
-              <b-field label="Personal Notes"
+              <b-field label="Comment"
                 label-position="on-border">
                 <b-input maxlength="70" v-model="modalProps.notes"
-                  placeholder="Enter Personal Notes here..."></b-input>
+                  placeholder="Enter Comment here..."></b-input>
               </b-field>
             </div>
             <div class="content-left">
@@ -166,46 +153,61 @@
   </div>
 </b-modal>
 
-  <b-modal v-model="modalViewVisible" width="90%" scroll="keep">
-    <div class="card">
-      <div class="card-content">
-        <div class="content">
-            <div class="flexcenter">
-              <div>
-                <sup>View Attempts</sup>
-              </div>
+<b-modal v-model="modalViewVisible" width="90%" scroll="keep">
+  <div class="card">
+    <div class="card-content">
+      <div class="content">
+          <div class="flexcenter">
+            <div>
+              <sup>Your Attempts:</sup>
             </div>
-            <div class="title is-4 flexrow">
-              <div>
-                #{{modalProps.routeNum}}
-              </div>
-              <div>
-                <template v-if="modalProps.flag_autob"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' /></template>
-                <template v-if="modalProps.flag_overh"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_overh.png?alt=media&token=b6f36953-6baf-49e1-b47e-c2691fbc150b' /></template>
-                <template v-else><div class='smallicon'></div></template>
-                <template v-if="modalProps.flag_lead"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' /></template>
-                <template v-else><div class='smallicon'></div></template>
-                <template v-if="modalProps.flag_topr"><img class='smallicon ml-1' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' /></template>
-                <template v-else><div class='smallicon'></div></template>
-              </div>
-              <div>
-                <template v-if="modalProps.color">
-                  <div id="square" :style="{
-                    'background-color': modalProps.color,
-                    'border-color': (modalProps.color === 'white' ? 'black' : ''),
-                    'border-width': (modalProps.color === 'white' ? '1px' : ''),
-                    'border-style': (modalProps.color === 'white' ? 'solid' : ''),
-                    }"
-                    style="border-radius: 5px;">&nbsp;
-                  </div>
-                </template>
-                {{modalProps.rating}}
-              </div>
+          </div>
+          <div class="title is-4 flexrow">
+            <div>
+              #{{modalProps.routeNum}}
             </div>
-          </div>*
-        <div class="content-left" v-for="(entry) in entries" :key="entry.id">
-          <div style="width: 10%" class="">{{entry.cmpOrAttempt}}</div>
-          <div style="width: 30%" class="">
+            <div>
+              <template v-if="modalProps.flag_autob"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' /></template>
+              <template v-if="modalProps.flag_overh"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_overh.png?alt=media&token=b6f36953-6baf-49e1-b47e-c2691fbc150b' /></template>
+              <template v-else><div class='smallicon'></div></template>
+              <template v-if="modalProps.flag_lead"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' /></template>
+              <template v-else><div class='smallicon'></div></template>
+              <template v-if="modalProps.flag_topr"><img class='smallicon ml-1' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' /></template>
+              <template v-else><div class='smallicon'></div></template>
+            </div>
+            <div>
+              <template v-if="modalProps.color">
+                <div id="square" :style="{
+                  'background-color': modalProps.color,
+                  'border-color': (modalProps.color === 'white' ? 'black' : ''),
+                  'border-width': (modalProps.color === 'white' ? '1px' : ''),
+                  'border-style': (modalProps.color === 'white' ? 'solid' : ''),
+                  }"
+                  style="border-radius: 5px;">&nbsp;
+                </div>
+              </template>
+              {{modalProps.rating}}
+            </div>
+          </div>
+        </div>
+      <div class="content-left" v-for="(entry) in entries" :key="entry.id">
+        <!-- <div style="width: 10%" class="">{{entry.cmpOrAttempt}}</div> -->
+        <div style="width: 20%" class="">
+          <template v-if="entry.doneAs === 'Toprope'">
+            <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' />
+          </template>
+          <template v-else-if="entry.doneAs === 'Lead'">
+            <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' />
+          </template>
+          <template v-if="entry.cmpOrAttempt === 'A'">
+            <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_warn.png?alt=media&token=a7d50e59-fc66-4cf1-99c4-e40eac2edd6b' />
+          </template>
+          <template v-else-if="entry.cmpOrAttempt === 'Y'">
+            <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_check.png?alt=media&token=a9528343-ea49-424c-9114-94b50447ab32' />
+          </template>
+        </div>
+        <div style="width: 30%" class="">
+          <template v-if="entry.dateDone">
             {{
             entry.dateDone.toDate().getUTCFullYear()
             }}/{{
@@ -213,17 +215,115 @@
             }}/{{
             entry.dateDone.toDate().getUTCDate()
             }}
-          </div>
-          <div style="width: 60%" class="">{{entry.notes}}</div>
-          <a class="button is-ghost is-small pl-2 pr-2 extrasmall"
-          @click="onModalViewDelete(entry)">
-            X
-          </a>
+          </template>
         </div>
+        <div style="width: 60%" class="ml-2">{{entry.notes}}</div>
+        <!-- <a class="button is-ghost is-small pl-2 pr-2 extrasmall"
+        @click="onModalViewDelete(entry)">
+          X
+        </a> -->
+      </div>
+      <div class="content"> <br /> </div>
+      <div class="content mt-4">
+        <div class="flexcenter">
+          <div>
+            <sup>Public Comments:</sup>
+          </div>
+        </div>
+      </div>
+      <div class="media" v-for="(comment) in comments" :key="comment.id">
+        <div class="media-left">
+          <figure class="image is-32x32">
+            <img :src="comment.image" alt="Placeholder image">
+          </figure>
+        </div>
+        <div class="media-content">
+          <div class="content">
+            <p>
+              <strong>{{comment.username}}</strong>
+              <small>
+                <template v-if="comment.dateDone">                --
+                  {{
+                    Math.round((new Date() - comment.dateDone.toDate()) / (1000 * 3600 * 24))
+                  }} days ago
+                </template>
+              </small>
+              <span style="" class="">
+                <template v-if="comment.doneAs === 'AutoB'">
+                  <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' />
+                </template>
+                <template v-if="comment.doneAs === 'Toprope'">
+                  <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' />
+                </template>
+                <template v-else-if="comment.doneAs === 'Lead'">
+                  <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' />
+                </template>
+                <template v-if="comment.cmpOrAttempt === 'A'">
+                  <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_warn.png?alt=media&token=a7d50e59-fc66-4cf1-99c4-e40eac2edd6b' />
+                </template>
+                <template v-else-if="comment.cmpOrAttempt === 'Y'">
+                  <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_check.png?alt=media&token=a9528343-ea49-424c-9114-94b50447ab32' />
+                </template>
+              </span>
+              <br>
+              {{comment.notes}}
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </b-modal>
-
+<!--
+-in the 'location'column:
+ -the number represents where in the gym the route is
+  the icons represent what type of route it is:
+    (a) = autobelay
+    (t)) = toprope able
+    (l) = leadable
+  -use the botton on the right end of each line if you attempted or completed a route.
+    you can add personal notes or modify the date
+  -(attempt) = means you only attempted the route
+  -(cmp) = means you also completed the route.
+  -->
+  <b-modal v-model="modalLegendVisible" width="90%" scroll="keep">
+    <div class="card">
+      <div class="card-content">
+        <div class="content">
+            <div class="flexcenter">
+              <div>
+                <h3>Legend</h3>
+              </div>
+            </div>
+            <div class="flexrow">
+            </div>
+            <h5>In the 'Location' column: </h5>
+            <li class="">The number represents where in the gym the route is. </li>
+            <li class="">The icons represent what type of route it is:</li>
+            <div class="ml-4"> <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' /> = Autobelay</div>
+            <div class="ml-4"> <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' /> = Toprope</div>
+            <div class="ml-4"> <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' /> = Lead</div>
+            <div class="ml-4"> <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_overh.png?alt=media&token=b6f36953-6baf-49e1-b47e-c2691fbc150b' /> = Overhang</div>
+            <h5 class="mt-4">In the 'Completed' column: </h5>
+            <li>Use the button on the right side if
+              you attempted or completed a route.</li>
+            <li>When you complete or attempt a route, it will show as:</li>
+            <div class="ml-4">
+              <img class='smallicon attempt' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' />
+              <img class='smallicon attempt' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' />
+              = Attempt
+            </div><div class="ml-4">
+              <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' />
+              <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' />
+              = Completed
+            </div>
+            <h5 class="mt-4">When viewing your attempts:</h5>
+            <div class="ml-4"> <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_warn.png?alt=media&token=a7d50e59-fc66-4cf1-99c4-e40eac2edd6b' /> = Attempt </div>
+            <div class="ml-4"> <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_check.png?alt=media&token=a9528343-ea49-424c-9114-94b50447ab32' /> = Completed</div>
+          </div>
+        </div>
+      </div>
+    </b-modal>
     <!-- <h1 class='title is-1 centered flex1'>Routes</h1> -->
     <!-- {{routesReal}} -->
     <!-- <b-table
@@ -348,10 +448,13 @@
         </b-table-column>
         <b-table-column field="cmp" label="Completed" sortable v-slot="props">
           <div class="flexrow" @click="onViewRoute(props.row)">
-            <div>
-                <img v-if="props.row.cmp === 'A'" class='smallicon attempt' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' />
-                <img v-if="props.row.cmp === 'Y'" class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' />
-            </div>
+            <template v-if="props.row.toprope_cmp === 'A'"><img class='smallicon attempt' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' /></template>
+            <template v-else-if="props.row.toprope_cmp === 'Y'"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' /></template>
+            <template v-else><div class='smallicon'></div></template>
+            <template v-if="props.row.lead_cmp === 'A'"><img class='smallicon attempt' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' /></template>
+            <template v-else-if="props.row.lead_cmp === 'Y'"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' /></template>
+            <template v-else><div class='smallicon'></div></template>
+            <div></div>
             <!-- <div>
               <button><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_edit.png?alt=media&token=6eaa64b0-50e0-4c82-b8a0-ad6aa1627219' /></button>
             </div> -->
@@ -382,7 +485,7 @@
             profile[0].lastUpdate.toDate().getUTCDate()
             }}
         </h5>
-        <h5 @click="onLegend()">
+        <h5 @click="onLegend()" style="cursor:pointer">
           Legend
         </h5>
       </div>
@@ -398,6 +501,7 @@ export default {
   data: () => ({
     modalEditVisible: false,
     modalViewVisible: false,
+    modalLegendVisible: false,
     modalProps: {
       rating: '',
       color: '',
@@ -408,7 +512,10 @@ export default {
       notes: '',
       create_at: '',
       switchTopLeadAuto: '',
+      checkboxPostPublic: '',
     },
+    picked: '',
+    switchTopLeadAuto: '',
     componentKey: 0,
     happenedAlready: false,
     happenedAlreadyGetRoutes: false,
@@ -440,7 +547,7 @@ export default {
       });
   },
   computed: {
-    ...mapState('dataJS', ['routesReal', 'profileroutes', 'lastUpdate', 'entries']),
+    ...mapState('dataJS', ['routesReal', 'profileroutes', 'lastUpdate', 'entries', 'comments']),
     ...mapState('profile', ['profile']),
     ...mapState('auth', ['user']),
     ...mapGetters('dataJS', ['getLoading', 'getComponentKey2']),
@@ -462,7 +569,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('dataJS', ['initRoutes', 'initLastUpdate', 'initProfileRoutes', 'getRoutes', 'setCompleted', 'modalComplete', 'modalAttempted', 'deleteStat', 'initEntries']),
+    ...mapActions('dataJS', ['initRoutes', 'initLastUpdate', 'initProfileRoutes', 'getRoutes', 'setCompleted', 'modalSubmit', 'deleteStat', 'initEntries', 'initComments']),
     // onClickSwitch(arg) {
     //   console.log('in onClick', arg);
     //   if (arg === 'topr') {
@@ -472,6 +579,9 @@ export default {
     //   }
     //   // this.modalProps.switchTopr = this.modalProps.switchTopr
     // },
+    getName(profileId) {
+      return profileId ? 'profileId' : 'no-name';
+    },
     onModalViewDelete(arg) {
       console.log('arg: ', arg);
       this.deleteStat(arg);
@@ -491,20 +601,30 @@ export default {
       console.log('onModalCMP', this.modalProps);
       // 1. create a newrecord in statistics table with all props and date
       // 2. also set the records flag to the appropriate ( check if topr or lead)
-      this.modalComplete(this.modalProps);
+      this.modalProps.switchTopLeadAuto = this.switchTopLeadAuto;
+      this.modalProps.username = this.profile[0].username;
+      this.modalProps.image = this.profile[0].image;
+      this.modalProps.cmpOrAttempt = 'Y';
+      this.modalSubmit(this.modalProps);
     },
     onModalAttempted() {
-      this.modalAttempted(this.modalProps);
+      this.modalProps.switchTopLeadAuto = this.switchTopLeadAuto;
+      this.modalProps.cmpOrAttempt = 'A';
+      this.modalSubmit(this.modalProps);
     },
     onViewRoute(row) {
       this.modalProps = row; // wherever the user clicked, set the modal to that data
-      // this.modalProps.entries = this.getEntries(row);
       this.modalViewVisible = true;
       console.log(' onViewRoute: modalProps= ', this.modalProps);
+
       // entries are not showing up yet, using this function to load them.
       // (links to profileroutes table, key is id (profileroutesid))
       this.initEntries(row.id).then(() => {
         console.log('finished loading entries: ', this.entries);
+      });
+
+      this.initComments(row.routeId).then(() => {
+        console.log('finished loading comments: ', this.comments);
       });
     },
     onEditRoute(row) {
@@ -512,7 +632,8 @@ export default {
       console.log('in edit row: ', row);
       this.modalProps = row;
       this.modalProps.notes = '';
-      this.modalProps.switchTopLeadAuto = this.profile[0].default;
+      // this.modalProps.switchTopLeadAuto = this.profile[0].default.toString();
+      this.switchTopLeadAuto = this.profile[0].default;
       this.modalProps.profileRoutesId = row.id;
       this.modalEditVisible = true;
       // this.modalProps.date = firebase.firestore.FieldValue.serverTimestamp().toString();
@@ -523,13 +644,7 @@ export default {
       this.modalProps.date = this.getShortDate(firebase.firestore.Timestamp.now());
     },
     onLegend() {
-      this.componentKey += 1;
-      console.log('component ket = ', this.componentKey);
-      // this.$buefy.dialog.alert({
-      //   title: 'Legend',
-      //   message: 'I have a title, a custom button and <b>HTML</b>!',
-      //   confirmText: 'Cool',
-      // });
+      this.modalLegendVisible = true;
     },
     // onGetRoutesManually() {
     //   this.getRoutes(this.profile[0]);
@@ -637,13 +752,14 @@ export default {
               console.error('     ------  profile routes ERROR loading!', error);
             });
           this.happenedAlready = true;
+          // also set the default toprope/lead when user logs in (profile changes)
+          console.log(' profile default in db is: ', this.profile[0].default);
+          if (this.profile[0].default) {
+            // this.modalProps.switchTopLeadAuto = this.profile[0].default;
+            // remove#3
+            console.log(' profile default in modalProps is: ', this.modalProps.switchTopLeadAuto);
+          }
         }
-      }
-      // also set the default toprope/lead when user logs in (profile changes)
-      console.log(' profile default in db is: ', this.profile[0].default);
-      if (this.profile[0].default) {
-        this.modalProps.switchTopLeadAuto = this.profile[0].default;
-        console.log(' profile default in modalProps is: ', this.modalProps.switchTopLeadAuto);
       }
     },
     // async profileroutes() {

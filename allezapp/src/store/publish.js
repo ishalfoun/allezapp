@@ -1,14 +1,6 @@
 import { firestoreAction } from 'vuexfire';
-import firebase from '@/firebase';
 import db from '@/db';
 import input from './input';
-
-///
-///
-// this file is only used to display the main data in main screen
-///
-///
-///
 
 const data = {
   routes: ['-1'],

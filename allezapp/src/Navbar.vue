@@ -11,8 +11,8 @@
           <div class="navbar-item profile if-mobile" aria-expanded="false">
             <template v-if="profile[0]">
               <img class="image is-24x24 mr-2"
-                :src="user.image">
-                <span>{{user.name}}</span>
+                :src="profile[0].image">
+                <span>{{profile[0].username}}</span>
             </template>
           </div>
           <a role="button" class="navbar-burger" aria-label="menu"
@@ -62,36 +62,74 @@
             </div>
           </div>
 
-  <!-- nav bar end for desktop: -->
-          <div class="navbar-end if-desktop">
-            <div class="navbar-item has-dropdown is-hoverable" id="navbarApps">
-            <!-- Menu dropdown  -->
-              <a class="navbar-link">
-                <!-- Menu dropdown link -->
-                Menu
-              </a>
-              <!-- <div class="navbar-dropdown" style="right: 0px;">
-              <router-link class="navbar-item" to="/input">
-                Input
-              </router-link>
-              </div> -->
+<!-- nav bar end for desktop: -->
+        <div class="navbar-end if-desktop">
+          <div class="navbar-item has-dropdown is-hoverable" v-if="isLoggedIn">
+            <!-- Account dropdown -->
+            <div class="navbar-link">
+              <!-- Accont drop down link -->
+              <div class="flexcontainer" v-if='profile[0]'>
+                <div class="centered imagecont mr-4">
+                  <img class="centered image is-24x24"
+                  :src="profile[0].image">
+                </div>
+                <span class="item">{{profile[0].username}}</span>
+              </div>
             </div>
-            <div class="navbar-item has-dropdown is-hoverable" id="navbarLogin" v-if="!isLoggedIn">
-            <!-- Login dropdown  -->
-              <a class="navbar-link">
-                <!-- Login dropdown link -->
-                Login
-              </a>
-              <div class="navbar-dropdown" style="right: 0px;left:auto">
-                  <!-- Login dropdown menu -->
-                <a href="/quiz" class="navbar-item" @click="login()">
-                  With Google
+            <div class="navbar-dropdown" style="right: 0px;left:auto">
+              <!-- Accont drop down menu -->
+              <div class="navbar-item flexcontainer">
+                <a class="button is-danger is-small pl-2 pr-2"
+                  v-if="isLoggedIn" @click="logout()">
+                  Log Out
                 </a>
+                <a class="button is-success is-small pl-2 pr-2"
+                  v-if="!isLoggedIn" @click="login()">
+                  Log In
+                </a>
+              </div>
+              <div v-if="isLoggedIn" class="navbar-item flexcontainer"
+              v-on:click.stop="onSwitchDefault(switchDefaultClimb)">
+                Default:
+                <b-field >
+                  <span class='mr-3'>{{ switchDefaultClimb }}</span>
+                  <b-switch v-model="switchDefaultClimb"
+                    type="is-danger"
+                    true-value="Lead"
+                    false-value="Toprope">
+                  </b-switch>
+                </b-field>
+              </div>
+              <div class="navbar-item" @click="closeNav()"
+              v-if="profile[0] && profile[0].id === 'aGyG5o6IaDZtnyK7ouOKmNU1UYP2'">
+                <router-link class="button" to="/input">
+                  Input
+                </router-link>
+                <router-link class="button" to="/publish">
+                  Publish
+                </router-link>
               </div>
             </div>
           </div>
+          <div class="navbar-item has-dropdown is-hoverable" id="navbarLogin" v-if="!isLoggedIn">
+          <!-- Login dropdown  -->
+            <a class="navbar-link">
+              <!-- Login dropdown link -->
+              Login
+            </a>
+            <div class="navbar-dropdown" style="right: 0px;left:auto">
+                <!-- Login dropdown menu -->
+              <a href="/quiz" class="navbar-item" @click="login()">
+                With Google
+              </a>
+              <a href="/quiz" class="navbar-item" @click="guestLogin()">
+                Guest Login
+              </a>
+            </div>
+          </div>
         </div>
-      </nav>
+      </div>
+    </nav>
 
       <section class="hero is-warning pt-4" v-if="!isLoggedIn">
         <div class="hero-body">
@@ -162,8 +200,8 @@ export default {
       }
     },
     async profile() {
-      console.log('navbar. profileWatch ahppened', this.profile[0]);
-      if (this.profile[0].default) {
+      // console.log('navbar. profileWatch happened', this.profile[0]);
+      if (this.profile[0] && this.profile[0].default) {
         console.log('       default in db is: ', this.profile[0].default);
         this.switchDefaultClimb = this.profile[0].default;
       }
@@ -213,10 +251,10 @@ export default {
 #navbarspace {
   margin-bottom: 56px;
 }
-#navbarApps {
+#navbarDropdown {
   position: relative;
   left: auto !important;
-  margin-right:0;
+  margin-right: 10px;
 }
 #navbarLogin {
   position: relative;
@@ -225,7 +263,7 @@ export default {
 }
 @media screen and (min-width: 1024px) { // =  on desktop
   .if-mobile { // on desktop, if mobile, dont show
-    display: none;
+    display: none !important;
   }
   .navbar-item {
     font-size: 1.5em;
@@ -236,6 +274,7 @@ export default {
   #content {
     width:80%;
     margin-left: 10% !important;
+    padding-top: 80px;
   }
 }
 @media screen and (max-width: 1024px) { // = on mobile
