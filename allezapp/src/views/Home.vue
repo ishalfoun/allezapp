@@ -90,7 +90,7 @@
                 <span class="radioBg blue"></span>
               </label>
             </div>
-            <div class="mb-2">
+            <div class="mb-2 flexcontainer" style="margin: auto;">
               <b-field class="checkbox">
                   <b-checkbox v-model="modalProps.checkboxPostPublic"
                       true-value="Yes"
@@ -98,6 +98,13 @@
                       Post Public
                   </b-checkbox>
               </b-field>
+            <div class="rating rating2"><!--
+              --><a href="#5" title="Give 5 stars">★</a><!--
+              --><a href="#4" title="Give 4 stars">★</a><!--
+              --><a href="#3" title="Give 3 stars">★</a><!--
+              --><a href="#2" title="Give 2 stars">★</a><!--
+              --><a href="#1" title="Give 1 star">★</a>
+            </div>
             </div>
             <div>
               <b-field label="Comment"
@@ -162,7 +169,8 @@
               #{{modalProps.routeNum}}
             </div>
             <div>
-              <template v-if="modalProps.flag_autob"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' /></template>
+              <template v-if="modalProps.flag_autob"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' />
+              </template>
               <template v-if="modalProps.flag_overh"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_overh.png?alt=media&token=b6f36953-6baf-49e1-b47e-c2691fbc150b' /></template>
               <template v-else><div class='smallicon'></div></template>
               <template v-if="modalProps.flag_lead"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' /></template>
@@ -198,6 +206,9 @@
           </template>
           <template v-else-if="entry.doneAs === 'Lead'">
             <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' />
+          </template>
+          <template v-else-if="entry.doneAs === 'AutoB'">
+            <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' />
           </template>
           <template v-if="entry.cmpOrAttempt === 'A'">
             <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_warn.png?alt=media&token=a7d50e59-fc66-4cf1-99c4-e40eac2edd6b' />
@@ -407,7 +418,7 @@
       id="table"
       :key="componentKey"
       :mobile-cards="false"
-      :data="profileroutes"
+      :data="filterRoutes(profileroutes)"
       ref="table2"
       sort-icon="arrow-up"
       sort-icon-size="is-small"
@@ -584,8 +595,9 @@ export default {
     //   }
     //   // this.modalProps.switchTopr = this.modalProps.switchTopr
     // },
-    getName(profileId) {
-      return profileId ? 'profileId' : 'no-name';
+    filterRoutes(arg) {
+      // console.log('filterRoutes: ', arg);
+      return arg;
     },
     onModalViewDelete(arg) {
       console.log('arg: ', arg);
@@ -604,8 +616,6 @@ export default {
     },
     onModalCompleted() {
       console.log('onModalCMP', this.modalProps);
-      // 1. create a newrecord in statistics table with all props and date
-      // 2. also set the records flag to the appropriate ( check if topr or lead)
       this.modalProps.switchTopLeadAuto = this.switchTopLeadAuto;
       this.modalProps.username = this.profile[0].username;
       this.modalProps.image = this.profile[0].image;
@@ -613,7 +623,10 @@ export default {
       this.modalSubmit(this.modalProps);
     },
     onModalAttempted() {
+      console.log('onModalATT', this.modalProps);
       this.modalProps.switchTopLeadAuto = this.switchTopLeadAuto;
+      this.modalProps.username = this.profile[0].username;
+      this.modalProps.image = this.profile[0].image;
       this.modalProps.cmpOrAttempt = 'A';
       this.modalSubmit(this.modalProps);
     },
@@ -638,7 +651,13 @@ export default {
       this.modalProps = row;
       this.modalProps.notes = '';
       // this.modalProps.switchTopLeadAuto = this.profile[0].default.toString();
-      this.switchTopLeadAuto = this.profile[0].default;
+      if (this.modalProps.flag_autob
+        && !this.modalProps.flag_lead
+        && !this.modalProps.flag_toprope) {
+        this.switchTopLeadAuto = 'AutoB';
+      } else {
+        this.switchTopLeadAuto = this.profile[0].default;
+      }
       this.modalProps.profileRoutesId = row.id;
       this.modalEditVisible = true;
       // this.modalProps.date = firebase.firestore.FieldValue.serverTimestamp().toString();
@@ -789,6 +808,49 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  /*
+  * Rating styles
+  */
+.rating {
+  margin: auto;
+  margin-bottom: 5px;
+  font-size: 1.5em;
+  overflow:hidden;
+}
+.rating input {
+  float: right;
+  opacity: 0;
+  position: absolute;
+}
+.rating a,
+.rating label {
+  float:right;
+  color: #aaa;
+  text-decoration: none;
+  -webkit-transition: color .4s;
+  -moz-transition: color .4s;
+  -o-transition: color .4s;
+  transition: color .4s;
+}
+.rating label:hover ~ label,
+.rating input:focus ~ label,
+.rating label:hover,
+.rating a:hover,
+.rating a:hover ~ a,
+.rating a:focus,
+.rating a:focus ~ a {
+  color: orange;
+  cursor: pointer;
+}
+.rating2 {
+  direction: rtl;
+}
+.rating2 a {
+  float:none
+}
+//
+// rating end
+//
 .flexendcontainer{
   display: flex;
   justify-content: space-between;

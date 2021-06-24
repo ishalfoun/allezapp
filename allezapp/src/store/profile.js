@@ -23,12 +23,13 @@ const actions = {
     }
   }),
   // eslint-disable-next-line
-  async switchDefault({ getters }, arg) {
-    console.log('in switch dfault: profile: ', state.profile[0]);
+  async updateProfileField({ getters }, arg) {
+    console.log('in updateProfileField: profile: ', state.profile[0]);
+    console.log('in updateProfileField: arg: ', arg);
     await db
       .collection('profiles')
       .doc(state.profile[0].id)
-      .update({ default: arg })
+      .update(arg)
       .then(() => {
         console.log('      updating profile.def: success!');
       })

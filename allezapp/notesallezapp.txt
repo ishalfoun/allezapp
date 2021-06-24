@@ -446,11 +446,19 @@ right now:
 [x] 4. show this.
 	
 
-[] show in entries if autob
-[]	shows this table, where the route id matches with route id to show all comments for that route
+[x] make default if autob
+[x]  show in entries if autob
+[x]	shows this table, where the route id matches with route id to show all comments for that route
 		-show real records
-[] rate a route with stars?
 
+
+[] fix the default autob
+[] rate a route with stars?
+[] navbar: hide autobleays and others.
+	-hide autobelay: [show/hide]
+	-only show lead [ lead / all ]
+	-only show toprope [toprope / all ]
+[] close nav func in all navbar menu clicks
 
 small stuff:	
 [] put route added in the view, not in add att

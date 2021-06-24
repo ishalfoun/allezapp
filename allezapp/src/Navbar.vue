@@ -30,7 +30,11 @@
   <!-- nav bar end for mobile: -->
           <div class="navbar-end if-mobile">
             <div class="navbar-item flexcontainer">
+              <a class="button is-success is-small pl-2 pr-2" style="background:#2463b6">
+                Profile
+              </a>
               <a class="button is-danger is-small pl-2 pr-2"
+                style="background:#e44035"
                 v-if="isLoggedIn" @click="logout()">
                 Log Out
               </a>
@@ -41,26 +45,70 @@
             </div>
             <div v-if="isLoggedIn" class="navbar-item flexcontainer"
             v-on:click.stop="onSwitchDefault(switchDefaultClimb)">
-              Default:
+              Default selection:
               <b-field >
                 <span class='mr-3'>{{ switchDefaultClimb }}</span>
                 <b-switch v-model="switchDefaultClimb"
                   type="is-danger"
                   true-value="Lead"
-                  false-value="Toprope">
+                  false-value="Toprope"
+                  class="defaultClimb">
                 </b-switch>
               </b-field>
             </div>
-            <div class="navbar-item" @click="closeNav()"
-             v-if="profile[0] && profile[0].id === 'aGyG5o6IaDZtnyK7ouOKmNU1UYP2'">
-              <router-link class="button" to="/input">
-                Input
-              </router-link>
-              <router-link class="button" to="/publish">
-                Publish
-              </router-link>
+              <div v-if="isLoggedIn" class="navbar-item flexcontainer"
+              v-on:click.stop="onSwitchHideAutoB(switchHideAutoB)">
+                Hide Autobelays:
+                <b-field >
+                  <span class='mr-3'>{{ switchHideAutoB }}</span>
+                  <b-switch v-model="switchHideAutoB"
+                    type=""
+                    true-value="Hide"
+                    false-value="Show"
+                    class="hideAutoB">
+                  </b-switch>
+                </b-field>
+              </div>
+              <div v-if="isLoggedIn" class="navbar-item flexcontainer"
+              v-on:click.stop="onSwitchShowOnlyLead(switchShowOnlyLead)">
+                <div>
+                  Only Show Lead routes:
+                </div>
+                <div>
+                  <b-field >
+                    <span class='mr-3'>{{ switchShowOnlyLead }}</span>
+                    <b-switch v-model="switchShowOnlyLead"
+                      type="is-danger"
+                      true-value="Lead"
+                      false-value="All"
+                      class="showOnlyLead">
+                    </b-switch>
+                  </b-field>
+                </div>
+              </div>
+              <div v-if="isLoggedIn" class="navbar-item flexcontainer"
+              v-on:click.stop="onSwitchShowOnlyToprope(switchShowOnlyToprope)">
+                Only show Toprope routes:
+                <b-field>
+                  <span class='mr-3'>{{ switchShowOnlyToprope }}</span>
+                  <b-switch v-model="switchShowOnlyToprope"
+                    type="is-danger"
+                    true-value="Toprope"
+                    false-value="All"
+                    class="showOnlyToprope">
+                  </b-switch>
+                </b-field>
+              </div>
+              <div class="navbar-item" @click="closeNav()"
+                v-if="profile[0] && profile[0].id === 'aGyG5o6IaDZtnyK7ouOKmNU1UYP2'">
+                  <router-link class="button ml-4" to="/input">
+                    Input
+                  </router-link>
+                  <router-link class="button" to="/publish">
+                    Publish
+                  </router-link>
+              </div>
             </div>
-          </div>
 
 <!-- nav bar end for desktop: -->
         <div class="navbar-end if-desktop">
@@ -165,6 +213,9 @@ export default {
     showAcc: false,
     isLoading: true,
     switchDefaultClimb: 'Toprope',
+    switchHideAutoB: 'Show',
+    switchShowOnlyLead: 'All',
+    switchShowOnlyToprope: 'All',
   }),
   created() { // When this component is mounted, we want to call the init
     // console.log(this.$store);
@@ -185,12 +236,37 @@ export default {
   },
   methods: {
     ...mapActions('auth', ['login', 'logout', 'guestLogin', 'soundToggle']),
-    ...mapActions('profile', ['init', 'switchDefault']),
+    ...mapActions('profile', ['init', 'updateProfileField']),
     onSwitchDefault(arg) {
-      this.switchDefault((arg === 'Toprope' ? 'Lead' : 'Toprope'));
+      console.log('in onSwitchDefault', arg);
+      // this.updateProfileField((arg === 'Toprope' ? 'Lead' : 'Toprope'));
+      this.updateProfileField({ default: arg });
+      this.closeNav();
     },
-    closeNav() {
-      this.showNav = false;
+    onSwitchHideAutoB(arg) {
+      console.log('in onSwitchHideAutoB', arg);
+      this.updateProfileField({ hideAutoB: arg });
+      this.closeNav();
+    },
+    onSwitchShowOnlyLead(arg) {
+      console.log('in onSwitchShowOnlyLead', arg);
+      this.updateProfileField({ showOnlyLead: arg });
+      this.closeNav();
+    },
+    onSwitchShowOnlyToprope(arg) {
+      console.log('in onSwitchShowOnlyToprope', arg);
+      this.updateProfileField({ showOnlyToprope: arg });
+      this.closeNav();
+    },
+    async closeNav() {
+      await this.wait(700).then(() => {
+        this.showNav = false;
+      });
+    },
+    async wait(timeout) { // await wait(500);
+      return new Promise((resolve) => {
+        setTimeout(resolve, timeout);
+      });
     },
   },
   watch: {
@@ -211,7 +287,22 @@ export default {
 </script>
 
 <style lang="scss">
-.switch input[type=checkbox] + .check {
+.defaultClimb input[type=checkbox] + .check  {
+  background: #ffdd57;
+}
+.hideAutoB input[type=checkbox] + .check {
+  background: blue;
+}
+.hideAutoB input[type=checkbox]:checked + .check {
+  background: #b5b5b5;
+}
+.hideAutoB:hover input[type=checkbox] + .check {
+  background: rgb(37, 37, 247);
+}
+.hideAutoB:hover input[type=checkbox]:checked + .check {
+  background: #b5b5b5;
+}
+.showOnlyToprope input[type=checkbox]:checked + .check  {
   background: #ffdd57;
 }
 .logo {
@@ -280,6 +371,9 @@ export default {
 @media screen and (max-width: 1024px) { // = on mobile
   .if-desktop { // on mobile, if desktop, dont show
     display: none;
+  }
+  .navbar-item {
+    font-size: 0.9em;
   }
 }
 #hoverpurp:hover {
