@@ -451,6 +451,17 @@ right now:
 [x]	shows this table, where the route id matches with route id to show all comments for that route
 		-show real records
 
+7
+8
+
+-filtering
+-tr/l switch in db???
+
+-on mobile, all small icons are not aligned
+-sorting !!( after filtering)
+
+
+
 
 [] fix the default autob
 [] rate a route with stars?

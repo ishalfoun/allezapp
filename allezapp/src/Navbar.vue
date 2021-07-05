@@ -30,25 +30,30 @@
   <!-- nav bar end for mobile: -->
           <div class="navbar-end if-mobile">
             <div class="navbar-item flexcontainer">
-              <a class="button is-success is-small pl-2 pr-2" style="background:#2463b6">
+              <a class="button is-success pl-4 pr-4" style="background:#2463b6">
                 Profile
               </a>
-              <a class="button is-danger is-small pl-2 pr-2"
+              <router-link class="button pl-4 pr-4"
+                v-if="profile[0] && profile[0].id === 'aGyG5o6IaDZtnyK7ouOKmNU1UYP2'"
+                style="background:lightgrey" to="/input">
+                Input
+              </router-link>
+              <!-- <a class="button is-danger is-small pl-2 pr-2"
                 style="background:#e44035"
                 v-if="isLoggedIn" @click="logout()">
                 Log Out
-              </a>
-              <a class="button is-success is-small pl-2 pr-2"
+              </a> -->
+              <a class="button is-success pl-2 pr-2"
                 v-if="!isLoggedIn" @click="login()">
                 Log In
               </a>
             </div>
             <div v-if="isLoggedIn" class="navbar-item flexcontainer"
-            v-on:click.stop="onSwitchDefault(switchDefaultClimb)">
+            v-on:click.stop="onSwitchDefault()">
               Default selection:
               <b-field >
-                <span class='mr-3'>{{ switchDefaultClimb }}</span>
-                <b-switch v-model="switchDefaultClimb"
+                <span class='mr-3'>{{ switches.switchDefaultClimb }}</span>
+                <b-switch v-model="switches.switchDefaultClimb"
                   type="is-danger"
                   true-value="Lead"
                   false-value="Toprope"
@@ -57,11 +62,11 @@
               </b-field>
             </div>
               <div v-if="isLoggedIn" class="navbar-item flexcontainer"
-              v-on:click.stop="onSwitchHideAutoB(switchHideAutoB)">
-                Hide Autobelays:
+              v-on:click.stop="onSwitchHideAutoB()">
+                Autobelays:
                 <b-field >
-                  <span class='mr-3'>{{ switchHideAutoB }}</span>
-                  <b-switch v-model="switchHideAutoB"
+                  <span class='mr-3'>{{ switches.switchHideAutoB }}</span>
+                  <b-switch v-model="switches.switchHideAutoB"
                     type=""
                     true-value="Hide"
                     false-value="Show"
@@ -70,43 +75,54 @@
                 </b-field>
               </div>
               <div v-if="isLoggedIn" class="navbar-item flexcontainer"
-              v-on:click.stop="onSwitchShowOnlyLead(switchShowOnlyLead)">
+              v-on:click.stop="onSwitchShowOnlyLead()">
                 <div>
-                  Only Show Lead routes:
+                  Lead-only routes:
                 </div>
                 <div>
                   <b-field >
-                    <span class='mr-3'>{{ switchShowOnlyLead }}</span>
-                    <b-switch v-model="switchShowOnlyLead"
-                      type="is-danger"
-                      true-value="Lead"
-                      false-value="All"
+                    <span class='mr-3'>{{ switches.switchShowOnlyLead }}</span>
+                    <b-switch v-model="switches.switchShowOnlyLead"
+                      type=""
+                      true-value="Hide"
+                      false-value="Show"
                       class="showOnlyLead">
                     </b-switch>
                   </b-field>
                 </div>
               </div>
               <div v-if="isLoggedIn" class="navbar-item flexcontainer"
-              v-on:click.stop="onSwitchShowOnlyToprope(switchShowOnlyToprope)">
-                Only show Toprope routes:
+              v-on:click.stop="onSwitchShowOnlyToprope()">
+                Toprope-only routes:
                 <b-field>
-                  <span class='mr-3'>{{ switchShowOnlyToprope }}</span>
-                  <b-switch v-model="switchShowOnlyToprope"
-                    type="is-danger"
-                    true-value="Toprope"
-                    false-value="All"
+                  <span class='mr-3'>{{ switches.switchShowOnlyToprope }}</span>
+                  <b-switch v-model="switches.switchShowOnlyToprope"
+                    type=""
+                    true-value="Hide"
+                    false-value="Show"
                     class="showOnlyToprope">
                   </b-switch>
                 </b-field>
               </div>
-              <div class="navbar-item" @click="closeNav()"
-                v-if="profile[0] && profile[0].id === 'aGyG5o6IaDZtnyK7ouOKmNU1UYP2'">
-                  <router-link class="button ml-4" to="/input">
-                    Input
-                  </router-link>
-                  <router-link class="button" to="/publish">
-                    Publish
-                  </router-link>
+              <div v-if="isLoggedIn" class="navbar-item flexcontainer"
+              v-on:click.stop="onSwitchShowOnlyOverhang()">
+                Overhang routes:
+                <b-field>
+                  <span class='mr-3'>{{ switches.switchShowOnlyOverhang }}</span>
+                  <b-switch v-model="switches.switchShowOnlyOverhang"
+                    type=""
+                    true-value="Hide"
+                    false-value="Show"
+                    class="showOnlyOverhang">
+                  </b-switch>
+                </b-field>
+              </div>
+              <div v-if="isLoggedIn" class="navbar-item flexcontainer">
+                <div></div>
+                <a class="button is-success pl-4 pr-4"
+                  @click="onApplyFilters()">
+                  Apply
+                </a>
               </div>
             </div>
 
@@ -135,18 +151,6 @@
                   v-if="!isLoggedIn" @click="login()">
                   Log In
                 </a>
-              </div>
-              <div v-if="isLoggedIn" class="navbar-item flexcontainer"
-              v-on:click.stop="onSwitchDefault(switchDefaultClimb)">
-                Default:
-                <b-field >
-                  <span class='mr-3'>{{ switchDefaultClimb }}</span>
-                  <b-switch v-model="switchDefaultClimb"
-                    type="is-danger"
-                    true-value="Lead"
-                    false-value="Toprope">
-                  </b-switch>
-                </b-field>
               </div>
               <div class="navbar-item" @click="closeNav()"
               v-if="profile[0] && profile[0].id === 'aGyG5o6IaDZtnyK7ouOKmNU1UYP2'">
@@ -212,10 +216,13 @@ export default {
     showForm: false,
     showAcc: false,
     isLoading: true,
-    switchDefaultClimb: 'Toprope',
-    switchHideAutoB: 'Show',
-    switchShowOnlyLead: 'All',
-    switchShowOnlyToprope: 'All',
+    switches: {
+      switchDefaultClimb: 'Toprope',
+      switchHideAutoB: 'Show',
+      switchShowOnlyLead: 'Show',
+      switchShowOnlyToprope: 'Show',
+      switchShowOnlyOverhang: 'Show',
+    },
   }),
   created() { // When this component is mounted, we want to call the init
     // console.log(this.$store);
@@ -237,29 +244,43 @@ export default {
   methods: {
     ...mapActions('auth', ['login', 'logout', 'guestLogin', 'soundToggle']),
     ...mapActions('profile', ['init', 'updateProfileField']),
-    onSwitchDefault(arg) {
-      console.log('in onSwitchDefault', arg);
+    ...mapActions('dataJS', ['applyFilters']),
+    onApplyFilters() {
+      this.applyFilters();
+    },
+    async onSwitchDefault() {
+      console.log('in onSwitchDefault ');
       // this.updateProfileField((arg === 'Toprope' ? 'Lead' : 'Toprope'));
-      this.updateProfileField({ default: arg });
-      this.closeNav();
+      await this.wait(500).then(() => {
+        this.updateProfileField({ default: this.switchDefaultClimb });
+      });
     },
-    onSwitchHideAutoB(arg) {
-      console.log('in onSwitchHideAutoB', arg);
-      this.updateProfileField({ hideAutoB: arg });
-      this.closeNav();
+    async onSwitchHideAutoB() {
+      console.log('in onSwitchHideAutoB');
+      await this.wait(500).then(() => {
+        this.updateProfileField({ hideAutoB: this.switchHideAutoB });
+      });
     },
-    onSwitchShowOnlyLead(arg) {
-      console.log('in onSwitchShowOnlyLead', arg);
-      this.updateProfileField({ showOnlyLead: arg });
-      this.closeNav();
+    async onSwitchShowOnlyLead() {
+      console.log('in onSwitchShowOnlyLead');
+      await this.wait(500).then(() => {
+        this.updateProfileField({ showOnlyLead: this.switchShowOnlyLead });
+      });
     },
-    onSwitchShowOnlyToprope(arg) {
-      console.log('in onSwitchShowOnlyToprope', arg);
-      this.updateProfileField({ showOnlyToprope: arg });
-      this.closeNav();
+    async onSwitchShowOnlyToprope() {
+      console.log('in onSwitchShowOnlyToprope');
+      await this.wait(500).then(() => {
+        this.updateProfileField({ showOnlyToprope: this.switchShowOnlyToprope });
+      });
+    },
+    async onSwitchShowOnlyOverhang() {
+      console.log('in onSwitchShowOnlyOverhang');
+      await this.wait(500).then(() => {
+        this.updateProfileField({ showOnlyOverhang: this.switchShowOnlyOverhang });
+      });
     },
     async closeNav() {
-      await this.wait(700).then(() => {
+      await this.wait(500).then(() => {
         this.showNav = false;
       });
     },
@@ -290,20 +311,63 @@ export default {
 .defaultClimb input[type=checkbox] + .check  {
   background: #ffdd57;
 }
+.defaultClimb:hover input[type=checkbox] + .check  {
+  background: #ffdd57;
+}
+.showOnlyToprope input[type=checkbox]:checked + .check  {
+  background: #ffdd57;
+}
+
+.showOnlyOverhang input[type=checkbox] + .check {
+        background: black;
+}
+.showOnlyOverhang:hover input[type=checkbox] + .check {
+        background: black;
+}
+.showOnlyOverhang input[type=checkbox]:checked + .check {
+  background: #b5b5b5;
+}
+.showOnlyOverhang:hover input[type=checkbox]:checked + .check {
+  background: #b5b5b5;
+}
+
+.showOnlyToprope input[type=checkbox] + .check {
+        background: #ffdd57;
+}
+.showOnlyToprope:hover input[type=checkbox] + .check {
+        background: #ffdd57;
+}
+.showOnlyToprope input[type=checkbox]:checked + .check {
+  background: #b5b5b5;
+}
+.showOnlyToprope:hover input[type=checkbox]:checked + .check {
+  background: #b5b5b5;
+}
+
+.showOnlyLead input[type=checkbox] + .check {
+        background: #f14668;
+}
+.showOnlyLead:hover input[type=checkbox] + .check {
+        background: #f14668;
+}
+.showOnlyLead input[type=checkbox]:checked + .check {
+  background: #b5b5b5;
+}
+.showOnlyLead:hover input[type=checkbox]:checked + .check {
+  background: #b5b5b5;
+}
+
 .hideAutoB input[type=checkbox] + .check {
   background: blue;
+}
+.hideAutoB:hover input[type=checkbox] + .check {
+  background: rgb(37, 37, 247); // slightly lighter blue
 }
 .hideAutoB input[type=checkbox]:checked + .check {
   background: #b5b5b5;
 }
-.hideAutoB:hover input[type=checkbox] + .check {
-  background: rgb(37, 37, 247);
-}
 .hideAutoB:hover input[type=checkbox]:checked + .check {
   background: #b5b5b5;
-}
-.showOnlyToprope input[type=checkbox]:checked + .check  {
-  background: #ffdd57;
 }
 .logo {
   color: #fff !important;

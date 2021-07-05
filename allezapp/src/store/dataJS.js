@@ -33,6 +33,9 @@ const getters2 = {
 // }
 
 const actions = {
+  applyFilters() {
+
+  },
   initEntries: firestoreAction(({ bindFirestoreRef }, profileRouteId) => bindFirestoreRef('entries', db.collection('profileroutes').doc(profileRouteId).collection('entries'))),
 
   initComments: firestoreAction(({ bindFirestoreRef }, routeId) => bindFirestoreRef('comments', db.collection('routesReal').doc(routeId).collection('comments'))),
