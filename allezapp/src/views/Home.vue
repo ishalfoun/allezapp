@@ -464,12 +464,35 @@
         <b-table-column field="cmp" label="Completed" sortable v-slot="props">
           <div class="flexrow"
            style="align-items:center;padding-left:2px" @click="onViewRoute(props.row)">
-            <template v-if="props.row.toprope_cmp === 'A'"><img class='smallicon attempt' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' /></template>
-            <template v-else-if="props.row.toprope_cmp === 'Y'"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' /></template>
-            <template v-else><div class='smallicon'></div></template>
-            <template v-if="props.row.lead_cmp === 'A'"><img class='smallicon attempt' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' /></template>
-            <template v-else-if="props.row.lead_cmp === 'Y'"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' /></template>
-            <template v-else><div class='smallicon'></div></template>
+            <template v-if="props.row.toprope_cmp === 'A'">
+              <img class='smallicon attempt' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' />
+            </template>
+            <template v-else-if="props.row.toprope_cmp === 'Y'">
+              <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' />
+            </template>
+            <template v-else>
+              <div class='smallicon'></div>
+            </template>
+
+            <template v-if="props.row.lead_cmp === 'A'">
+              <img class='smallicon attempt' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' />
+            </template>
+            <template v-else-if="props.row.lead_cmp === 'Y'">
+              <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' />
+            </template>
+            <template v-else>
+              <div class='smallicon'></div>
+            </template>
+
+            <template v-if="props.row.autob_cmp === 'A'">
+              <img class='smallicon attempt' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' />
+            </template>
+            <template v-else-if="props.row.autob_cmp === 'Y'">
+              <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' />
+            </template>
+            <template v-else>
+              <div class='smallicon'></div>
+            </template>
             <div></div>
             <!-- <div>
               <button><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_edit.png?alt=media&token=6eaa64b0-50e0-4c82-b8a0-ad6aa1627219' /></button>
@@ -563,7 +586,7 @@ export default {
       });
   },
   computed: {
-    ...mapState('dataJS', ['routesReal', 'profileroutes', 'lastUpdate', 'entries', 'comments']),
+    ...mapState('dataJS', ['routesReal', 'profileroutes', 'lastUpdate', 'entries', 'comments', 'filters']),
     ...mapState('profile', ['profile']),
     ...mapState('auth', ['user']),
     ...mapGetters('dataJS', ['getLoading', 'getComponentKey2']),
@@ -596,8 +619,31 @@ export default {
     //   // this.modalProps.switchTopr = this.modalProps.switchTopr
     // },
     filterRoutes(arg) {
-      // console.log('filterRoutes: ', arg);
-      return arg;
+      let profileRoutes = arg;
+      // console.log('in filterRoutes (new table data), filters:', this.filters);
+      // console.log('   in filterRoutes (new table data), proutes:', profileRoutes);
+      // remove the autoBs
+      if (this.filters.switchHideAutoB === 'Hide') {
+        // return routes that have autoB=false
+        profileRoutes = profileRoutes.filter((element) => !element.flag_autob);
+      }
+      if (this.filters.switchShowOnlyLead === 'Hide') {
+        // return routes that are not lead only routes
+        profileRoutes = profileRoutes.filter(
+          (element) => !(element.flag_lead && !element.flag_topr),
+        );
+      }
+      if (this.filters.switchShowOnlyToprope === 'Hide') {
+        // return routes that are not Toprope only routes
+        profileRoutes = profileRoutes.filter(
+          (element) => !(element.flag_topr && !element.flag_lead),
+        );
+      }
+      if (this.filters.switchShowOnlyOverhang === 'Hide') {
+        // return routes that are not overhang routes
+        profileRoutes = profileRoutes.filter((element) => !element.flag_overh);
+      }
+      return profileRoutes;
     },
     onModalViewDelete(arg) {
       console.log('arg: ', arg);

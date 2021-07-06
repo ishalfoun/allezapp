@@ -29,7 +29,12 @@
          @click="closeNav()">
   <!-- nav bar end for mobile: -->
           <div class="navbar-end if-mobile">
-            <div class="navbar-item flexcontainer">
+            <div v-if="!isLoggedIn" class="navbar-item flexcontainer">
+              <a class="button is-success pl-2 pr-2" @click="login()">
+                Log In
+              </a>
+            </div>
+            <div v-if="isLoggedIn" class="navbar-item flexcontainer">
               <a class="button is-success pl-4 pr-4" style="background:#2463b6">
                 Profile
               </a>
@@ -39,21 +44,86 @@
                 Input
               </router-link>
               <!-- <a class="button is-danger is-small pl-2 pr-2"
-                style="background:#e44035"
-                v-if="isLoggedIn" @click="logout()">
+                style="background:#e44035" @click="logout()">
                 Log Out
               </a> -->
-              <a class="button is-success pl-2 pr-2"
-                v-if="!isLoggedIn" @click="login()">
-                Log In
+            </div>
+            <div class="navbar-item flexcontainer">
+              <strong>Filters:</strong>
+            </div>
+            <div class="navbar-item flexcontainer ml-2"
+            v-on:click.stop="onSwitchHideAutoB()">
+              Autobelays:
+              <b-field >
+                <span class='mr-3'>{{ switchHideAutoB }}</span>
+                <b-switch v-model="switchHideAutoB"
+                  type=""
+                  true-value="Hide"
+                  false-value="Show"
+                  class="hideAutoB">
+                </b-switch>
+              </b-field>
+            </div>
+            <div class="navbar-item flexcontainer ml-2"
+            v-on:click.stop="onSwitchShowOnlyLead()">
+              <div>
+                Lead-only routes:
+              </div>
+              <div>
+                <b-field >
+                  <span class='mr-3'>{{ switchShowOnlyLead }}</span>
+                  <b-switch v-model="switchShowOnlyLead"
+                    type=""
+                    true-value="Hide"
+                    false-value="Show"
+                    class="showOnlyLead">
+                  </b-switch>
+                </b-field>
+              </div>
+            </div>
+            <div class="navbar-item flexcontainer ml-2"
+            v-on:click.stop="onSwitchShowOnlyToprope()">
+              Toprope-only routes:
+              <b-field>
+                <span class='mr-3'>{{ switchShowOnlyToprope }}</span>
+                <b-switch v-model="switchShowOnlyToprope"
+                  type=""
+                  true-value="Hide"
+                  false-value="Show"
+                  class="showOnlyToprope">
+                </b-switch>
+              </b-field>
+            </div>
+            <div class="navbar-item flexcontainer ml-2"
+            v-on:click.stop="onSwitchShowOnlyOverhang()">
+              Overhang routes:
+              <b-field>
+                <span class='mr-3'>{{ switchShowOnlyOverhang }}</span>
+                <b-switch v-model="switchShowOnlyOverhang"
+                  type=""
+                  true-value="Hide"
+                  false-value="Show"
+                  class="showOnlyOverhang">
+                </b-switch>
+              </b-field>
+            </div>
+            <div class="navbar-item flexcontainer">
+              <div></div>
+              <a class="button is-success pl-4 pr-4 mr-4"
+                @click="onSetFilters()">
+                Apply
               </a>
             </div>
-            <div v-if="isLoggedIn" class="navbar-item flexcontainer"
+          </div>
+          <div class="navbar-item flexcontainer">
+              <strong>Settings:</strong>
+          </div>
+          <div class="navbar-item flexcontainer ml-2"
             v-on:click.stop="onSwitchDefault()">
               Default selection:
               <b-field >
-                <span class='mr-3'>{{ switches.switchDefaultClimb }}</span>
-                <b-switch v-model="switches.switchDefaultClimb"
+                <span class='mr-3'>{{ switchDefaultClimb }}</span>
+                <b-switch v-model="switchDefaultClimb"
                   type="is-danger"
                   true-value="Lead"
                   false-value="Toprope"
@@ -61,71 +131,6 @@
                 </b-switch>
               </b-field>
             </div>
-              <div v-if="isLoggedIn" class="navbar-item flexcontainer"
-              v-on:click.stop="onSwitchHideAutoB()">
-                Autobelays:
-                <b-field >
-                  <span class='mr-3'>{{ switches.switchHideAutoB }}</span>
-                  <b-switch v-model="switches.switchHideAutoB"
-                    type=""
-                    true-value="Hide"
-                    false-value="Show"
-                    class="hideAutoB">
-                  </b-switch>
-                </b-field>
-              </div>
-              <div v-if="isLoggedIn" class="navbar-item flexcontainer"
-              v-on:click.stop="onSwitchShowOnlyLead()">
-                <div>
-                  Lead-only routes:
-                </div>
-                <div>
-                  <b-field >
-                    <span class='mr-3'>{{ switches.switchShowOnlyLead }}</span>
-                    <b-switch v-model="switches.switchShowOnlyLead"
-                      type=""
-                      true-value="Hide"
-                      false-value="Show"
-                      class="showOnlyLead">
-                    </b-switch>
-                  </b-field>
-                </div>
-              </div>
-              <div v-if="isLoggedIn" class="navbar-item flexcontainer"
-              v-on:click.stop="onSwitchShowOnlyToprope()">
-                Toprope-only routes:
-                <b-field>
-                  <span class='mr-3'>{{ switches.switchShowOnlyToprope }}</span>
-                  <b-switch v-model="switches.switchShowOnlyToprope"
-                    type=""
-                    true-value="Hide"
-                    false-value="Show"
-                    class="showOnlyToprope">
-                  </b-switch>
-                </b-field>
-              </div>
-              <div v-if="isLoggedIn" class="navbar-item flexcontainer"
-              v-on:click.stop="onSwitchShowOnlyOverhang()">
-                Overhang routes:
-                <b-field>
-                  <span class='mr-3'>{{ switches.switchShowOnlyOverhang }}</span>
-                  <b-switch v-model="switches.switchShowOnlyOverhang"
-                    type=""
-                    true-value="Hide"
-                    false-value="Show"
-                    class="showOnlyOverhang">
-                  </b-switch>
-                </b-field>
-              </div>
-              <div v-if="isLoggedIn" class="navbar-item flexcontainer">
-                <div></div>
-                <a class="button is-success pl-4 pr-4"
-                  @click="onApplyFilters()">
-                  Apply
-                </a>
-              </div>
-            </div>
-
 <!-- nav bar end for desktop: -->
         <div class="navbar-end if-desktop">
           <div class="navbar-item has-dropdown is-hoverable" v-if="isLoggedIn">
@@ -216,13 +221,11 @@ export default {
     showForm: false,
     showAcc: false,
     isLoading: true,
-    switches: {
-      switchDefaultClimb: 'Toprope',
-      switchHideAutoB: 'Show',
-      switchShowOnlyLead: 'Show',
-      switchShowOnlyToprope: 'Show',
-      switchShowOnlyOverhang: 'Show',
-    },
+    switchDefaultClimb: 'Toprope',
+    switchHideAutoB: 'Show',
+    switchShowOnlyLead: 'Show',
+    switchShowOnlyToprope: 'Show',
+    switchShowOnlyOverhang: 'Show',
   }),
   created() { // When this component is mounted, we want to call the init
     // console.log(this.$store);
@@ -244,40 +247,37 @@ export default {
   methods: {
     ...mapActions('auth', ['login', 'logout', 'guestLogin', 'soundToggle']),
     ...mapActions('profile', ['init', 'updateProfileField']),
-    ...mapActions('dataJS', ['applyFilters']),
-    onApplyFilters() {
-      this.applyFilters();
+    ...mapActions('dataJS', ['setFilters']),
+    ///
+    /// when user clicks 'Apply' after changing the filter switches
+    ///
+    onSetFilters() {
+      const switches = {
+        switchDefaultClimb: this.switchDefaultClimb,
+        switchHideAutoB: this.switchHideAutoB,
+        switchShowOnlyLead: this.switchShowOnlyLead,
+        switchShowOnlyToprope: this.switchShowOnlyToprope,
+        switchShowOnlyOverhang: this.switchShowOnlyOverhang,
+      };
+      this.setFilters(switches);
     },
     async onSwitchDefault() {
-      console.log('in onSwitchDefault ');
       // this.updateProfileField((arg === 'Toprope' ? 'Lead' : 'Toprope'));
       await this.wait(500).then(() => {
         this.updateProfileField({ default: this.switchDefaultClimb });
       });
     },
     async onSwitchHideAutoB() {
-      console.log('in onSwitchHideAutoB');
-      await this.wait(500).then(() => {
-        this.updateProfileField({ hideAutoB: this.switchHideAutoB });
-      });
+      // this.updateProfileField({ hideAutoB: this.switchHideAutoB });
     },
     async onSwitchShowOnlyLead() {
-      console.log('in onSwitchShowOnlyLead');
-      await this.wait(500).then(() => {
-        this.updateProfileField({ showOnlyLead: this.switchShowOnlyLead });
-      });
+      this.updateProfileField({ showOnlyLead: this.switchShowOnlyLead });
     },
     async onSwitchShowOnlyToprope() {
-      console.log('in onSwitchShowOnlyToprope');
-      await this.wait(500).then(() => {
-        this.updateProfileField({ showOnlyToprope: this.switchShowOnlyToprope });
-      });
+      this.updateProfileField({ showOnlyToprope: this.switchShowOnlyToprope });
     },
     async onSwitchShowOnlyOverhang() {
-      console.log('in onSwitchShowOnlyOverhang');
-      await this.wait(500).then(() => {
-        this.updateProfileField({ showOnlyOverhang: this.switchShowOnlyOverhang });
-      });
+      this.updateProfileField({ showOnlyOverhang: this.switchShowOnlyOverhang });
     },
     async closeNav() {
       await this.wait(500).then(() => {

@@ -24,14 +24,12 @@ const actions = {
   }),
   // eslint-disable-next-line
   async updateProfileField({ getters }, arg) {
-    console.log('in updateProfileField: profile: ', state.profile[0]);
-    console.log('in updateProfileField: arg: ', arg);
     await db
       .collection('profiles')
       .doc(state.profile[0].id)
       .update(arg)
       .then(() => {
-        console.log('      updating profile.def: success!');
+        console.log('      updating profile.def: success!', arg);
       })
       .catch((error) => {
         console.error('      updating profile.def, error:!', error);

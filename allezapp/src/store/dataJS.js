@@ -19,6 +19,7 @@ const data = {
   componentKey2: 0,
   entries: [],
   comments: [],
+  filters: {},
 };
 
 const getters2 = {
@@ -33,8 +34,11 @@ const getters2 = {
 // }
 
 const actions = {
-  applyFilters() {
-
+  // eslint-disable-next-line
+  setFilters({ getters }, arg) {
+    console.log('in setFilters', arg);
+    data.filters = arg;
+    data.componentKey2 += 1; // this refreshes table and closes the modal
   },
   initEntries: firestoreAction(({ bindFirestoreRef }, profileRouteId) => bindFirestoreRef('entries', db.collection('profileroutes').doc(profileRouteId).collection('entries'))),
 
@@ -116,30 +120,39 @@ const actions = {
       });
 
     // logic for setting icons dependng on
-    // CMP/Attempted, lead/toprope, and previous values
+    // CMP/Attempted, lead/toprope/autoB, and previous values
     //
     // if attempt
     //   if lead
     //     if prev=''
-    //       PUT 'A'@L
+    //       PUT 'Att'@Lead
     //   if top
     //     if prev=''
-    //       PUT 'A'@T
+    //       PUT 'Att'@Tr
+    //   if autoB
+    //     if prev=''
+    //       PUT 'Att'@AutoB
     // if cmp
     //   if lead
-    //     if prev='A'
+    //     if prev='Att'
     //     or if prev=''
-    //       PUT 'Y'@L
+    //       PUT 'Y-CMP'@Lead
     //   if top
-    //     if prev='A'
+    //     if prev='Att'
     //     or if prev=''
-    //   PUT 'Y'@T
+    //    PUT 'Y-CMP'@Tr
+    //   if autoB
+    //     if prev='Att'
+    //     or if prev=''
+    //    PUT 'Y-CMP'@autoB
+
     const nr = newEntryRec;
 
     console.log('  nr.cmpOrAttempt ', nr.cmpOrAttempt);
     console.log('  nr.doneAs ', nr.doneAs);
     console.log('  modalProps.lead_cmp ', modalProps.lead_cmp);
     console.log('  modalProps.toprope_cmp ', modalProps.toprope_cmp);
+    console.log('  modalProps.autob_cmp ', modalProps.autob_cmp);
 
     if (nr.cmpOrAttempt === 'A') { // if attempt
       if (nr.doneAs === 'Lead') { //   if lead
@@ -164,6 +177,18 @@ const actions = {
             })
             .catch((error) => {
               console.error('      Error profileroutes.toprope_cmp=A updated in DB! ', error);
+            });
+        }
+      } else if (nr.doneAs === 'AutoB') { //   if autoB
+        if (!modalProps.autob_cmp || modalProps.autob_cmp === '') { //     if prev=''
+          console.log('    update: autob_cmp = A'); //       PUT 'A'@T
+          await db.collection('profileroutes').doc(modalProps.profileRoutesId)
+            .update({ autob_cmp: 'A' })
+            .then(() => {
+              console.log('      profileroutes.autob_cmp=A updated in DB!');
+            })
+            .catch((error) => {
+              console.error('      Error profileroutes.autob_cmp=A updated in DB! ', error);
             });
         }
       }
@@ -194,6 +219,20 @@ const actions = {
             })
             .catch((error) => {
               console.error('      Error profileroutes.toprope_cmp=C updated in DB! ', error);
+            });
+        }
+      } else if (nr.doneAs === 'AutoB') {
+        if (!modalProps.autob_cmp
+        || modalProps.autob_cmp === 'A' //     if prev='A'
+        || modalProps.autob_cmp === '') { //   or if prev=' '
+          console.log('     update: autob_cmp = Y'); //   PUT 'Y'@T
+          await db.collection('profileroutes').doc(modalProps.profileRoutesId)
+            .update({ autob_cmp: 'Y' })
+            .then(() => {
+              console.log('      profileroutes.autob_cmp=C updated in DB!');
+            })
+            .catch((error) => {
+              console.error('      Error profileroutes.autob_cmp=C updated in DB! ', error);
             });
         }
       }

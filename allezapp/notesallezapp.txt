@@ -453,23 +453,57 @@ right now:
 
 7
 8
-
--filtering
--tr/l switch in db???
-
--on mobile, all small icons are not aligned
--sorting !!( after filtering)
+8
+8
 
 
+[bug]:
+10a 23, not done in toprope,
+5.8 at 20 also not done tr
+15 blue 11d also nto done tr
 
 
-[] fix the default autob
-[] rate a route with stars?
-[] navbar: hide autobleays and others.
+[x]-filtering - visuals
+[] - filtering - code
+	-hide autobelays:
+method 1:
+	- remove the records from the array 
+		/and put in sep array
+		/then add back
+		* bad because too much loading?
+method 2:
+	-hide the records in the view
+	data going into the table is a list.
+	filter that list based on which var is true.
+	data="(hideAutoB)? filterAutoB(list) : list"
+		
+		
+[]todo: 
+-Navbar.253:
+	-save the switches to dataJS
+[] in home.vue:
+	- filterRoutes(arg)
+	-add into function:
+		-if(hideAutoB)
+			return filterAutoB(list)
+		-if (hideLead)
+			return filterLead(list)
+	-then refresh table.
+
+[] later, connect the Navbar click.		
+}		
+[x] fix the default autob
+[x]-tr/l switch in db???
+[x] navbar: hide autobleays and others.
 	-hide autobelay: [show/hide]
 	-only show lead [ lead / all ]
 	-only show toprope [toprope / all ]
-[] close nav func in all navbar menu clicks
+[x] close nav func in all navbar menu clicks
+
+[bugs]
+-on mobile, all small icons are not aligned
+[]sorting !!( after filtering)
+[] rate a route with stars?
 
 small stuff:	
 [] put route added in the view, not in add att
@@ -500,9 +534,6 @@ this  manually refresh all profileroutes:
 	-this function resets your profile date so you refresh for sure.
 [] input mode: implem a delete lock (if on, the delete all btn also moves to right)
 
-input colors + icons
-
-[x] at flags in edit modal
 [] Sort by completed
 [] Cmp option: attempted (yellow)
 [] Input mode: top rope, lead, etx
@@ -518,34 +549,13 @@ input colors + icons
 	-this is saved in profile
 	-retrieved during edit modal.
 
-
-[] fix db redundancy:
--have the stats entry be 1-1 with profile routes:
-	[x] -stats have profileroutesid
-	[x] -profile id
-	[x] -route id
-	[x] -flags,color,etc
-	
-todo:
-dataJS.js: 64:
-rewrite the whole thing:
--parent stats record has:
-	-flags,color, ids
--child stats record has:
-	-cmp, date, notes
-	-no flags
-
-[] stats.entries[]:
-	-has entries of:
-	[x]	-cmp date notes dateAd (what is already only disp anyways)
-	[] remove the flags
 [] input mode:
 	-two icons are the same (overhang missing)
 [] close navbar menu when clicking on navbar as well
-[] navbar: close navbar 2 seconds after changing default (fade out?)
 [] make the date be a calendar datepicker
 [] db rules: make table user not readable unless you are signed in?
 [] dataJS.js fix code: put the firestore fuctions in a function, to not repeat them.
 []input mode: when clicking autob, disclick all other types
 [] if you did the route in autob, and its only autob/able, then set it cmp
 [] stars rating in add 
+[] profile
