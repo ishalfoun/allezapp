@@ -161,7 +161,7 @@
 </b-modal>
 
 <b-modal v-model="modalViewVisible" width="90%" scroll="keep">
-  <div class="card">
+  <div class="card" @click.prevent="modalViewDeleteButtonVisible = false;">
     <div class="card-content">
       <div class="content">
           <div class="title is-4 flexrow mt-2">
@@ -217,7 +217,7 @@
             <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_check.png?alt=media&token=a9528343-ea49-424c-9114-94b50447ab32' />
           </template>
         </div>
-        <div style="width: 30%" class="mr-2">
+        <div style="width: 30%" class="mr-2 ml-2">
           <template v-if="entry.dateDone">
             {{
             entry.dateDone.toDate().getUTCFullYear()
@@ -229,6 +229,8 @@
           </template>
         </div>
         <div style="width: 60%" class="ml-2">{{entry.notes}}</div>
+        <div style="width: 20%" class="button is-danger is-small mega-small"
+          v-if="modalViewDeleteButtonVisible" @click="onClickDelete(entry)">Delete?</div>
         <!-- <a class="button is-ghost is-small pl-2 pr-2 extrasmall"
         @click="onModalViewDelete(entry)">
           X
@@ -256,7 +258,7 @@
                 <template v-if="comment.dateDone">
                   {{
                     Math.round((new Date() - comment.dateDone.toDate()) / (1000 * 3600 * 24))
-                  }} days ago
+                  }} day(s) ago
                 </template>
               </small></span>
               <span class='flexendcontainer' >
@@ -284,6 +286,11 @@
         </div>
       </div>
     </div>
+  </div>
+  <div class="flexcontainer">
+    <div class="button is-danger is-small" style="margin:auto"
+      @touchstart.stop="touchstart()" @mousedown.stop="touchstart()"
+      @touchend.stop="touchend()" @mouseup.stop="touchend()">Long-Click to Delete</div>
   </div>
 </b-modal>
 <!--
@@ -543,6 +550,7 @@ export default {
   data: () => ({
     modalEditVisible: false,
     modalViewVisible: false,
+    modalViewDeleteButtonVisible: false,
     modalLegendVisible: false,
     modalProps: {
       rating: '',
@@ -594,6 +602,9 @@ export default {
       '5.14c': 28,
       '5.14d': 29,
     },
+    longtouch: null,
+    timer: null,
+    touchduration: 900, // length of time we want the user to touch before we do something
   }),
   mounted() {
     this.initRoutes().then(() => {
@@ -637,15 +648,36 @@ export default {
   },
   methods: {
     ...mapActions('dataJS', ['initRoutes', 'initLastUpdate', 'initProfileRoutes', 'getRoutes', 'setCompleted', 'modalSubmit', 'deleteStat', 'initEntries', 'initComments']),
-    // onClickSwitch(arg) {
-    //   console.log('in onClick', arg);
-    //   if (arg === 'topr') {
-    //     this.modalProps.switchLead = !this.modalProps.switchLead;
-    //   } else if (arg === 'lead') {
-    //     this.modalProps.switchTopr = !this.modalProps.switchTopr;
-    //   }
-    //   // this.modalProps.switchTopr = this.modalProps.switchTopr
-    // },
+    onClickDelete(arg) {
+      console.log('onClickDelete, ', arg);
+      // array.splice(index, howmany, item1, ....., itemX)
+    },
+    touchstart(arg1, arg2) {
+      console.log('arg1, ', arg1);
+      console.log('arg2, ', arg2);
+      this.longtouch = false;
+
+      this.timer = setTimeout(() => {
+        this.longtouch = true;
+        this.timer = null;
+      }, this.touchduration);
+    },
+    touchend() {
+      if (this.timer) {
+        clearTimeout(this.timer);
+        this.timer = null;
+      }
+      if (this.longtouch) {
+        console.log('in on LOOOOONG PRSSS.');
+        this.modalViewDeleteButtonVisible = true;
+        this.longtouch = false;
+      }
+    },
+    onShortPress() {
+      console.log('in on shortpress.');
+      // this.componentKey += 1;
+      // this.modalEditVisible = false;
+    },
     //
     // Function (a: Object, b: Object, isAsc: Boolean)
     customSortFuncRouteNum(firstObj, secondObj, isAsc) {
@@ -923,6 +955,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.mega-small {
+  height: 1.8em;
+  margin: auto;
+  font-size: 0.55rem;
+  font-weight: 400;
+  margin-top: 1px;
+  margin-bottom: 1px;
+}
   /*
   * Rating styles
   */
