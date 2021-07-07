@@ -418,6 +418,33 @@ ATA - DO NOTHING
 CLY - DO NOTHING
 CTY - DO NOTHING
 
+
+if attempt 
+  if lead
+    if prev=''
+      PUT 'Att'@Lead
+  if top 
+    if prev=''
+      PUT 'Att'@Tr
+  if autoB 
+    if prev=''
+      PUT 'Att'@AutoB
+if cmp
+  if lead
+    if prev='Att'
+    or if prev=''
+      PUT 'Y-CMP'@Lead
+  if top
+    if prev='Att'
+    or if prev=''
+	  PUT 'Y-CMP'@Tr
+  if autoB
+    if prev='Att'
+    or if prev=''
+	  PUT 'Y-CMP'@autoB
+
+
+
 [x] fix logic for modalSubmit
 [x] fix icon position of cmp's
 in view modal:
@@ -451,37 +478,21 @@ right now:
 [x]	shows this table, where the route id matches with route id to show all comments for that route
 		-show real records
 
-7
-8
-8
-8
-
-
-[bug]:
-10a 23, not done in toprope,
-5.8 at 20 also not done tr
-15 blue 11d also nto done tr
 
 
 [x]-filtering - visuals
-[] - filtering - code
+[x] - filtering - code
 	-hide autobelays:
-method 1:
-	- remove the records from the array 
-		/and put in sep array
-		/then add back
-		* bad because too much loading?
-method 2:
 	-hide the records in the view
 	data going into the table is a list.
 	filter that list based on which var is true.
 	data="(hideAutoB)? filterAutoB(list) : list"
 		
 		
-[]todo: 
+[x]todo: 
 -Navbar.253:
 	-save the switches to dataJS
-[] in home.vue:
+[x] in home.vue:
 	- filterRoutes(arg)
 	-add into function:
 		-if(hideAutoB)
@@ -489,8 +500,25 @@ method 2:
 		-if (hideLead)
 			return filterLead(list)
 	-then refresh table.
+7
+7
+7
+7
+8
+	5
+	3
+	4
+	5
+7
+7
+8
+	5
+	4
 
-[] later, connect the Navbar click.		
+npx eslint . --fix
+
+[NB] todo: in dataJS.41, save the args to profile in db.
+[x] later, connect the Navbar click.		
 }		
 [x] fix the default autob
 [x]-tr/l switch in db???
@@ -500,21 +528,30 @@ method 2:
 	-only show toprope [toprope / all ]
 [x] close nav func in all navbar menu clicks
 
-[bugs]
--on mobile, all small icons are not aligned
 []sorting !!( after filtering)
+-rating
+
+
+
+10a
+10b
+7
+
+
+-completed
 [] rate a route with stars?
 
-small stuff:	
+[bugs/small stuff:]
+-on mobile, all small icons are not aligned	
 [] put route added in the view, not in add att
 [] if youc omplee a autob, the icon is a autob
 	-edit modal also changes for autob
 [] in add attempt, remove title add attempt
 [] change icon from notebook to plus
 
-
-
-[] FILTER BUTTON
+[new]
+[] if route was set less than a week ago, put new tag in each line!
+[] delete of completion, attempts, comments (long click)
 [] add back the div at top of home.vue for the filter btn func
 [] another button beside filter: called settings:
 []   - choose between easy-medium-hard

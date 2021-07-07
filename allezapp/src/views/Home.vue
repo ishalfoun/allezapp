@@ -430,7 +430,8 @@
           {{props.row.routeId.substring(0,4)}} </b-table-column> -->
         <!-- <b-table-column field="profileId" label="ProfileId" sortable v-slot="props">
           {{props.row.profileId.substring(0,4)}} </b-table-column> -->
-        <b-table-column field="routeNum" label="Location" sortable v-slot="props">
+        <b-table-column field="routeNum" :custom-sort="customSortFuncRouteNum"
+         label="Location" sortable v-slot="props">
           <div @click="onViewRoute(props.row)">
             <span class="routeNum">{{props.row.routeNum}}</span>
             <template v-if="props.row.flag_autob"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' /></template>
@@ -442,7 +443,8 @@
             <template v-else><div class='smallicon'></div></template>
           </div>
         </b-table-column>
-        <b-table-column field="rating" label="Rating" sortable v-slot="props">
+        <b-table-column field="rating" :custom-sort="customSortFuncRating"
+         label="Rating" sortable v-slot="props">
           <div class="flexcontainer"
            style="align-items:center;justify-content: flex-start;" @click="onViewRoute(props.row)">
             <template v-if="props.row.color">
@@ -461,7 +463,8 @@
               </div>
           </div>
         </b-table-column>
-        <b-table-column field="cmp" label="Completed" sortable v-slot="props">
+        <b-table-column field="cmp" label="Completed"
+          :custom-sort="customSortFuncCmp" sortable v-slot="props">
           <div class="flexrow"
            style="align-items:center;padding-left:2px" @click="onViewRoute(props.row)">
             <template v-if="props.row.toprope_cmp === 'A'">
@@ -566,6 +569,31 @@ export default {
     routesLoaded: false,
     lastUpdateLoaded: false,
     profileroutesLoaded: false,
+    convertedRatings: {
+      5.7: 7,
+      5.8: 8,
+      5.9: 9,
+      '5.10a': 10,
+      '5.10b': 11,
+      '5.10c': 12,
+      '5.10d': 13,
+      '5.11a': 14,
+      '5.11b': 15,
+      '5.11c': 16,
+      '5.11d': 17,
+      '5.12a': 18,
+      '5.12b': 19,
+      '5.12c': 20,
+      '5.12d': 21,
+      '5.13a': 22,
+      '5.13b': 23,
+      '5.13c': 24,
+      '5.13d': 25,
+      '5.14a': 26,
+      '5.14b': 27,
+      '5.14c': 28,
+      '5.14d': 29,
+    },
   }),
   mounted() {
     this.initRoutes().then(() => {
@@ -618,6 +646,47 @@ export default {
     //   }
     //   // this.modalProps.switchTopr = this.modalProps.switchTopr
     // },
+    //
+    // Function (a: Object, b: Object, isAsc: Boolean)
+    customSortFuncRouteNum(firstObj, secondObj, isAsc) {
+    // default behaviour for numbers:
+      return (isAsc) ? (firstObj.routeNum - secondObj.routeNum)
+        : (secondObj.routeNum - firstObj.routeNum);
+    },
+    // Function (a: Object, b: Object, isAsc: Boolean)
+    customSortFuncRating(a, b, isAsc) {
+      // convert the ratings using the array
+      const newA = this.convertedRatings[a.rating];
+      const newB = this.convertedRatings[b.rating];
+
+      return (isAsc) ? (Number(newA) - Number(newB))
+        : (Number(newB) - Number(newA));
+    },
+    // Function (a: Object, b: Object, isAsc: Boolean)
+    customSortFuncCmp(a, b, isAsc) {
+      // convert the ratings using the array
+      const newA = this.convertCompletedFlagsForSorting(a);
+      const newB = this.convertCompletedFlagsForSorting(b);
+
+      return (isAsc) ? (Number(newA) - Number(newB))
+        : (Number(newB) - Number(newA));
+    },
+    convertCompletedFlagsForSorting(arg) {
+      if (arg.lead_cmp === 'Y') {
+        return 6;
+      } if (arg.lead_cmp === 'A') {
+        return 5;
+      } if (arg.toprope_cmp === 'Y') {
+        return 4;
+      } if (arg.toprope_cmp === 'A') {
+        return 3;
+      } if (arg.autob_cmp === 'Y') {
+        return 2;
+      } if (arg.autob_cmp === 'A') {
+        return 1;
+      }
+      return 0;
+    },
     filterRoutes(arg) {
       let profileRoutes = arg;
       // console.log('in filterRoutes (new table data), filters:', this.filters);
