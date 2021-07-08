@@ -45,16 +45,54 @@ const actions = {
   initComments: firestoreAction(({ bindFirestoreRef }, routeId) => bindFirestoreRef('comments', db.collection('routesReal').doc(routeId).collection('comments'))),
 
   // eslint-disable-next-line
-  async deleteStat({ getters }, arg) {
-    const toDeleteStatsRecord = arg;
-    await db.collection('stats').doc(toDeleteStatsRecord.id)
-      .collection('entries').doc()
-      .set(toDeleteStatsRecord)
+  async deleteComment({ getters }, arg) {
+    const toDeleteCommentRecordId = arg[0];
+    const routeId = arg[1];
+    console.log('in deleteComment', toDeleteCommentRecordId);
+    console.log('in deleteComment', routeId);
+
+    await db.collection('routesReal').doc(routeId)
+      .collection('comments').doc(toDeleteCommentRecordId)
+      .delete()
       .then(() => {
-        console.log('      toDeleteStatsRecord saved to DB!');
+        console.log('      routesReal.comments deleted in DB!');
       })
       .catch((error) => {
-        console.error('      Error creating toDeleteStatsRecord: ', error);
+        console.log('      Error:routesReal.comments not deleted in DB', error);
+      });
+  },
+  // eslint-disable-next-line
+  async deleteEntry({ getters }, arg) {
+    const toDeleteEntryRecordId = arg[0];
+    const prouteId = arg[1];
+    console.log('in deleteEntry', toDeleteEntryRecordId);
+    console.log('in deleteEntry', prouteId);
+
+    await db.collection('profileroutes').doc(prouteId)
+      .collection('entries').doc(toDeleteEntryRecordId)
+      .delete()
+      .then(() => {
+        console.log('      profileroutes.entries deleted in DB!');
+      })
+      .catch((error) => {
+        console.log('      Error:profileroutes.entries not deleted in DB', error);
+      });
+  },
+  // eslint-disable-next-line
+  async deleteEntry2Original({ getters }, arg) {
+    const toDeleteEntryRecordId = arg[0];
+    const prouteId = arg[1];
+    console.log('in deleteEntry', toDeleteEntryRecordId);
+    console.log('in deleteEntry', prouteId);
+
+    await db.collection('profileroutes').doc(prouteId)
+      .collection('entries').doc(toDeleteEntryRecordId)
+      .delete()
+      .then(() => {
+        console.log('      profileroutes.entries deleted in DB!');
+      })
+      .catch((error) => {
+        console.log('      Error:profileroutes.entries not deleted in DB', error);
       });
   },
   // eslint-disable-next-line

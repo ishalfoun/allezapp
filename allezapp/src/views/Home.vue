@@ -161,11 +161,27 @@
 </b-modal>
 
 <b-modal v-model="modalViewVisible" width="90%" scroll="keep">
-  <div class="card" @click.prevent="modalViewDeleteButtonVisible = false;">
+  <div class="card">
     <div class="card-content">
+      <div class="">
+        <div class="flexrow">
+          <div>
+            <sup>Location:</sup>
+          </div>
+          <div class="pr-4">
+            <sup>Type:</sup>
+          </div>
+          <div>
+            <sup>Rating:</sup>
+          </div>
+          <div>
+            <sup>Completed:</sup>
+          </div>
+        </div>
+      </div>
       <div class="content">
-          <div class="title is-4 flexrow mt-2">
-            <div>
+          <div class="title is-4 flexrow">
+            <div style="width:20%">
               #{{modalProps.routeNum}}
             </div>
             <div>
@@ -191,50 +207,85 @@
               </template>
               {{modalProps.rating}}
             </div>
+            <div class="flexrow"
+              style="align-items:center;padding-left:2px">
+              <template v-if="modalProps.toprope_cmp === 'A'">
+                <img class='smallicon attempt' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' />
+              </template>
+              <template v-else-if="modalProps.toprope_cmp === 'Y'">
+                <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' />
+              </template>
+              <template v-else>
+                <div class='smallicon'></div>
+              </template>
+
+              <template v-if="modalProps.lead_cmp === 'A'">
+                <img class='smallicon attempt' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' />
+              </template>
+              <template v-else-if="modalProps.lead_cmp === 'Y'">
+                <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' />
+              </template>
+              <template v-else>
+                <div class='smallicon'></div>
+              </template>
+
+              <template v-if="modalProps.autob_cmp === 'A'">
+                <img class='smallicon attempt' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' />
+              </template>
+              <template v-else-if="modalProps.autob_cmp === 'Y'">
+                <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' />
+              </template>
+              <template v-else>
+                <div class='smallicon'></div>
+              </template>
+            </div>
           </div>
           <div class="flexcenter">
             <div>
-              <sup>Private Log:</sup>
+              <sup>Your Sends:</sup>
             </div>
           </div>
         </div>
-      <div class="content-left" v-for="(entry) in entries" :key="entry.id">
-        <!-- <div style="width: 10%" class="">{{entry.cmpOrAttempt}}</div> -->
-        <div style="width: 20%" class="flexcenter">
-          <template v-if="entry.doneAs === 'Toprope'">
-            <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' />
-          </template>
-          <template v-else-if="entry.doneAs === 'Lead'">
-            <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' />
-          </template>
-          <template v-else-if="entry.doneAs === 'AutoB'">
-            <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' />
-          </template>
-          <template v-if="entry.cmpOrAttempt === 'A'">
-            <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_warn.png?alt=media&token=a7d50e59-fc66-4cf1-99c4-e40eac2edd6b' />
-          </template>
-          <template v-else-if="entry.cmpOrAttempt === 'Y'">
-            <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_check.png?alt=media&token=a9528343-ea49-424c-9114-94b50447ab32' />
-          </template>
+      <div class="" :key="componentKeyEntries">
+        <div class="content-left" v-for="(entry) in sortEntries(entries)"
+          :key="entry.id" @click="entryRowClick(entry)">
+          <!-- <div style="width: 10%" class="">{{entry.cmpOrAttempt}}</div> -->
+          <div style="width: 20%" class="flexcenter">
+            <template v-if="entry.doneAs === 'Toprope'">
+              <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' />
+            </template>
+            <template v-else-if="entry.doneAs === 'Lead'">
+              <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' />
+            </template>
+            <template v-else-if="entry.doneAs === 'AutoB'">
+              <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' />
+            </template>
+            <template v-if="entry.cmpOrAttempt === 'A'">
+              <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_warn.png?alt=media&token=a7d50e59-fc66-4cf1-99c4-e40eac2edd6b' />
+            </template>
+            <template v-else-if="entry.cmpOrAttempt === 'Y'">
+              <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_check.png?alt=media&token=a9528343-ea49-424c-9114-94b50447ab32' />
+            </template>
+          </div>
+          <div style="width: 30%" class="mr-2 ml-2">
+            <template v-if="entry.dateDone">
+              {{
+              entry.dateDone.toDate().getUTCFullYear()
+              }}/{{
+              (entry.dateDone.toDate().getUTCMonth() + 1)
+              }}/{{
+              entry.dateDone.toDate().getUTCDate()
+              }}:
+            </template>
+          </div>
+          <div style="width: 60%" class="ml-2">{{entry.notes}}</div>
+          <div style="width: 20%" class="button is-danger is-small mega-small"
+            v-if="entry.deleteButtonVisible" @click="onClickEntryDeleteConfirm(entry)">Delete?</div>
+          <a class="button is-ghost is-small pl-2 pr-2 extrasmall"
+            @click.stop="onClickEntryDeleteShow(entry)">
+            X
+          </a>
         </div>
-        <div style="width: 30%" class="mr-2 ml-2">
-          <template v-if="entry.dateDone">
-            {{
-            entry.dateDone.toDate().getUTCFullYear()
-            }}/{{
-            (entry.dateDone.toDate().getUTCMonth() + 1)
-            }}/{{
-            entry.dateDone.toDate().getUTCDate()
-            }}:
-          </template>
-        </div>
-        <div style="width: 60%" class="ml-2">{{entry.notes}}</div>
-        <div style="width: 20%" class="button is-danger is-small mega-small"
-          v-if="modalViewDeleteButtonVisible" @click="onClickDelete(entry)">Delete?</div>
-        <!-- <a class="button is-ghost is-small pl-2 pr-2 extrasmall"
-        @click="onModalViewDelete(entry)">
-          X
-        </a> -->
       </div>
       <div class="content"> <br /> </div>
       <div class="content mt-4">
@@ -244,54 +295,76 @@
           </div>
         </div>
       </div>
-      <div class="media" v-for="(comment) in comments" :key="comment.id">
-        <div class="media-left">
-          <figure class="image is-32x32 is-centered">
-            <img :src="comment.image" alt="Placeholder image">
-          </figure>
-        </div>
-        <div class="media-content">
-          <div class="content">
-            <div class="flexendcontainer">
-              <span><strong>{{comment.username}}</strong></span>
-              <span><small>
-                <template v-if="comment.dateDone">
-                  {{
-                    Math.round((new Date() - comment.dateDone.toDate()) / (1000 * 3600 * 24))
-                  }} day(s) ago
+      <div :key="componentKeyComments+'a'">
+        <div class="media" v-for="(comment) in comments" :key="comment.id"
+         @click="commentRowClick(comment)">
+          <div class="media-left">
+            <figure class="image is-32x32 is-centered">
+              <img :src="comment.image" alt="Placeholder image">
+            </figure>
+          </div>
+          <div class="media-content">
+            <div class="content">
+              <div class="flexendcontainer">
+                <span><strong>{{comment.username}}</strong></span>
+                <span><small>
+                  <template v-if="comment.dateDone">
+                    {{
+                      Math.round((new Date() - comment.dateDone.toDate()) / (1000 * 3600 * 24))
+                    }} day(s) ago
+                  </template>
+                </small></span>
+                <span class='flexendcontainer' >
+                <template v-if="comment.doneAs === 'AutoB'">
+                  <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' />
                 </template>
-              </small></span>
-              <span class='flexendcontainer' >
-              <template v-if="comment.doneAs === 'AutoB'">
-                <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' />
-              </template>
-              <template v-if="comment.doneAs === 'Toprope'">
-                <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' />
-              </template>
-              <template v-else-if="comment.doneAs === 'Lead'">
-                <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' />
-              </template>
-              <template v-if="comment.cmpOrAttempt === 'A'">
-                <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_warn.png?alt=media&token=a7d50e59-fc66-4cf1-99c4-e40eac2edd6b' />
-              </template>
-              <template v-else-if="comment.cmpOrAttempt === 'Y'">
-                <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_check.png?alt=media&token=a9528343-ea49-424c-9114-94b50447ab32' />
-              </template>
-              </span>
-            </div>
-            <div>
-              {{comment.notes}}
+                <template v-if="comment.doneAs === 'Toprope'">
+                  <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' />
+                </template>
+                <template v-else-if="comment.doneAs === 'Lead'">
+                  <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' />
+                </template>
+                <template v-if="comment.cmpOrAttempt === 'A'">
+                  <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_warn.png?alt=media&token=a7d50e59-fc66-4cf1-99c4-e40eac2edd6b' />
+                </template>
+                <template v-else-if="comment.cmpOrAttempt === 'Y'">
+                  <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_check.png?alt=media&token=a9528343-ea49-424c-9114-94b50447ab32' />
+                </template>
+                </span>
+                <div style="width: 20%" class="button is-danger is-small mega-small"
+                  v-if="comment.deleteButtonVisible"
+                  @click="onClickCommentDeleteConfirm(comment)">
+                  Delete?
+                </div>
+                <a class="button is-ghost is-small pl-2 pr-2 extrasmall"
+                  v-if="checkIfDeleteCommentAllowed(comment)"
+                  @click.stop="onClickCommentDeleteShow(comment)">
+                  X
+                </a>
+              </div>
+              <div>
+                {{comment.notes}}
+              </div>
             </div>
           </div>
         </div>
       </div>
+      <div class="flexcenter mt-4">
+        <div>
+          <sub>Route added: {{getShortDate(modalProps.created_at)}}</sub>
+        </div>
+        <div>
+          <span class="button is-danger is-small extrasmall is-rounded smallbutton"
+            v-if="isDateRecent(modalProps.created_at)">(NEW!)</span>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="flexcontainer">
+  <!-- <div class="flexcontainer">
     <div class="button is-danger is-small" style="margin:auto"
       @touchstart.stop="touchstart()" @mousedown.stop="touchstart()"
       @touchend.stop="touchend()" @mouseup.stop="touchend()">Long-Click to Delete</div>
-  </div>
+  </div> -->
 </b-modal>
 <!--
 -in the 'location'column:
@@ -448,6 +521,7 @@
             <template v-else><div class='smallicon'></div></template>
             <template v-if="props.row.flag_lead"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' /></template>
             <template v-else><div class='smallicon'></div></template>
+            {{isDateRecentNum(props.row.created_at)}}
           </div>
         </b-table-column>
         <b-table-column field="rating" :custom-sort="customSortFuncRating"
@@ -467,7 +541,9 @@
               </div>
             </template>
             <div>{{props.row.rating}}
-              </div>
+            </div>
+            <span class="button is-danger is-small extrasmall is-rounded smallbutton"
+              v-if="isDateRecent(props.row.created_at)">(NEW!)</span>
           </div>
         </b-table-column>
         <b-table-column field="cmp" label="Completed"
@@ -550,7 +626,6 @@ export default {
   data: () => ({
     modalEditVisible: false,
     modalViewVisible: false,
-    modalViewDeleteButtonVisible: false,
     modalLegendVisible: false,
     modalProps: {
       rating: '',
@@ -567,6 +642,8 @@ export default {
     picked: '',
     switchTopLeadAuto: '',
     componentKey: 0,
+    componentKeyEntries: 0,
+    componentKeyComments: 0,
     happenedAlready: false,
     happenedAlreadyGetRoutes: false,
     sortVar: 'route',
@@ -647,10 +724,76 @@ export default {
     },
   },
   methods: {
-    ...mapActions('dataJS', ['initRoutes', 'initLastUpdate', 'initProfileRoutes', 'getRoutes', 'setCompleted', 'modalSubmit', 'deleteStat', 'initEntries', 'initComments']),
-    onClickDelete(arg) {
-      console.log('onClickDelete, ', arg);
-      // array.splice(index, howmany, item1, ....., itemX)
+    ...mapActions('dataJS', ['initRoutes', 'initLastUpdate', 'initProfileRoutes', 'getRoutes', 'setCompleted', 'modalSubmit', 'deleteEntry', 'deleteComment', 'initEntries', 'initComments']),
+    isDateRecentNum(timestamp) {
+      if (timestamp) {
+        const today = new Date();
+        const dateDone = timestamp.toDate();
+        return (Math.round((today - dateDone) / (1000 * 3600 * 24)));
+      }
+      return false;
+    },
+    isDateRecent(timestamp) {
+      if (timestamp) {
+        const today = new Date();
+        const dateDone = timestamp.toDate();
+        const result = (Math.round((today - dateDone) / (1000 * 3600 * 24)));
+        // console.log('   xxxin isdaterecent: 1', dateDone);
+        // console.log('   xxxin isdaterecent: 2', today);
+        // console.log('   xxxin isdaterecent: 3=', result);
+        return result < 8; // if age is less than 8 days
+      }
+      return false;
+    },
+    checkIfDeleteCommentAllowed(comment) {
+      if (comment.profileId === this.profile[0].id) {
+        return true;
+      }
+      return false;
+    },
+    sortEntries(arg) {
+      // console.log('in sortEntries', arg);
+      const arrayToReturn = arg.filter(() => true);
+      arrayToReturn.sort((a, b) => a.dateDone - b.dateDone);
+      return arrayToReturn;
+    },
+    entryRowClick(arg) { // cancel the delete
+      const entry = this.entries.find(
+        (element) => (element.id === arg.id),
+      );
+      entry.deleteButtonVisible = false;
+      this.componentKeyEntries += 1;
+    },
+    onClickEntryDeleteConfirm(entry) {
+      console.log('onClickEntryDeleteConfirm, ', entry);
+      this.deleteEntry([entry.id, this.modalProps.id]);
+    },
+    onClickEntryDeleteShow(arg) {
+      const entry = this.entries.find(
+        (element) => (element.id === arg.id),
+      );
+      entry.deleteButtonVisible = !entry.deleteButtonVisible;
+      this.componentKeyEntries += 1;
+      // this.entries[arg.id].deleteButtonVisible = true;
+    },
+    commentRowClick(arg) { // cancel the delete
+      const comment = this.comments.find(
+        (element) => (element.id === arg.id),
+      );
+      comment.deleteButtonVisible = false;
+      this.componentKeyComments += 1;
+    },
+    onClickCommentDeleteConfirm(comment) {
+      console.log('onClickCommentDeleteConfirm, ', comment);
+      this.deleteComment([comment.id, this.modalProps.routeId]);
+    },
+    onClickCommentDeleteShow(arg) {
+      const comment = this.comments.find(
+        (element) => (element.id === arg.id),
+      );
+      comment.deleteButtonVisible = !comment.deleteButtonVisible;
+      this.componentKeyComments += 1;
+      // this.entries[arg.id].deleteButtonVisible = true;
     },
     touchstart(arg1, arg2) {
       console.log('arg1, ', arg1);
@@ -669,7 +812,7 @@ export default {
       }
       if (this.longtouch) {
         console.log('in on LOOOOONG PRSSS.');
-        this.modalViewDeleteButtonVisible = true;
+        // add logic here to happe after longpress
         this.longtouch = false;
       }
     },
@@ -745,10 +888,6 @@ export default {
         profileRoutes = profileRoutes.filter((element) => !element.flag_overh);
       }
       return profileRoutes;
-    },
-    onModalViewDelete(arg) {
-      console.log('arg: ', arg);
-      this.deleteStat(arg);
     },
     getShortDate(arg) {
       if (arg) {
@@ -955,13 +1094,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.smallbutton {
+  height: 1.6em !important;
+  width: 4em !important;
+  font-size: 0.60rem !important;
+}
 .mega-small {
   height: 1.8em;
   margin: auto;
   font-size: 0.55rem;
   font-weight: 400;
-  margin-top: 1px;
-  margin-bottom: 1px;
 }
   /*
   * Rating styles
