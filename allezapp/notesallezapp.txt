@@ -73,19 +73,19 @@ publish:
 				
     // old:
     // 1 - loop through routes
-    // 2 - if it doesnt exist in routesReal, = an addition i made
+    // 2 - if it doesnt exist in routesReal,: an addition i made
     // 3 - if it exists, check if it is at it's own first found index
     //   - if not, it is a duplicate.
     //    -check how often it exists.
     //      -if twice
     //        -check if routesReal also has it twice....
-    //          - if more than twice = a deletion I made +(flag it)
-    //          - if less = an addition I made +(flag it for del)
-    //          - if yes = do nothing.
+    //          - if more than twice: a deletion I made +(flag it)
+    //          - if less: an addition I made +(flag it for del)
+    //          - if yes: do nothing.
     // 4 - loop through routesReal
-    // 5 - if it doesnt exist in routes, = a removal i made
+    // 5 - if it doesnt exist in routes,: a removal i made
     // 6 - if it exists, check if it is at it's own first found index (dupe)
-    // 7 -  if not, its a dupe that is now single = a removal i made
+    // 7 -  if not, its a dupe that is now single: a removal i made
 
 [plan]
 [x] additions:
@@ -111,8 +111,8 @@ publish:
 [x]	-when switching page, not update
 	
 	
-routes = what i edit in input
-routesreal = edits after commit
+routes: what i edit in input
+routesreal: edits after commit
 profileroutes: takes from routesreal
 
 todo:
@@ -125,7 +125,7 @@ TODO::
 [x] fix when rerouting, navbar menu should close.
 [x] can add empty routes!!
 [x] only accessible by me
-	-put a rule: if profileid = ...
+	-put a rule: if profileid: ...
 [x] when clicking 8 or 9, disable a-d
 [x] 	  allow empty 5.10s?(otherwise {a-d} req'd)
 [x] make + button green when you selected two things.
@@ -246,7 +246,7 @@ at end you view:
 		in the first check, profile.lastupdate=0
 		1. trying to not save in db as .toDate
 		-nvm, there was no update bc no new routes added
-	[] why is the profile.lastUpdate = 0 at start of getRoutes()?
+	[] why is the profile.lastUpdate: 0 at start of getRoutes()?
 	[x] before calling getroutes, also 0
 	[x] profile in db has correct date. (being saved)
 	!! profile lvl is also always 0!!
@@ -264,8 +264,8 @@ pu: 7
 
 for now:
 [x] remove the delet button
-[x] green C = completed
-[x] yellow A = attempted
+[x] green C: completed
+[x] yellow A: attempted
 [x] lead toprope:
 	[x]-menu option decides default sel
 	[x] when creating the attempt, the lead/tr needs to be saved
@@ -300,13 +300,13 @@ for now:
 -	in the 'location'column:
 	-the number represents where in the gym the route is
 	-the icons represent what type of route it is:
-		(a) = autobelay
-		(t) = toprope able
-		(l) = leadable
+		(a): autobelay
+		(t): toprope able
+		(l): leadable
 	-use the botton on the right end of each line if you attempted or completed a route.
 		you can add personal notes or modify the date
-	-(attempt) = means you only attempted the route
-	-(cmp) = means you also completed the route.
+	-(attempt): means you only attempted the route
+	-(cmp): means you also completed the route.
 	
 [x]desktop mode:
 [x]	-move everything down a bit
@@ -338,7 +338,7 @@ fixes:
 	modalComplete():
 		-if (postpublic)
 		{
-			newRecord = same fields
+			newRecord: same fields
 			await db.coll('routecomments').add(newRecord)
 		}
 		
@@ -362,18 +362,18 @@ fixes:
 			if cmp
 				set lead_cmp=Y
 	-elif top, 
-	*****and if top_cmp !=y, set top_cmp = A
+	*****and if top_cmp !=y, set top_cmp: A
 
 if attempt
 	if lead
 	'
 
-A = ATTEMPT
- L = LEAD
-  Y = PREVIOUS STATE OF L/T_CMP
- T = TOPROPE
-C = COMPLETE
-  A = PREVIOUS STATE 
+A: ATTEMPT
+ L: LEAD
+  Y: PREVIOUS STATE OF L/T_CMP
+ T: TOPROPE
+C: COMPLETE
+  A: PREVIOUS STATE 
 ALY - DO NOTHING
 ALA - DO NOTHING
 AL_ - PUT 'A'@L
@@ -514,8 +514,8 @@ right now:
 8
 	5
 	4
+	4
 
-npx eslint . --fix
 
 [NB] todo: in dataJS.41, save the args to profile in db.
 [x] later, connect the Navbar click.		
@@ -528,31 +528,125 @@ npx eslint . --fix
 	-only show toprope [toprope / all ]
 [x] close nav func in all navbar menu clicks
 
-[]sorting !!( after filtering)
+[x]sorting !!( after filtering)
 -rating
 
+1)
+ :custom-sort="customSortFunc"
+ :customSort (same thign)
+ -in column
+	-calls the function
+	-no sorting
+	->									find out how to code the function, so shows wrong table tag. ->2)
+ -in column, without field:
+	-same result
+ -in table
+	-not called, but sorts
+	->									maybe other flags needed?					
+ -in v-data-table
+	-shown on stackoverflow
 
+2)
+ :sort-compare="customSortFunc"
+ -in table
+	-shown on stackoverflow
+	-not called, but sorts
 
-10a
-10b
+10a -> 10.1
+10b -> 10.2
 7
 
+cmp_lead = 6
+att_lead = 5
+cmp_top = 4
+att_top = 3
+cmp_autob = 2
+att_autob = 1
+nothing = 0
+
+newA.cmp_lead && !newB.cmp_lead ? 1 :
+
+
+if (arg.lead_cmp = 'Y')
+	return 6
+else if (arg.lead_cmp = 'A')
+	return 5
+ese if (arg.toprope_cmp = 'A'
 
 -completed
-[] rate a route with stars?
 
-[bugs/small stuff:]
--on mobile, all small icons are not aligned	
-[] put route added in the view, not in add att
-[] if youc omplee a autob, the icon is a autob
+s
+[bug]
+attempt of tr not possible??
+-> not visible on mobil!!??
+
+
+[priority:]
+[x] delete entries possible
+	-what i want:
+	1. click X
+	2. delete shows up.
+	3. click delete
+	4. record deleted
+	
+	problem:
+	-when click1, set it's own buttonVisible to true.
+	-so we could have entry.buttonVisible on each entry.
+	-then it sets that for that entry i guess.
+[x]
+firebase rules:
+-need to st the profile id into entries
+- make the delete function actually just set a profileid
+
+[]
+
+
+[x] (all clicks in modal will hide the buttons): do something with it at home.vue.164 .
+-problem is that the buttons are now on on the indiv entry level."entry.deleteButtonVisible"
+-also, the var is still used in the long press logic
+
+
+[x] only see the X in comments if profile id same.?
+[x] 'new' - flag in routes
+
+git add . | git commit -m 'entry/comment delete logic, new flag' | git push -u origin master | npm run serve
+
+[x] redid design of input mode.
+
+[NB]-on mobile, all small icons are not aligned	
+[x] put route added in the view, not in add att
+[x] if youc omplee a autob, the icon is a autob
 	-edit modal also changes for autob
-[] in add attempt, remove title add attempt
-[] change icon from notebook to plus
+[NB] in add attempt, remove title add attempt
 
 [new]
-[] if route was set less than a week ago, put new tag in each line!
-[] delete of completion, attempts, comments (long click)
-[] add back the div at top of home.vue for the filter btn func
+[x] if route was set less than a week ago, put new tag in each line!
+[x] delete of completion, attempts, comments (long click)
+[x] add back the div at top of home.vue for the filter btn func
+
+
+
+[] INPUT:
+-change date of a route (or other fields)
+[]	-long click on route in inputmode
+[]	-opens modal: 
+[]		-edit fields as textbox
+[]		-commit button
+[]	-this will update routes, routesReal, profileroutes, all for this routeId.
+	
+[] rate a route with stars?
+[] attempt/completed: flash/onsite/redpoint/send
+[] make an accompanying about page:
+in this about page you can write a comment to the admin.
+[] see your own stats:
+	-all your sends, sorted by day
+[] map of the gym:
+
+
+
+[bugs/small stuff:]
+[] change icon from notebook to plus
+
 [] another button beside filter: called settings:
 []   - choose between easy-medium-hard
 []   - chose to disclude autobelays ... etc

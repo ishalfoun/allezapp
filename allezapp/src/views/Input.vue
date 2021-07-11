@@ -1,166 +1,338 @@
 <template>
   <section class="main debug">
     <template v-if="profile[0] && profile[0].id === 'aGyG5o6IaDZtnyK7ouOKmNU1UYP2'">
-    <div class='row mt-2'>
-      <h2 class='title'>Input Mode</h2>
-      <router-link class="button" to="/publish">
-        Publish
-      </router-link>
-    </div>
-    <!-- <form @submit.prevent="onCreateRoute()" class="ml-4 mr-4">
-      <b-field label="Route Num">
-        <b-input v-model="route.routeNum" required></b-input>
-      </b-field>
-      <b-field label="Rating">
-        <b-input v-model="route.rating" required></b-input>
-      </b-field>
-      <button class="button is-success">Add Route</button>
-    </form> -->
-    <div class='row'>
-      <!-- <span class="firstdigit"> 5. </span> -->
-      <div class='button' :class="(inputRoute.selected6)? 'is-warning':''"
-      @click="onClickRoute('6')"> 6 </div>
-      <div class='button' :class="(inputRoute.selected7)? 'is-warning':''"
-      @click="onClickRoute('7')"> 7 </div>
-      <div class='button' :class="(inputRoute.selected8)? 'is-warning':''"
-      @click="onClickRoute('8')"> 8 </div>
-      <div class='button' :class="(inputRoute.selected9)? 'is-warning':''"
-      @click="onClickRoute('9')"> 9 </div>
-    </div>
-    <div class='row'>
-      <div class='button' :class="(inputRoute.selected10)? 'is-warning':''"
-      @click="onClickRoute('10')"> 10 </div>
-      <div class='button' :class="(inputRoute.selected11)? 'is-warning':''"
-      @click="onClickRoute('11')"> 11 </div>
-      <div class='button' :class="(inputRoute.selected12)? 'is-warning':''"
-      @click="onClickRoute('12')"> 12 </div>
-      <div class='button' :class="(inputRoute.selected13)? 'is-warning':''"
-      @click="onClickRoute('13')"> 13 </div>
-      <div class='button' :class="(inputRoute.selected14)? 'is-warning':''"
-      @click="onClickRoute('14')"> 14 </div>
-    </div>
-    <div class='row'>
-      <!-- <div class='button' :class="(inputRoute.selectedn)? 'is-warning':''"
-      @click="onClickRouteLetter('n')"> _ </div> -->
-      <div class='button' :disabled="(!this.inputRoute.showLetters)"
-        :class="(inputRoute.selecteda)? 'is-warning':''"
-        @click="onClickRouteLetter('a')"> a </div>
-      <div class='button' :disabled="(!this.inputRoute.showLetters)"
-        :class="(inputRoute.selectedb)? 'is-warning':''"
-        @click="onClickRouteLetter('b')"> b </div>
-      <div class='button' :disabled="(!this.inputRoute.showLetters)"
-        :class="(inputRoute.selectedc)? 'is-warning':''"
-        @click="onClickRouteLetter('c')"> c </div>
-      <div class='button' :disabled="(!this.inputRoute.showLetters)"
-        :class="(inputRoute.selectedd)? 'is-warning':''"
-        @click="onClickRouteLetter('d')"> d </div>
-    </div>
-    <div class='row'>
-      <div class='button' @click="onAutob()"
-        :class="(inputRoute.selectedAutob)? 'is-warning':''">
-        <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' /></div>
-      <div class='button' @click="onOverh()"
-        :class="(inputRoute.selectedOverh)? 'is-warning':''">
-        <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' /></div>
-      <div class='button' @click="onLead()"
-        :class="(inputRoute.selectedLead)? 'is-warning':''">
-        <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' /></div>
-      <div class='button' @click="onTopr()"
-        :class="(inputRoute.selectedTopr)? 'is-warning':''">
-        <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/rope3.png?alt=media&token=633842a5-deb3-49e6-b3b8-35848865829b' /></div>
-    </div>
-    <div class='row'>
-      <div class='button color' style="background-color:red;"
-        :style="(inputRoute.selectedRed)?
-        'border-color:black':'border-color:white;'"
-        @click="onColor('red')"> &nbsp; </div>
-      <div class='button color' style="background-color:blue"
-        :style="(inputRoute.selectedBlue)?
-        'border-color:deeppink;':'border-color:white;'"
-        @click="onColor('blue')"> &nbsp; </div>
-      <div class='button color' style="background-color: green"
-        :style="(inputRoute.selectedGreen)?
-        'border-color:black;':'border-color:white;'"
-         @click="onColor('green')"> &nbsp; </div>
-      <div class='button color' style="background-color: gold"
-        :style="(inputRoute.selectedYellow)?
-        'border-color:black;':'border-color:white;'"
-         @click="onColor('gold')"> &nbsp; </div>
-      <div class='button color' style="background-color: darkorange"
-        :style="(inputRoute.selectedOrange)?
-        'border-color:black;':'border-color:white;'"
-         @click="onColor('darkorange')">&nbsp;</div>
-      <div class='button color' style="background-color: deeppink"
-        :style="(inputRoute.selectedPink)?
-        'border-color:black;':'border-color:white;'"
-         @click="onColor('deeppink')"> &nbsp; </div>
-      <div class='button color' style="background-color: indigo"
-        :style="(inputRoute.selectedPurple)?
-        'border-color:black;':'border-color:white;'"
-         @click="onColor('indigo')"> &nbsp; </div>
-      <div class='button color' style="background-color: white;
-        border-color:black;border-style:solid;"
-        :style="(inputRoute.selectedWhite)?
-        'border-width:4px;':'border-width:1px;'"
-         @click="onColor('white')"> &nbsp; </div>
-      <div class='button color' style="background-color: black"
-        :style="(inputRoute.selectedBlack)?
-        'border-color:gold;':'border-color:white;'"
-         @click="onColor('black')"> &nbsp; </div>
-    </div>
-    <div class='row'>
-      <div class='button' @click="onBack()"> ◀ </div>
-      <div class='button' disabled> {{currentRouteNum}} </div>
-      <div class='button' @click="onNext()"> ▶ </div>
-      <div class='button' @click="onCreateRoute()"
-      :class="(inputRoute.plus)? 'is-success':''"> + </div>
-      <div class='button' @click="onEnterNext()"> +▶ </div>
-      <div class='button' @click="onDeleteAll()"> × </div>
-    </div>
-    <!-- {{getRoutesAt(currentRouteNum)}} -->
-    <!-- route#:{{routes[currentRouteNum].routeNum}} ({{routes[currentRouteNum].rating}}) -->
-    <div class="table debug">
-      <b-table
-      :key="componentKeyR"
-      style="width=100%"
-      :mobile-cards="false"
-      :data="currentRoutes"
-      ref="table">
-
-        <b-table-column field="" label="" v-slot="props">
-          <div @click="onDelete(props.row)"> X </div>
-        </b-table-column>
-
-        <b-table-column field="routeNum" label="Route" v-slot="props">
-          {{props.row.routeNum}}
-          <template v-if="props.row.color"><div id="square"
-            :style="{
-              'background-color': props.row.color,
-              'border-color': (props.row.color === 'white' ? 'black' : ''),
-              'border-width': (props.row.color === 'white' ? '1px' : ''),
-              'border-style': (props.row.color === 'white' ? 'solid' : ''),
-              }">&nbsp;</div></template>
-        </b-table-column>
-
-        <b-table-column field="rating" label="Rating" v-slot="props">
-          {{props.row.rating}}
-        </b-table-column>
-
-        <b-table-column field="flags" label="" v-slot="props">
-          <template v-if="props.row.flag_autob"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/triangle-xxl.png?alt=media&token=37986abe-878e-4b77-af1d-c0bfb8ce6ed7' /></template>
-          <template v-if="props.row.flag_overh"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/leadclimbing.jpg?alt=media&token=26257ad8-ae6e-4b20-a611-f1f71cfb8be2' /></template>
-          <template v-if="props.row.flag_lead"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' /></template>
-          <template v-if="props.row.flag_topr"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/rope3.png?alt=media&token=633842a5-deb3-49e6-b3b8-35848865829b' /></template>
-        </b-table-column>
-      </b-table>
-      <template v-if="currentRoutes.length === 0">
-        <div>
-          No Records at {{currentRouteNum}}
+      <b-modal v-model="modalInputEditVisible" width="90%" scroll="keep">
+        <div class="card">
+          <div class="card-content" style="padding-top: 0.5em;">
+            <div class="content">
+              <div class="flexcenter" style="padding-top: 0;">
+                <div>
+                  <sup>Change fields in route:</sup>
+                </div>
+              </div>
+              <div class="flexrow">
+                <div>
+                  #{{modalProps.routeNum}}
+                </div>
+                <div class="flexrow">
+                  <template v-if="modalProps.flag_autob"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' /></template>
+                  <template v-if="modalProps.flag_overh"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_overh.png?alt=media&token=b6f36953-6baf-49e1-b47e-c2691fbc150b' /></template>
+                  <template v-else><div class='smallicon'></div></template>
+                  <template v-if="modalProps.flag_topr"><img class='smallicon ml-1' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' /></template>
+                  <template v-else><div class='smallicon'></div></template>
+                  <template v-if="modalProps.flag_lead"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' /></template>
+                  <template v-else><div class='smallicon'></div></template>
+                </div>
+                <div class="flexrow">
+                  <template v-if="modalProps.color">
+                    <div class="square" :style="{
+                      'background-color': modalProps.color,
+                      'border-color': (modalProps.color === 'white' ? 'black' : ''),
+                      'border-width': (modalProps.color === 'white' ? '1px' : ''),
+                      'border-style': (modalProps.color === 'white' ? 'solid' : ''),
+                      }"
+                      style="border-radius: 5px;">&nbsp;
+                    </div>
+                  </template>
+                  {{modalProps.rating}}
+                </div>
+              </div>
+              <div class="flexcontainer ml-2">
+                <div class="flexcenter">
+                  <b-field label="Route#" />
+                </div>
+                <div class="flexcenter">
+                  <div class='button' @click="onBackModal()"> ◀ </div>
+                  <b-input v-model="routeNumChanged"
+                   style="width: 3em"></b-input>
+                  <div class='button' @click="onNextModal()"> ▶ </div>
+                </div>
+              </div>
+              <div class="flexcontainer ml-2">
+                <div class="flexcenter">
+                  <b-field label="Rating" />
+                </div>
+                <b-select
+                  v-model="ratingChanged">
+                  <option
+                    v-for="rating in possibleRatings"
+                    :value="rating"
+                    :key="rating">
+                    {{ rating }}
+                  </option>
+                </b-select>
+              </div>
+              <div class="flexcontainer ml-2">
+                <div>
+                  Autobelay:
+                </div>
+                <div>
+                  <b-field>
+                    <span class='mr-3'>
+                      <template v-if="switchAutoB">
+                        <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' />
+                      </template>
+                    </span>
+                    <b-switch v-model="switchAutoB">
+                    </b-switch>
+                  </b-field>
+                </div>
+              </div>
+              <div class="flexcontainer ml-2">
+                <div>
+                  Lead:
+                </div>
+                <div>
+                  <b-field>
+                    <span class='mr-3'>
+                      <template v-if="switchLead">
+                        <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' />
+                      </template>
+                    </span>
+                    <b-switch v-model="switchLead">
+                    </b-switch>
+                  </b-field>
+                </div>
+              </div>
+              <div class="flexcontainer ml-2">
+                <div>
+                  Toprope:
+                </div>
+                <div>
+                  <b-field>
+                    <span class='mr-3'>
+                      <template v-if="switchToprope">
+                        <img class='smallicon ml-1' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' />
+                      </template>
+                    </span>
+                    <b-switch v-model="switchToprope">
+                    </b-switch>
+                  </b-field>
+                </div>
+              </div>
+              <div class="flexcontainer ml-2">
+                <div>
+                  Overhang:
+                </div>
+                <div>
+                  <b-field>
+                    <span class='mr-3'>
+                      <template v-if="switchOverhang">
+                        <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_overh.png?alt=media&token=b6f36953-6baf-49e1-b47e-c2691fbc150b' />
+                      </template>
+                    </span>
+                    <b-switch v-model="switchOverhang"
+                      class="showOverhang">
+                    </b-switch>
+                  </b-field>
+                </div>
+              </div>
+              <div class="flexcontainer">
+                <div></div>
+                <a class="button is-success pl-4 pr-4 mr-4"
+                  @click="onApplyChangeToRoute(modalProps.id)">
+                  Apply
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
+      </b-modal>
+      <div class='row mt-2'>
+        <h2 class='title'>Input Mode</h2>
+        <router-link class="button" to="/publish">
+          Publish
+        </router-link>
+      </div>
+      <!-- <form @submit.prevent="onCreateRoute()" class="ml-4 mr-4">
+        <b-field label="Route Num">
+          <b-input v-model="route.routeNum" required></b-input>
+        </b-field>
+        <b-field label="Rating">
+          <b-input v-model="route.rating" required></b-input>
+        </b-field>
+        <button class="button is-success">Add Route</button>
+      </form> -->
+      <div class='row' style="height:50%">
+        <!-- <span class="firstdigit"> 5. </span> -->
+        <div class='flexcolumn' style="width: 60%">
+          <div class='button' :class="(inputRoute.selected7)? 'is-warning':''"
+            @click="onClickRoute('7')" style="height:100%"> 7
+          </div>
+          <div class='button' :class="(inputRoute.selected8)? 'is-warning':''"
+            @click="onClickRoute('8')" style="height:100%"> 8 </div>
+          <div class='button' :class="(inputRoute.selected9)? 'is-warning':''"
+            @click="onClickRoute('9')" style="height:100%"> 9 </div>
+        </div>
+        <div class='button' :class="(inputRoute.selected10)? 'is-warning':''"
+          @click="onClickRoute('10')" style="width:100%;height:100%;flex-grow:4"> 10
+        </div>
+        <div class='button' :class="(inputRoute.selected11)? 'is-warning':''"
+          @click="onClickRoute('11')" style="width:100%;height:100%;flex-grow:4"> 11
+        </div>
+        <div class='flexcolumn' style="width: 60%">
+          <div class='button' :class="(inputRoute.selected12)? 'is-warning':''"
+            @click="onClickRoute('12')" style="flex-grow:2"> 12
+          </div>
+          <div class='button' :class="(inputRoute.selected13)? 'is-warning':''"
+            @click="onClickRoute('13')"> 13
+          </div>
+        </div>
+      </div>
+      <div class='row' style="height:20%">
+        <!-- <span class="firstdigit"> 5. </span> -->
+        <div class='button' :disabled="(!this.inputRoute.showLetters)"
+          :class="(inputRoute.selecteda)? 'is-warning':''"
+          @click="onClickRouteLetter('a')" style="flex-grow:10;height:100%;"> a </div>
+        <div class='button' :disabled="(!this.inputRoute.showLetters)"
+          :class="(inputRoute.selectedb)? 'is-warning':''"
+          @click="onClickRouteLetter('b')" style="flex-grow:10;height:100%;"> b
+        </div>
+        <div class='button' :disabled="(!this.inputRoute.showLetters)"
+          :class="(inputRoute.selectedc)? 'is-warning':''"
+          @click="onClickRouteLetter('c')" style="flex-grow:5;height:100%;"> c </div>
+        <div class='button' :disabled="(!this.inputRoute.showLetters)"
+          :class="(inputRoute.selectedd)? 'is-warning':''"
+          @click="onClickRouteLetter('d')" style="flex-grow:5;height:100%;"> d </div>
+      </div>
+      <div class='row'>
+        <div class='button' @click="onAutob()"
+          :class="(inputRoute.selectedAutob)? 'is-warning':''">
+          <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' /></div>
+        <div class='button' @click="onOverh()"
+          :class="(inputRoute.selectedOverh)? 'is-warning':''">
+          <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_overh.png?alt=media&token=b6f36953-6baf-49e1-b47e-c2691fbc150b' /></div>
+        <div class='button' @click="onLead()"
+          :class="(inputRoute.selectedLead)? 'is-warning':''">
+          <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' /></div>
+        <div class='button' @click="onTopr()"
+          :class="(inputRoute.selectedTopr)? 'is-warning':''">
+          <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/rope3.png?alt=media&token=633842a5-deb3-49e6-b3b8-35848865829b' /></div>
+      </div>
+      <div class='row'>
+        <div class='button color' style="background-color:red;"
+          :style="(inputRoute.selectedRed)?
+          'border-color:black':'border-color:white;'"
+          @click="onColor('red')"> &nbsp; </div>
+        <div class='button color' style="background-color:blue"
+          :style="(inputRoute.selectedBlue)?
+          'border-color:deeppink;':'border-color:white;'"
+          @click="onColor('blue')"> &nbsp; </div>
+        <div class='button color' style="background-color: green"
+          :style="(inputRoute.selectedGreen)?
+          'border-color:black;':'border-color:white;'"
+          @click="onColor('green')"> &nbsp; </div>
+        <div class='button color' style="background-color: gold"
+          :style="(inputRoute.selectedYellow)?
+          'border-color:black;':'border-color:white;'"
+          @click="onColor('gold')"> &nbsp; </div>
+        <div class='button color' style="background-color: darkorange"
+          :style="(inputRoute.selectedOrange)?
+          'border-color:black;':'border-color:white;'"
+          @click="onColor('darkorange')">&nbsp;</div>
+        <div class='button color' style="background-color: deeppink"
+          :style="(inputRoute.selectedPink)?
+          'border-color:black;':'border-color:white;'"
+          @click="onColor('deeppink')"> &nbsp; </div>
+        <div class='button color' style="background-color: indigo"
+          :style="(inputRoute.selectedPurple)?
+          'border-color:black;':'border-color:white;'"
+          @click="onColor('indigo')"> &nbsp; </div>
+        <div class='button color' style="background-color: white;
+          border-color:black;border-style:solid;"
+          :style="(inputRoute.selectedWhite)?
+          'border-width:4px;':'border-width:1px;'"
+          @click="onColor('white')"> &nbsp; </div>
+        <div class='button color' style="background-color: black"
+          :style="(inputRoute.selectedBlack)?
+          'border-color:gold;':'border-color:white;'"
+          @click="onColor('black')"> &nbsp; </div>
+      </div>
+      <div class='row'>
+        <div class='button' @click="onBack()"> ◀ </div>
+        <div class='button' disabled> {{currentRouteNum}} </div>
+        <div class='button' @click="onNext()"> ▶ </div>
+        <div class='button' @click="onCreateRoute()"
+        :class="(inputRoute.plus)? 'is-success':''"> + </div>
+        <div class='button' @click="onEnterNext()"> +▶ </div>
+        <div class='button' @click="onDeleteAll()"> × </div>
+      </div>
+      <!-- <div class="flexcontainer">
+        <div class="button is-danger is-small" style="margin:auto"
+          @touchstart.stop="touchstart" @mousedown.stop="touchstart"
+          @touchend.stop="touchend" @mouseup.stop="touchend"
+          @mousemove="mousemove">Long-Click to Delete</div>
+      </div> -->
+      <!-- {{getRoutesAt(currentRouteNum)}} -->
+      <!-- route#:{{routes[currentRouteNum].routeNum}} ({{routes[currentRouteNum].rating}}) -->
+      <div class="table debug">
+        <b-table
+        id="tableid"
+        :key="componentKeyR"
+        style="width=100%"
+        :mobile-cards="false"
+        :data="currentRoutes"
+        ref="table">
+
+          <b-table-column field="" label="" v-slot="props">
+            <div class="cellcontent">
+              <div @click="onDelete(props.row)">
+                X
+              </div>
+            </div>
+          </b-table-column>
+
+          <b-table-column field="routeNum" label="Route" v-slot="props">
+            <div class="cellcontent"
+              @touchstart.stop="touchstart(props.row, $event)"
+              @mousedown.stop="touchstart(props.row, $event)"
+              @touchend.stop="touchend"
+              @mouseup.stop="touchend"
+              @mousemove="mousemove">
+              {{props.row.routeNum}}
+              <template v-if="props.row.color"><div id="square"
+                :style="{
+                  'background-color': props.row.color,
+                  'border-color': (props.row.color === 'white' ? 'black' : ''),
+                  'border-width': (props.row.color === 'white' ? '1px' : ''),
+                  'border-style': (props.row.color === 'white' ? 'solid' : ''),
+                  }">&nbsp;</div></template>
+            </div>
+          </b-table-column>
+
+          <b-table-column field="rating" label="Rating" v-slot="props">
+            <div class="cellcontent"
+              @touchstart.stop="touchstart(props.row, $event)"
+              @mousedown.stop="touchstart(props.row, $event)"
+              @touchend.stop="touchend"
+              @mouseup.stop="touchend"
+              @mousemove="mousemove">
+              {{props.row.rating}}
+            </div>
+          </b-table-column>
+
+          <b-table-column field="flags" label="Type" v-slot="props">
+            <div class="cellcontent"
+              @touchstart.stop="touchstart(props.row, $event)"
+              @mousedown.stop="touchstart(props.row, $event)"
+              @touchend.stop="touchend"
+              @mouseup.stop="touchend"
+              @mousemove="mousemove">
+              <template v-if="props.row.flag_autob"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/triangle-xxl.png?alt=media&token=37986abe-878e-4b77-af1d-c0bfb8ce6ed7' /></template>
+              <template v-if="props.row.flag_overh"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/leadclimbing.jpg?alt=media&token=26257ad8-ae6e-4b20-a611-f1f71cfb8be2' /></template>
+              <template v-if="props.row.flag_lead"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' /></template>
+              <template v-if="props.row.flag_topr"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/rope3.png?alt=media&token=633842a5-deb3-49e6-b3b8-35848865829b' /></template>
+            </div>
+          </b-table-column>
+        </b-table>
+        <template v-if="currentRoutes.length === 0">
+          <div>
+            No Records at {{currentRouteNum}}
+          </div>
+        </template>
+      </div>
       </template>
-    </div>
-    </template>
-    <template v-else>
+      <template v-else>
       not accessible
       </template>
   </section>
@@ -224,6 +396,53 @@ export default {
     nonfound: false,
     currentRoutes: [],
     alreadyInitd: false,
+    mouse: {
+      longtouch: null,
+      timer: null,
+    },
+    modalInputEditVisible: false,
+    modalProps: {
+      rating: '',
+      color: '',
+      routeNum: '',
+      id: '',
+      comments: [],
+      date: '',
+      notes: '',
+      create_at: '',
+      checkboxPostPublic: '',
+    },
+    routeNumChanged: '',
+    ratingChanged: '',
+    switchAutoB: '',
+    switchLead: '',
+    switchToprope: '',
+    switchOverhang: '',
+    possibleRatings: {
+      7: '5.7',
+      8: '5.8',
+      9: '5.9',
+      10: '5.10a',
+      11: '5.10b',
+      12: '5.10c',
+      13: '5.10d',
+      14: '5.11a',
+      15: '5.11b',
+      16: '5.11c',
+      17: '5.11d',
+      18: '5.12a',
+      19: '5.12b',
+      20: '5.12c',
+      21: '5.12d',
+      22: '5.13a',
+      23: '5.13b',
+      24: '5.13c',
+      25: '5.13d',
+      26: '5.14a',
+      27: '5.14b',
+      28: '5.14c',
+      29: '5.14d',
+    },
   }),
   // When this component is mounted, we want to call the init
   // When you load a specific subreddit, the params have the name of given subreddit
@@ -236,7 +455,84 @@ export default {
     ...mapState('profile', ['profile']),
   },
   methods: {
-    ...mapActions('input', ['createRoute', 'initRoutes', 'deleteRoute', 'deleteAll']),
+    ...mapActions('input', ['createRoute', 'initRoutes', 'deleteRoute', 'deleteAll', 'applyChangeToRoute']),
+    onApplyChangeToRoute(routeId) {
+      const argument = {};
+      argument.id = routeId;
+      if (this.routeNumChanged !== this.modalProps.routeNum) {
+        argument.routeNumChanged = this.routeNumChanged;
+      }
+      if (this.ratingChanged !== this.modalProps.rating) {
+        argument.ratingChanged = this.ratingChanged;
+      }
+      if (this.switchAutoB !== this.modalProps.flag_autob) {
+        argument.switchAutoB = this.switchAutoB;
+      }
+      if (this.switchLead !== this.modalProps.flag_lead) {
+        argument.switchLead = this.switchLead;
+      }
+      if (this.switchToprope !== this.modalProps.flag_topr) {
+        argument.switchToprope = this.switchToprope;
+      }
+      if (this.switchOverhang !== this.modalProps.flag_overh) {
+        argument.switchOverhang = this.switchOverhang;
+      }
+      console.log('sending applyChangetoRoute varg=', argument);
+      this.applyChangeToRoute(argument);
+    },
+    longPressAction(row) {
+      console.log('in on LOOOOONG PRSSS.', row);
+      this.modalInputEditVisible = true;
+      this.modalProps = row; // wherever the user clicked, set the modal to that data
+      this.routeNumChanged = row.routeNum;
+      this.ratingChanged = row.rating;
+      this.switchAutoB = row.flag_autob;
+      this.switchLead = row.flag_lead;
+      this.switchToprope = row.flag_topr;
+      this.switchOverhang = row.flag_overh;
+    },
+    touchstart(row, event) {
+      // console.log('in on start PRSSS.', row);
+      this.mouse.longtouch = false;
+      this.mouse.stillTouching = true;
+      this.mouse.coord_x = event.x;
+      this.mouse.coord_y = event.y;
+
+      this.mouse.timer = setTimeout(() => {
+        this.mouse.longtouch = true;
+        this.mouse.timer = null;
+        if (this.mouse.stillTouching === true) {
+          this.longPressAction(row);
+        }
+      }, 900);
+    },
+    // if at the time you let go, the timer has gone off, it's a long touch
+    // what i want:
+    // if the timer goes off, check if still holding, if so, do the action
+    touchend() {
+      this.mouse.stillTouching = false;
+      console.log('touchEnd.');
+      if (this.mouse.timer) {
+        clearTimeout(this.mouse.timer);
+        this.mouse.timer = null;
+        console.log('timer canceled.');
+      }
+      // if (this.mouse.longtouch) {
+      //   console.log('in on LOOOOONG PRSSS.');
+      //   // add logic here to happe after longpress
+      //   this.mouse.longtouch = false;
+      // }
+    },
+    mousemove(event) {
+      if (this.mouse.timer) { // if timer is still going
+        // if move more than 50 px each way, cancel
+        if (Math.abs(event.x - this.mouse.coord_x) > 50
+          || Math.abs(event.y - this.mouse.coord_y) > 50) {
+          this.touchend();
+          console.log('moved mouse too far away :(');
+        }
+      }
+    },
     onAutob() {
       this.inputRoute.selectedAutob = !this.route.flag_autob;
       this.route.flag_autob = !this.route.flag_autob;
@@ -446,6 +742,31 @@ export default {
         default:
       }
     },
+    // onBackModal() {
+    //   console.log('in back: ', this.modalProps.routeNumChanged);
+    //   this.modalProps.routeNumChanged -= 1;
+    //   if (this.modalProps.routeNumChanged < 10) {
+    //     this.modalProps.routeNumChanged = 81;
+    //   }
+    // },
+    // onNextModal() {
+    //   this.modalProps.routeNumChanged += 1;
+    //   if (this.modalProps.routeNumChanged > 81) {
+    //     this.modalProps.routeNumChanged = 10;
+    //   }
+    // },
+    onBackModal() {
+      this.routeNumChanged -= 1;
+      if (this.routeNumChanged < 10) {
+        this.routeNumChanged = 81;
+      }
+    },
+    onNextModal() {
+      this.routeNumChanged += 1;
+      if (this.routeNumChanged > 81) {
+        this.routeNumChanged = 10;
+      }
+    },
     onBack() {
       this.currentRouteNum -= 1;
       if (this.currentRouteNum < 10) {
@@ -491,6 +812,7 @@ export default {
     },
     componentKey() {
       this.componentKeyR += 1;
+      this.modalInputEditVisible = false;
       console.log('componentKey watched!! componentKeyR=', this.componentKeyR);
       this.getRoutesAt(this.currentRouteNum);
     },
@@ -499,6 +821,25 @@ export default {
 </script>
 
 <style lang="scss">
+.content > * {
+  margin-bottom: 0.5em;
+}
+.flexrow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.cellcontent {
+  padding: 0.5em 0.75em;
+}
+.table td{
+  padding: 0px 0px 0px 0px !important;
+  // font-weight: 400;
+  // font-size: 1.4em;
+}
+.centered {
+  justify-content: center;
+}
 #square {
   display: inline-block;
   height: 15px;
@@ -528,6 +869,11 @@ export default {
   display: flex;
   justify-content: space-between;
   height: 15%;
+}
+.flexcolumn {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 .main {
   height: 100%;

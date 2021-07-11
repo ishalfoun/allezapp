@@ -38,7 +38,7 @@
               </div>
               <div>
                 <template v-if="modalProps.color">
-                  <div id="square" :style="{
+                  <div class="square" :style="{
                     'background-color': modalProps.color,
                     'border-color': (modalProps.color === 'white' ? 'black' : ''),
                     'border-width': (modalProps.color === 'white' ? '1px' : ''),
@@ -196,7 +196,7 @@
             </div>
             <div>
               <template v-if="modalProps.color">
-                <div id="square" :style="{
+                <div class="square" :style="{
                   'background-color': modalProps.color,
                   'border-color': (modalProps.color === 'white' ? 'black' : ''),
                   'border-width': (modalProps.color === 'white' ? '1px' : ''),
@@ -529,15 +529,14 @@
           <div class="flexcontainer"
            style="align-items:center;justify-content: flex-start;" @click="onViewRoute(props.row)">
             <template v-if="props.row.color">
-              <div id="square"
+              <div class="square mr-2"
                 :style="{
                   'background-color': props.row.color,
                   'border-color': (props.row.color === 'white' ? 'black' : ''),
                   'border-width': (props.row.color === 'white' ? '1px' : ''),
                   'border-style': (props.row.color === 'white' ? 'solid' : ''),
                   }"
-                  style="border-radius: 5px"
-                  class="mr-2">&nbsp;
+                  style="border-radius: 5px">&nbsp;
               </div>
             </template>
             <div>{{props.row.rating}}
@@ -584,7 +583,9 @@
               <button><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_edit.png?alt=media&token=6eaa64b0-50e0-4c82-b8a0-ad6aa1627219' /></button>
             </div> -->
             <div>
-              <button v-on:click.stop="onEditRoute(props.row)"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_edit.png?alt=media&token=6eaa64b0-50e0-4c82-b8a0-ad6aa1627219' /></button>
+              <button v-on:click.stop="onEditRoute(props.row)">
+                <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_edit.png?alt=media&token=6eaa64b0-50e0-4c82-b8a0-ad6aa1627219' />
+              </button>
             </div>
           </div>
           <!-- <img class='icon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/rope.png?alt=media&token=c8f1cf11-05ff-4367-a6d7-ead1426a48a1' />
@@ -1093,6 +1094,14 @@ export default {
 
 </script>
 
+<style lang="scss" >
+.flexcenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>
+
 <style lang="scss" scoped>
 .smallbutton {
   height: 1.6em !important;
@@ -1177,11 +1186,6 @@ export default {
 .card-content {
   padding-bottom: 0.5em;
   padding-top: 6px;
-}
-.flexcenter {
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 /* The radiobtn container */
 .radiobtncontainer {
@@ -1270,7 +1274,7 @@ export default {
 .content-left {
   display: flex;
 }
-#square {
+.square {
   display: inline-block;
   height: 20px;
   width: 20px;

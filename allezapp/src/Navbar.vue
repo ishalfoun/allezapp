@@ -114,23 +114,23 @@
                 Apply
               </a>
             </div>
-          </div>
-          <div class="navbar-item flexcontainer">
-              <strong>Settings:</strong>
-          </div>
-          <div class="navbar-item flexcontainer ml-2"
-            v-on:click.stop="onSwitchDefault()">
-              Default selection:
-              <b-field >
-                <span class='mr-3'>{{ switchDefaultClimb }}</span>
-                <b-switch v-model="switchDefaultClimb"
-                  type="is-danger"
-                  true-value="Lead"
-                  false-value="Toprope"
-                  class="defaultClimb">
-                </b-switch>
-              </b-field>
+            <div class="navbar-item flexcontainer">
+                <strong>Settings:</strong>
             </div>
+            <div class="navbar-item flexcontainer ml-2"
+              v-on:click.stop="onSwitchDefault()">
+                Default selection:
+                <b-field >
+                  <span class='mr-3'>{{ switchDefaultClimb }}</span>
+                  <b-switch v-model="switchDefaultClimb"
+                    type="is-danger"
+                    true-value="Lead"
+                    false-value="Toprope"
+                    class="defaultClimb">
+                  </b-switch>
+                </b-field>
+            </div>
+          </div>
 <!-- nav bar end for desktop: -->
         <div class="navbar-end if-desktop">
           <div class="navbar-item has-dropdown is-hoverable" v-if="isLoggedIn">
