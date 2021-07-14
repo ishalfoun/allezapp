@@ -626,13 +626,32 @@ git add . | git commit -m 'entry/comment delete logic, new flag' | git push -u o
 
 
 
+[x] fix: in desktop, navbar has a item
 [] INPUT:
 -change date of a route (or other fields)
-[]	-long click on route in inputmode
-[]	-opens modal: 
-[]		-edit fields as textbox
-[]		-commit button
-[]	-this will update routes, routesReal, profileroutes, all for this routeId.
+[x]	-long click on route in inputmode
+[x]	-opens modal: 
+[]		-edit fields
+	-two columns:
+	Route#: 10 (textfield)
+	Rating: 5.7 (dropdown)
+	Type: 
+	 autob (switch)
+	 lead (switch)
+	 topr (switch)
+	 overh (switch)
+	 
+[x] copy the log click to all fields
+[x] logic for each field 
+	[x] route num arrows
+	[x] (rating select)
+	[x] icons for flags
+[x]		-commit button
+		-this will update 
+	[x] routes, 
+	[x] routesReal, 
+	[] profileroutes, all for this routeId.
+	[]-show how many records were updated.
 	
 [] rate a route with stars?
 [] attempt/completed: flash/onsite/redpoint/send
@@ -645,6 +664,10 @@ in this about page you can write a comment to the admin.
 
 
 [bugs/small stuff:]
+[] bug: if it says connecting to server for 5 seconds, (if no records displayed)
+reload page (profileroutes?) automatically
+[] when i publish, removed routes delete routesReall, which causes comment of routesReal to be orphaned
+[] when hitting publish, also fix orpahned routes.
 [] change icon from notebook to plus
 
 [] another button beside filter: called settings:

@@ -521,7 +521,7 @@
             <template v-else><div class='smallicon'></div></template>
             <template v-if="props.row.flag_lead"><img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' /></template>
             <template v-else><div class='smallicon'></div></template>
-            {{isDateRecentNum(props.row.created_at)}}
+            <!-- {{isDateRecentNum(props.row.created_at)}} -->
           </div>
         </b-table-column>
         <b-table-column field="rating" :custom-sort="customSortFuncRating"
