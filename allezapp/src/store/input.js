@@ -27,10 +27,20 @@ const actions = {
       actions.updateRoutesRealField({ getters }, arg.id, { routeNum: arg.routeNumChanged });
       actions.updateProfileRoutesField({ getters }, arg.id, { routeNum: arg.routeNumChanged });
     }
+    if (arg.createdAtChanged) {
+      actions.updateRoutesField({ getters }, arg.id, { created_at: arg.createdAtChanged });
+      actions.updateRoutesRealField({ getters }, arg.id, { created_at: arg.createdAtChanged });
+      actions.updateProfileRoutesField({ getters }, arg.id, { created_at: arg.createdAtChanged });
+    }
     if (arg.ratingChanged) {
       actions.updateRoutesField({ getters }, arg.id, { rating: arg.ratingChanged });
       actions.updateRoutesRealField({ getters }, arg.id, { rating: arg.ratingChanged });
       actions.updateProfileRoutesField({ getters }, arg.id, { rating: arg.ratingChanged });
+    }
+    if (arg.colorChanged) {
+      actions.updateRoutesField({ getters }, arg.id, { color: arg.colorChanged });
+      actions.updateRoutesRealField({ getters }, arg.id, { color: arg.colorChanged });
+      actions.updateProfileRoutesField({ getters }, arg.id, { color: arg.colorChanged });
     }
     // explanation of the if-statement for the flags:
     //   -if the field is true or false, update
@@ -55,6 +65,16 @@ const actions = {
       actions.updateRoutesRealField({ getters }, arg.id, { flag_overh: arg.switchOverhang });
       actions.updateProfileRoutesField({ getters }, arg.id, { flag_overh: arg.switchOverhang });
     }
+  },
+  getTimestampFromDate(dateArg) {
+    console.log('in getTimestampFromDate ', dateArg);
+
+    // console.log('in getTimestampFromDate toTimestamp ', dateArg.toTimestamp());
+    // console.log('in  Date.parse ', Date.parse(dateArg));
+    // console.log('in  Date.parse ', (Date.parse(dateArg)).getTime());
+    // console.log('in  Date.parse ', (new Date(dateArg)));
+    // console.log('in  Date.parse ', (new Date(dateArg)).getTime());
+    // return datum.getTime() / 1000;
   },
   // eslint-disable-next-line
   async updateRoutesField({ getters }, id, arg) {
@@ -112,17 +132,11 @@ const actions = {
     console.log('updating in db profileRoutes: id ', id);
     console.log('updating in db profileRoutes: field ', arg);
 
-    // [x] we need the collection profileroutes
-    // [x] loop through it
-    // [x] for each record, check if the id matches,
-    // [x]     if so, save that profilerouteId
-    //      later, do an update for that profilerouteId (use batch write)
-    //      also delete subrecords (comments)
+    // get all profileroutes for this id
+    // delete them in separate function (above)
 
-    // dataJS.data.profileroutes
     await db
       .collection('profileroutes')
-      // .where('rating', '==', '5.10a')
       .where('routeId', '==', id)
       .get()
       .then((querySnapshot) => {

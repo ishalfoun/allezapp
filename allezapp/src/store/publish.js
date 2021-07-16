@@ -106,6 +106,8 @@ const actions = {
   // additions and removals now filled (from routes)
   // 1. save all additions (to routesReal)
   // 2. delete all removals (to routesReal)
+  // 3. also delete comments
+  // 4. also delete orphans
   ///
   commit() {
     ///
@@ -131,6 +133,9 @@ const actions = {
     });
     data.removals.forEach(async (element, index) => {
       dbwaiting += 1;
+      console.log(element);
+      console.log(index);
+      await actions.deleteComments(element.id);
       await db.collection('routesReal').doc(element.id).delete()
         .then(() => {
           console.log('      deleting in commit: routesReal deleted/or never existed!');
@@ -144,6 +149,86 @@ const actions = {
           console.error('      adddeletinging in commit: Error deleting routesReal: ', error);
         });
     });
+    // actions.deleteComments();
+    // actions.deleteEntries();
+  },
+  async deleteComments(routeId) {
+    console.log('deleteComments: routeId', routeId);
+    await db
+      .collection('routesReal')
+      .doc(routeId)
+      .collection('comments')
+      .get()
+      .then((querySnapshot) => {
+        if (querySnapshot) {
+          // console.log('full get Document data:', querySnapshot);
+          querySnapshot.docs.map((doc) => {
+            // console.log('full get each doc:', { id: doc.id, ...doc.data() });
+            // only pass the id and the original func arg
+            actions.deleteCommentSingle(routeId, doc.id);
+            return { id: doc.id, ...doc.data() };
+          });
+        } else {
+          console.log('full get No such document!');
+        }
+      })
+      .catch((error) => {
+        console.log('full get Error getting document:', error);
+      });
+  },
+  async deleteCommentSingle(routeId, commentId) {
+    console.log(`in deletecommentSingle, routeId: ${routeId}, ${commentId}`);
+    await db
+      .collection('routesReal')
+      .doc(routeId)
+      .collection('comments')
+      .doc(commentId)
+      .delete()
+      .then(() => {
+        console.log('      routesReal.comments deleted in DB!');
+      })
+      .catch((error) => {
+        console.log('      Error:routesReal.comments not deleted in DB', error);
+      });
+  },
+  async deleteEntries(prouteId) {
+    console.log('deleteEntries: routeId', prouteId);
+    await db
+      .collection('profileroutes')
+      .doc(prouteId)
+      .collection('entries')
+      .get()
+      .then((querySnapshot) => {
+        if (querySnapshot) {
+          // console.log('full get Document data:', querySnapshot);
+          querySnapshot.docs.map((doc) => {
+            // console.log('full get each doc:', { id: doc.id, ...doc.data() });
+            // only pass the id and the original func arg
+            actions.deleteEntrySingle(prouteId, doc.id);
+            return { id: doc.id, ...doc.data() };
+          });
+        } else {
+          console.log('deleteEntries get No such document!');
+        }
+      })
+      .catch((error) => {
+        console.log('deleteEntries get Error getting document:', error);
+      });
+  },
+  async deleteEntrySingle(prouteId, entryId) {
+    console.log(`in deleteEntrySingle, prouteId: ${prouteId}, entryId ${entryId}`);
+    await db
+      .collection('profileroutes')
+      .doc(prouteId)
+      .collection('entries')
+      .doc(entryId)
+      .delete()
+      .then(() => {
+        console.log('      profileroutes.entries deleted in DB!');
+      })
+      .catch((error) => {
+        console.log('      Error:profileroutes.entries not deleted in DB', error);
+      });
   },
   deleteAddi({ gett }, row) {
     console.log(' in deleteAddi', row);

@@ -25,7 +25,7 @@
                 </div>
                 <div class="flexrow">
                   <template v-if="modalProps.color">
-                    <div class="square" :style="{
+                    <div class="square mr-2" :style="{
                       'background-color': modalProps.color,
                       'border-color': (modalProps.color === 'white' ? 'black' : ''),
                       'border-width': (modalProps.color === 'white' ? '1px' : ''),
@@ -35,6 +35,23 @@
                     </div>
                   </template>
                   {{modalProps.rating}}
+                </div>
+              </div>
+              <div class="flexcontainer ml-2">
+                <div class="flexcenter">
+                  <b-field label="Date Added" />
+                </div>
+                <div class="flexcenter">
+                  <!-- <b-input v-model="createdAtChanged"
+                   style="width: 6em"></b-input> -->
+                  <b-field label="Select a date">
+                    <b-datepicker
+                      v-model="createdAtChanged"
+                      placeholder="Click to select..."
+                      icon="calendar-today"
+                      trap-focus>
+                    </b-datepicker>
+                  </b-field>
                 </div>
               </div>
               <div class="flexcontainer ml-2">
@@ -61,6 +78,31 @@
                     {{ rating }}
                   </option>
                 </b-select>
+              </div>
+              <div class="flexcontainer ml-2">
+                <div class="flexcenter">
+                  <b-field label="Color" />
+                </div>
+                <div class="flexcenter">
+                  <div class="square mr-2"
+                      style="border-color:red;border-style:solid;"
+                      :style="{
+                        'background-color': colorChanged,
+                        'border-color': (colorChanged === 'white' ? 'black' : ''),
+                        'border-width': (colorChanged === 'white' ? '1px' : ''),
+                        'border-style': (colorChanged === 'white' ? 'solid' : ''),
+                        }">&nbsp;
+                      </div>
+                  <b-select
+                    v-model="colorChanged">
+                    <option
+                      v-for="(value, key) in colors"
+                      :value="value"
+                      :key="key">
+                      {{ key }}
+                    </option>
+                  </b-select>
+                </div>
               </div>
               <div class="flexcontainer ml-2">
                 <div>
@@ -290,7 +332,7 @@
               @mouseup.stop="touchend"
               @mousemove="mousemove">
               {{props.row.routeNum}}
-              <template v-if="props.row.color"><div id="square"
+              <template v-if="props.row.color"><div class="square"
                 :style="{
                   'background-color': props.row.color,
                   'border-color': (props.row.color === 'white' ? 'black' : ''),
@@ -413,7 +455,9 @@ export default {
       checkboxPostPublic: '',
     },
     routeNumChanged: '',
+    createdAtChanged: new Date(),
     ratingChanged: '',
+    colorChanged: '',
     switchAutoB: '',
     switchLead: '',
     switchToprope: '',
@@ -443,6 +487,17 @@ export default {
       28: '5.14c',
       29: '5.14d',
     },
+    colors: {
+      Yellow: 'gold',
+      Pink: 'deeppink',
+      Purple: 'indigo',
+      Orange: 'darkorange',
+      Red: 'red',
+      Green: 'green',
+      Blue: 'blue',
+      White: 'white',
+      Black: 'black',
+    },
   }),
   // When this component is mounted, we want to call the init
   // When you load a specific subreddit, the params have the name of given subreddit
@@ -459,11 +514,17 @@ export default {
     onApplyChangeToRoute(routeId) {
       const argument = {};
       argument.id = routeId;
+      if (this.createdAtChanged !== this.modalProps.created_at) {
+        argument.createdAtChanged = this.createdAtChanged;
+      }
       if (this.routeNumChanged !== this.modalProps.routeNum) {
         argument.routeNumChanged = this.routeNumChanged;
       }
       if (this.ratingChanged !== this.modalProps.rating) {
         argument.ratingChanged = this.ratingChanged;
+      }
+      if (this.colorChanged !== this.modalProps.color) {
+        argument.colorChanged = this.colorChanged;
       }
       if (this.switchAutoB !== this.modalProps.flag_autob) {
         argument.switchAutoB = this.switchAutoB;
@@ -480,12 +541,27 @@ export default {
       console.log('sending applyChangetoRoute varg=', argument);
       this.applyChangeToRoute(argument);
     },
+    getShortDate(arg) {
+      if (arg) {
+        const toReturn = arg.toDate();
+        return toReturn
+          .getFullYear().toString().concat('/')
+          .concat(toReturn.getMonth() + 1)
+          .concat('/')
+          .concat(toReturn.getDate());
+      }
+      return arg;
+    },
     longPressAction(row) {
       console.log('in on LOOOOONG PRSSS.', row);
       this.modalInputEditVisible = true;
+      this.componentKeyR = 0;
       this.modalProps = row; // wherever the user clicked, set the modal to that data
       this.routeNumChanged = row.routeNum;
+      this.createdAtChanged = (row.created_at.toDate)
+        ? (row.created_at.toDate()) : (row.created_at);
       this.ratingChanged = row.rating;
+      this.colorChanged = row.color;
       this.switchAutoB = row.flag_autob;
       this.switchLead = row.flag_lead;
       this.switchToprope = row.flag_topr;
@@ -742,19 +818,6 @@ export default {
         default:
       }
     },
-    // onBackModal() {
-    //   console.log('in back: ', this.modalProps.routeNumChanged);
-    //   this.modalProps.routeNumChanged -= 1;
-    //   if (this.modalProps.routeNumChanged < 10) {
-    //     this.modalProps.routeNumChanged = 81;
-    //   }
-    // },
-    // onNextModal() {
-    //   this.modalProps.routeNumChanged += 1;
-    //   if (this.modalProps.routeNumChanged > 81) {
-    //     this.modalProps.routeNumChanged = 10;
-    //   }
-    // },
     onBackModal() {
       this.routeNumChanged -= 1;
       if (this.routeNumChanged < 10) {
@@ -839,11 +902,6 @@ export default {
 }
 .centered {
   justify-content: center;
-}
-#square {
-  display: inline-block;
-  height: 15px;
-  width: 15px;
 }
 .color{
   border-width:3px;

@@ -3,7 +3,7 @@ import firebase from '@/firebase';
 import db from '@/db';
 // eslint-disable-next-line
 import profileJS from './profile';
-
+import publish from './publish';
 ///
 ///
 // this file is only used to display the main data in main screen
@@ -79,23 +79,6 @@ const actions = {
       });
   },
   // eslint-disable-next-line
-  async deleteEntry2Original({ getters }, arg) {
-    const toDeleteEntryRecordId = arg[0];
-    const prouteId = arg[1];
-    console.log('in deleteEntry', toDeleteEntryRecordId);
-    console.log('in deleteEntry', prouteId);
-
-    await db.collection('profileroutes').doc(prouteId)
-      .collection('entries').doc(toDeleteEntryRecordId)
-      .delete()
-      .then(() => {
-        console.log('      profileroutes.entries deleted in DB!');
-      })
-      .catch((error) => {
-        console.log('      Error:profileroutes.entries not deleted in DB', error);
-      });
-  },
-  // eslint-disable-next-line
   async getEntries({ getters }, arg) {
     // const newStatsRecord = arg;
     // await db.collection('stats').doc(newStatsRecord.id)
@@ -127,7 +110,8 @@ const actions = {
   async modalSubmit({getters}, arg) {
     const modalProps = arg;
     const newEntryRec = {};
-    newEntryRec.dateDone = firebase.firestore.FieldValue.serverTimestamp();
+    newEntryRec.dateWritten = firebase.firestore.FieldValue.serverTimestamp();
+    newEntryRec.dateDone = modalProps.date;
     newEntryRec.notes = modalProps.notes;
     newEntryRec.doneAs = modalProps.switchTopLeadAuto;
     newEntryRec.profileId = modalProps.profileId;
@@ -411,6 +395,7 @@ const actions = {
 
     console.log('   var duplicates: ', duplicates);
     duplicates.forEach(async (duplicate) => {
+      await publish.actions.deleteEntries(duplicate.id);
       await db.collection('profileroutes').doc(duplicate.id).delete()
         .then(() => {
           console.log('      duplicate profileR deleted');
@@ -445,6 +430,7 @@ const actions = {
       if (found === false) {
         console.log('   invalid profileR found!: ', profileR.routeId);
         atLeastOneRouteFound = true;
+        await publish.actions.deleteEntries(profileR.id);
         await db.collection('profileroutes').doc(profileR.id).delete()
           .then(() => {
             console.log('      invalid profileR deleted');

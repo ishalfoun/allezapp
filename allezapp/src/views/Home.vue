@@ -268,7 +268,7 @@
             </template>
           </div>
           <div style="width: 30%" class="mr-2 ml-2">
-            <template v-if="entry.dateDone">
+            <template v-if="entry.dateDone.toDate">
               {{
               entry.dateDone.toDate().getUTCFullYear()
               }}/{{
@@ -276,6 +276,9 @@
               }}/{{
               entry.dateDone.toDate().getUTCDate()
               }}:
+            </template>
+            <template v-else>
+              {{entry.dateDone}}
             </template>
           </div>
           <div style="width: 60%" class="ml-2">{{entry.notes}}</div>
@@ -1099,6 +1102,14 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.square {
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+  position: relative;
+  top: 10%;
+  border-radius: 5px;
 }
 </style>
 

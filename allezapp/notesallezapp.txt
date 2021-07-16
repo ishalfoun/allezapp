@@ -650,9 +650,25 @@ git add . | git commit -m 'entry/comment delete logic, new flag' | git push -u o
 		-this will update 
 	[x] routes, 
 	[x] routesReal, 
-	[] profileroutes, all for this routeId.
-	[]-show how many records were updated.
+	[x] profileroutes, all for this routeId.
+	profileroutes.routeId ==
+	[x]-show how many records were updated.
+[x] in input editmodal: color is missing.
+[] when i publish, removed routes delete routesReal, which causes comment of routesReal to be orphaned
+[x]	-where routesReal is deleted
+		-also deleted comments
+[x]	-where profileRoutes is deleted
+		-also deleted entries
 	
+[NB] when hitting publish, also fix orpahned routes.
+[] make the date changeable!!!
+	[] how is the date saved
+	[] input field date added
+
+left of:
+trying to saave the date i db
+input.js.72: gettimestampfrom...
+
 [] rate a route with stars?
 [] attempt/completed: flash/onsite/redpoint/send
 [] make an accompanying about page:
@@ -662,12 +678,11 @@ in this about page you can write a comment to the admin.
 [] map of the gym:
 
 
-
 [bugs/small stuff:]
+[]permission problem w oleg:
+ he cldnt post public?
 [] bug: if it says connecting to server for 5 seconds, (if no records displayed)
-reload page (profileroutes?) automatically
-[] when i publish, removed routes delete routesReall, which causes comment of routesReal to be orphaned
-[] when hitting publish, also fix orpahned routes.
+reload page (profileroutes?) automatically. or just write .. plese refresh in 5 seconds
 [] change icon from notebook to plus
 
 [] another button beside filter: called settings:
