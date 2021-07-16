@@ -98,13 +98,30 @@
                       Post Public
                   </b-checkbox>
               </b-field>
-            <div class="rating rating2"><!--
-              --><a href="#5" title="Give 5 stars">★</a><!--
-              --><a href="#4" title="Give 4 stars">★</a><!--
-              --><a href="#3" title="Give 3 stars">★</a><!--
-              --><a href="#2" title="Give 2 stars">★</a><!--
-              --><a href="#1" title="Give 1 star">★</a>
-            </div>
+              <div class="flexendcontainer">
+                <div class="starsRating">
+                  <input name="stars" id="e5" type="radio"
+                    v-model="switchStars"
+                    value="5">
+                    <label for="e5">★</label>
+                  <input name="stars" id="e4" type="radio"
+                    v-model="switchStars"
+                    value="4">
+                    <label for="e4">★</label>
+                  <input name="stars" id="e3" type="radio"
+                    v-model="switchStars"
+                    value="3">
+                    <label for="e3">★</label>
+                  <input name="stars" id="e2" type="radio"
+                    v-model="switchStars"
+                    value="2">
+                    <label for="e2">★</label>
+                  <input name="stars" id="e1" type="radio"
+                    v-model="switchStars"
+                    value="1">
+                    <label for="e1">★</label>
+                </div>
+              </div>
             </div>
             <div>
               <b-field label="Comment"
@@ -114,10 +131,16 @@
               </b-field>
             </div>
             <div class="content-left">
-              <b-field label="Date"
+              <!-- <b-input maxlength="13" v-model="modalProps.date"
+                placeholder="" style="width:130px"></b-input> -->
+              <b-field label="Select a date"
                 label-position="on-border">
-                <b-input maxlength="13" v-model="modalProps.date"
-                  placeholder="" style="width:130px"></b-input>
+                <b-datepicker
+                  v-model="modalProps.date"
+                  placeholder="Click to select..."
+                  icon="calendar-today"
+                  trap-focus>
+                </b-datepicker>
               </b-field>
             </div>
             <div class="flexrow mt-2" style="justify-content:space-evenly">
@@ -242,12 +265,13 @@
           </div>
           <div class="flexcenter">
             <div>
-              <sup>Your Sends:</sup>
+              <sup>Personal Entries</sup>
             </div>
           </div>
         </div>
       <div class="" :key="componentKeyEntries">
-        <div class="content-left" v-for="(entry) in sortEntries(entries)"
+        <div class="content-left entryStyle"
+          v-for="(entry) in sortEntries(entries)"
           :key="entry.id" @click="entryRowClick(entry)">
           <!-- <div style="width: 10%" class="">{{entry.cmpOrAttempt}}</div> -->
           <div style="width: 20%" class="flexcenter">
@@ -267,15 +291,9 @@
               <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_check.png?alt=media&token=a9528343-ea49-424c-9114-94b50447ab32' />
             </template>
           </div>
-          <div style="width: 30%" class="mr-2 ml-2">
+          <div style="width: 30%" class="mr-2 ml-2 flexcenter">
             <template v-if="entry.dateDone.toDate">
-              {{
-              entry.dateDone.toDate().getUTCFullYear()
-              }}/{{
-              (entry.dateDone.toDate().getUTCMonth() + 1)
-              }}/{{
-              entry.dateDone.toDate().getUTCDate()
-              }}:
+              {{ getShortDate(entry.dateDone) }}:
             </template>
             <template v-else>
               {{entry.dateDone}}
@@ -284,7 +302,7 @@
           <div style="width: 60%" class="ml-2">{{entry.notes}}</div>
           <div style="width: 20%" class="button is-danger is-small mega-small"
             v-if="entry.deleteButtonVisible" @click="onClickEntryDeleteConfirm(entry)">Delete?</div>
-          <a class="button is-ghost is-small pl-2 pr-2 extrasmall"
+          <a class="flexcenter button is-ghost is-small pl-2 pr-2 extrasmall"
             @click.stop="onClickEntryDeleteShow(entry)">
             X
           </a>
@@ -309,41 +327,55 @@
           <div class="media-content">
             <div class="content">
               <div class="flexendcontainer">
-                <span><strong>{{comment.username}}</strong></span>
-                <span><small>
-                  <template v-if="comment.dateDone">
-                    {{
-                      Math.round((new Date() - comment.dateDone.toDate()) / (1000 * 3600 * 24))
-                    }} day(s) ago
-                  </template>
-                </small></span>
-                <span class='flexendcontainer' >
-                <template v-if="comment.doneAs === 'AutoB'">
-                  <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' />
-                </template>
-                <template v-if="comment.doneAs === 'Toprope'">
-                  <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' />
-                </template>
-                <template v-else-if="comment.doneAs === 'Lead'">
-                  <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' />
-                </template>
-                <template v-if="comment.cmpOrAttempt === 'A'">
-                  <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_warn.png?alt=media&token=a7d50e59-fc66-4cf1-99c4-e40eac2edd6b' />
-                </template>
-                <template v-else-if="comment.cmpOrAttempt === 'Y'">
-                  <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_check.png?alt=media&token=a9528343-ea49-424c-9114-94b50447ab32' />
-                </template>
+                <span>
+                  <strong>{{comment.username}}</strong>
                 </span>
-                <div style="width: 20%" class="button is-danger is-small mega-small"
-                  v-if="comment.deleteButtonVisible"
-                  @click="onClickCommentDeleteConfirm(comment)">
-                  Delete?
-                </div>
-                <a class="button is-ghost is-small pl-2 pr-2 extrasmall"
-                  v-if="checkIfDeleteCommentAllowed(comment)"
-                  @click.stop="onClickCommentDeleteShow(comment)">
-                  X
-                </a>
+                <span>
+                  <small>
+                    <template v-if="comment.dateDone">
+                      {{
+                        Math.round((new Date() - comment.dateDone.toDate()) / (1000 * 3600 * 24))
+                      }}
+                       day(s) ago
+                    </template>
+                  </small>
+                </span>
+                <span class='flexendcontainer' >
+                  <template v-if="comment.doneAs === 'AutoB'">
+                    <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_autob.png?alt=media&token=85f1bdb2-96eb-4d6a-8753-0f9b0702233d' />
+                  </template>
+                  <template v-if="comment.doneAs === 'Toprope'">
+                    <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/iconp_topr.png?alt=media&token=e02edaf4-0f0d-40af-8048-481a3f3dd8ed' />
+                  </template>
+                  <template v-else-if="comment.doneAs === 'Lead'">
+                    <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/carabiner%20(1).png?alt=media&token=d6e81e07-3cc7-48ef-9dda-c1087c9da84b' />
+                  </template>
+                  <template v-if="comment.cmpOrAttempt === 'A'">
+                    <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_warn.png?alt=media&token=a7d50e59-fc66-4cf1-99c4-e40eac2edd6b' />
+                  </template>
+                  <template v-else-if="comment.cmpOrAttempt === 'Y'">
+                    <img class='smallicon' src='https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/icon_check.png?alt=media&token=a9528343-ea49-424c-9114-94b50447ab32' />
+                  </template>
+                </span>
+                <span class='flexendcontainer' >
+                  <div class="button is-danger is-small mega-small"
+                    v-if="comment.deleteButtonVisible"
+                    @click="onClickCommentDeleteConfirm(comment)">
+                    Confirm?
+                  </div>
+                  <a class="button is-ghost is-small pl-2 pr-2 extrasmall"
+                    v-if="checkIfDeleteCommentAllowed(comment)"
+                    @click.stop="onClickCommentDeleteShow(comment)">
+                    X
+                  </a>
+                </span>
+              </div>
+              <div class="starsDisplay">
+                <label :class="{yellowStar: (Number(comment.stars) >= 1) ? true : false}">★</label>
+                <label :class="{yellowStar: (Number(comment.stars) >= 2) ? true : false}">★</label>
+                <label :class="{yellowStar: (Number(comment.stars) >= 3) ? true : false}">★</label>
+                <label :class="{yellowStar: (Number(comment.stars) >= 4) ? true : false}">★</label>
+                <label :class="{yellowStar: (Number(comment.stars) >= 5) ? true : false}">★</label>
               </div>
               <div>
                 {{comment.notes}}
@@ -605,14 +637,7 @@
       </b-table>
       <div class="flexrow mt-3">
         <h5 v-if="profile[0] && profile[0].lastUpdate">
-          last update:
-            {{
-            profile[0].lastUpdate.toDate().getUTCFullYear()
-            }}/{{
-            (profile[0].lastUpdate.toDate().getUTCMonth() + 1)
-            }}/{{
-            profile[0].lastUpdate.toDate().getUTCDate()
-            }}
+          last update: {{ getShortDate(profile[0].lastUpdate) }}
         </h5>
         <h5 @click="onLegend()" style="cursor:pointer">
           Legend
@@ -637,7 +662,7 @@ export default {
       route: '',
       id: '',
       comments: [],
-      date: '',
+      date: new Date(),
       notes: '',
       create_at: '',
       switchTopLeadAuto: '',
@@ -645,6 +670,7 @@ export default {
     },
     picked: '',
     switchTopLeadAuto: '',
+    switchStars: '',
     componentKey: 0,
     componentKeyEntries: 0,
     componentKeyComments: 0,
@@ -897,16 +923,21 @@ export default {
       if (arg) {
         const toReturn = arg.toDate();
         return toReturn
-          .getFullYear().toString().concat('/')
+          .getDate().toString().concat('/')
           .concat(toReturn.getMonth() + 1)
           .concat('/')
-          .concat(toReturn.getDate());
+          .concat(toReturn.getFullYear());
+        // .getFullYear().toString().concat('/')
+        // .concat(toReturn.getMonth() + 1)
+        // .concat('/')
+        // .concat(toReturn.getDate());
       }
       return arg;
     },
     onModalCompleted() {
       console.log('onModalCMP', this.modalProps);
       this.modalProps.switchTopLeadAuto = this.switchTopLeadAuto;
+      this.modalProps.switchStars = this.switchStars;
       this.modalProps.username = this.profile[0].username;
       this.modalProps.image = this.profile[0].image;
       this.modalProps.cmpOrAttempt = 'Y';
@@ -915,6 +946,7 @@ export default {
     onModalAttempted() {
       console.log('onModalATT', this.modalProps);
       this.modalProps.switchTopLeadAuto = this.switchTopLeadAuto;
+      this.modalProps.switchStars = this.switchStars;
       this.modalProps.username = this.profile[0].username;
       this.modalProps.image = this.profile[0].image;
       this.modalProps.cmpOrAttempt = 'A';
@@ -940,7 +972,6 @@ export default {
       console.log('in edit row: ', row);
       this.modalProps = row;
       this.modalProps.notes = '';
-      // this.modalProps.switchTopLeadAuto = this.profile[0].default.toString();
       if (this.modalProps.flag_autob
         && !this.modalProps.flag_lead
         && !this.modalProps.flag_toprope) {
@@ -950,12 +981,9 @@ export default {
       }
       this.modalProps.profileRoutesId = row.id;
       this.modalEditVisible = true;
-      // this.modalProps.date = firebase.firestore.FieldValue.serverTimestamp().toString();
-      // this.modalProps.date = firebase.firestore.Timestamp.now().toDate().getMonth()+1;
-      // const now = firebase.firestore.Timestamp.now().toDate();
-      // this.modalProps.date = now.getFullYear().toString().concat('/');
-      // this.modalProps.date = this.modalProps.date.concat(now.getMonth() + 1).concat('/');
-      this.modalProps.date = this.getShortDate(firebase.firestore.Timestamp.now());
+      this.modalProps.date2 = this.getShortDate(firebase.firestore.Timestamp.now());
+      console.log('new date(): ', new Date());
+      this.modalProps.date = new Date();
     },
     onLegend() {
       this.modalLegendVisible = true;
@@ -1066,13 +1094,6 @@ export default {
               console.error('     ------  profile routes ERROR loading!', error);
             });
           this.happenedAlready = true;
-          // also set the default toprope/lead when user logs in (profile changes)
-          console.log(' profile default in db is: ', this.profile[0].default);
-          if (this.profile[0].default) {
-            // this.modalProps.switchTopLeadAuto = this.profile[0].default;
-            // remove#3
-            console.log(' profile default in modalProps is: ', this.modalProps.switchTopLeadAuto);
-          }
         }
       }
     },
@@ -1114,6 +1135,11 @@ export default {
 </style>
 
 <style lang="scss" scoped>
+.entryStyle {
+  border-style: solid;
+  border-width: thin;
+  border-color: gray;
+}
 .smallbutton {
   height: 1.6em !important;
   width: 4em !important;
@@ -1128,19 +1154,19 @@ export default {
   /*
   * Rating styles
   */
-.rating {
+.starsDisplay, .starsRating{
   margin: auto;
   margin-bottom: 5px;
   font-size: 1.5em;
   overflow:hidden;
 }
-.rating input {
+.starsRating input {
   float: right;
   opacity: 0;
   position: absolute;
 }
-.rating a,
-.rating label {
+.starsRating a,
+.starsRating label {
   float:right;
   color: #aaa;
   text-decoration: none;
@@ -1149,23 +1175,21 @@ export default {
   -o-transition: color .4s;
   transition: color .4s;
 }
-.rating label:hover ~ label,
-.rating input:focus ~ label,
-.rating label:hover,
-.rating a:hover,
-.rating a:hover ~ a,
-.rating a:focus,
-.rating a:focus ~ a {
+.starsRating label:hover ~ label,
+.starsRating input:checked ~ label,
+.starsRating input:focus ~ label,
+.starsRating label:hover,
+.starsRating a:hover,
+.starsRating a:hover ~ a,
+.starsRating a:focus,
+.starsRating a:focus ~ a {
   color: orange;
   cursor: pointer;
 }
-.rating2 {
-  direction: rtl;
+.starsDisplay .yellowStar {
+  color: orange;
 }
-.rating2 a {
-  float:none
-}
-//
+// :checked
 // rating end
 //
 .flexendcontainer{

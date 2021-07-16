@@ -38,15 +38,15 @@
               <a class="button is-success pl-4 pr-4" style="background:#2463b6">
                 Profile
               </a>
+              <a class="button is-danger pl-4 pr-4"
+                style="background:#e44035" @click="logout()">
+                Log Out
+              </a>
               <router-link class="button pl-4 pr-4"
                 v-if="profile[0] && profile[0].id === 'aGyG5o6IaDZtnyK7ouOKmNU1UYP2'"
                 style="background:lightgrey" to="/input">
                 Input
               </router-link>
-              <!-- <a class="button is-danger is-small pl-2 pr-2"
-                style="background:#e44035" @click="logout()">
-                Log Out
-              </a> -->
             </div>
             <div class="navbar-item flexcontainer">
               <strong>Filters:</strong>

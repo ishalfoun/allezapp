@@ -654,22 +654,105 @@ git add . | git commit -m 'entry/comment delete logic, new flag' | git push -u o
 	profileroutes.routeId ==
 	[x]-show how many records were updated.
 [x] in input editmodal: color is missing.
-[] when i publish, removed routes delete routesReal, which causes comment of routesReal to be orphaned
+[x] when i publish, removed routes delete routesReal, which causes comment of routesReal to be orphaned
 [x]	-where routesReal is deleted
 		-also deleted comments
 [x]	-where profileRoutes is deleted
 		-also deleted entries
 	
 [NB] when hitting publish, also fix orpahned routes.
-[] make the date changeable!!!
-	[] how is the date saved
-	[] input field date added
+[x] make the date changeable
 
-left of:
-trying to saave the date i db
-input.js.72: gettimestampfrom...
 
-[] rate a route with stars?
+[x] createdate is saved as timestamp
+[x] displayed in input datepicked correctly
+
+[x] add datepicker to AddRouteModal
+
+[x] fix bug oleg had with permissions
+- in routes.comments, everyone needs to have permissions to create
+
+[x] rate a route with stars
+  [x] have input link to a field
+  [x] make sure field is in db
+  [x] show field in viewModal
+  
+
+NEXT:
+  
+[] see your own climbs:
+   ex:
+   -list with each day
+   jul 05: 0T 5L 0A
+   jul 06: 2T 0L 0A
+   jul 07: 0T 0L 0A
+   jul 05: 0T 5L 0A
+   jul 06: 0T 14L 0A
+   jul 07: 0T 0L 0A
+   jul 05: 7T 5L 0A
+   jul 06: 0T 0L 0A
+   jul 07: 7T 0L 0A
+   jul 05: 0T 5L 19A
+   jul 06: 2T 0L 0A
+   jul 07: 0T 0L 3A
+   (click on it to open detailed rows:= with full records.)
+   
+  [] create new page: stats
+  []     -link to it from menu
+  [] create table with data from dbtable.stats:
+
+[] onReload(){
+       gestatsfull()
+      getstatsummary()
+      show summary in table in vue
+[] columns: T R L Date
+}
+
+getStatsFull() {
+  []-find each entry of your pR's
+  []-also look into your stats.
+  []  -save as array of statsFull:
+      -  (cmpOrA,doneAs,Date,rId)
+  [] but also save route,rating,color,flags
+}
+getStatsSummary()  {
+  [] -loop: today..today-14 days
+	-   getRoutes(today) {
+	-     count each tr,L,A:
+	-     return {date, 1Tr, 1L, 0A}
+	-   newStats.add(that)
+  [] and fill a local array called 'state.statsSummary'
+  
+[] in the table, add the extra template <template #detail="props">
+[] when this is set to visible, 
+	
+  set the array in func
+   getDtledStatsForDay(props.date) {
+     search through statsFull.where(date === date) // for that specific day.
+[] call it in the xml near:
+<template #detail="props"> :
+v-for: getDtledStatsForDay(props.date)
+[] style it properly
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
 [] attempt/completed: flash/onsite/redpoint/send
 [] make an accompanying about page:
 in this about page you can write a comment to the admin.
@@ -679,8 +762,6 @@ in this about page you can write a comment to the admin.
 
 
 [bugs/small stuff:]
-[]permission problem w oleg:
- he cldnt post public?
 [] bug: if it says connecting to server for 5 seconds, (if no records displayed)
 reload page (profileroutes?) automatically. or just write .. plese refresh in 5 seconds
 [] change icon from notebook to plus

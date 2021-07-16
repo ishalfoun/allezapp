@@ -114,17 +114,18 @@ const actions = {
     newEntryRec.dateDone = modalProps.date;
     newEntryRec.notes = modalProps.notes;
     newEntryRec.doneAs = modalProps.switchTopLeadAuto;
+    newEntryRec.stars = modalProps.switchStars;
     newEntryRec.profileId = modalProps.profileId;
     newEntryRec.routeId = modalProps.routeId;
     newEntryRec.cmpOrAttempt = modalProps.cmpOrAttempt;
-    newEntryRec.username = modalProps.username;
-    newEntryRec.image = modalProps.image;
     // modalProps.lead_cmp
 
     console.log('modalProps: ', modalProps);
     console.log('newEntryRec: ', newEntryRec);
 
     if (modalProps.checkboxPostPublic === 'Yes') {
+      newEntryRec.username = modalProps.username;
+      newEntryRec.image = modalProps.image;
       actions.postPublicComment(newEntryRec);
     }
 
