@@ -9,6 +9,9 @@
             </router-link>
           </div>
           <div class="navbar-item profile if-mobile" aria-expanded="false">
+            <a @click="testModalVisible = !testModalVisible">Map</a>
+          </div>
+          <div class="navbar-item profile if-mobile" aria-expanded="false">
             <template v-if="profile[0]">
               <img class="image is-24x24 mr-2"
                 :src="profile[0].image">
@@ -204,6 +207,14 @@
         </div>
       </section>
 
+      <b-modal v-model="testModalVisible" width="100%" scroll="keep">
+        <div class="card" style="overflow: visible;">
+            <img style="max-width: 200%;" src="https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/allezapp_map2.png?alt=media&token=94a05731-2df8-4685-877f-eae1746766b6" />
+    <!-- // add a third modal with the map: -->
+    <!-- https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/allezapp_map2.png?alt=media&token=94a05731-2df8-4685-877f-eae1746766b6 -->
+
+        </div>
+      </b-modal>
       <router-view id="content" class="ml-4 mr-4" v-if="isLoggedIn"/>
     </div>
   </div>
@@ -226,6 +237,7 @@ export default {
     switchShowOnlyLead: 'Show',
     switchShowOnlyToprope: 'Show',
     switchShowOnlyOverhang: 'Show',
+    testModalVisible: false,
   }),
   created() { // When this component is mounted, we want to call the init
     // console.log(this.$store);

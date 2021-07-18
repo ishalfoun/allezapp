@@ -184,7 +184,17 @@
 </b-modal>
 
 <b-modal v-model="modalViewVisible" width="90%" scroll="keep">
+  <b-button class="is-danger modalMapButton"
+    @click="modalMapExpanded = !modalMapExpanded">
+    Map
+  </b-button>
   <div class="card">
+    <template class="card" v-if="(modalMapExpanded)">
+      <div class="card" @click="modalMapExpanded = false">
+        <img :src="getModalMapImageSource(modalProps.routeNum)"/>
+        <!-- <img src="https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/allezapp_map2.png?alt=media&token=94a05731-2df8-4685-877f-eae1746766b6" /> -->
+      </div>
+    </template>
     <div class="card-content">
       <div class="">
         <div class="flexrow">
@@ -451,6 +461,7 @@
         </div>
       </div>
     </b-modal>
+
     <!-- <h1 class='title is-1 centered flex1'>Routes</h1> -->
     <!-- {{routesReal}} -->
     <!-- <b-table
@@ -656,6 +667,7 @@ export default {
     modalEditVisible: false,
     modalViewVisible: false,
     modalLegendVisible: false,
+    modalMapExpanded: false,
     modalProps: {
       rating: '',
       color: '',
@@ -755,6 +767,42 @@ export default {
   },
   methods: {
     ...mapActions('dataJS', ['initRoutes', 'initLastUpdate', 'initProfileRoutes', 'getRoutes', 'setCompleted', 'modalSubmit', 'deleteEntry', 'deleteComment', 'initEntries', 'initComments']),
+    getModalMapImageSource(routeNum) {
+      if (routeNum >= 10 && routeNum <= 17) {
+        return 'https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/allezapp_map_sec1.png?alt=media&token=8b23acad-22ab-4667-8848-1dfd19187ac2';
+      }
+      if (routeNum >= 18 && routeNum <= 20) {
+        return 'https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/allezapp_map_sec2.png?alt=media&token=64e157f0-c9ee-4251-8bf5-df50b1afdcc8';
+      }
+      if (routeNum >= 21 && routeNum <= 26) {
+        return 'https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/allezapp_map_sec3.png?alt=media&token=a9334c87-b7a9-4a6b-a795-a60357302250';
+      }
+      if (routeNum >= 27 && routeNum <= 34) {
+        return 'https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/allezapp_map_sec4.png?alt=media&token=101898a3-c6d4-4e87-b9f8-5e42a5b1ecf9';
+      }
+      if (routeNum >= 35 && routeNum <= 41) {
+        return 'https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/allezapp_map_sec5.png?alt=media&token=431d4ea2-03af-4de7-a086-5e422663cf89';
+      }
+      if (routeNum >= 42 && routeNum <= 47) {
+        return 'https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/allezapp_map_sec6.png?alt=media&token=d5d7ba76-ccae-4087-acd8-af678327054f';
+      }
+      if (routeNum >= 48 && routeNum <= 52) {
+        return 'https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/allezapp_map_sec7.png?alt=media&token=4130f337-a898-43b3-b9c2-f5c1bcac81ec';
+      }
+      if (routeNum >= 53 && routeNum <= 58) {
+        return 'https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/allezapp_map_sec8.png?alt=media&token=ab16cf27-3a41-45c7-bf4c-88807df3e78a';
+      }
+      if (routeNum >= 59 && routeNum <= 65) {
+        return 'https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/allezapp_map_sec9.png?alt=media&token=9056e3a1-85e3-4c3e-a31b-cab2e95bc707';
+      }
+      if (routeNum >= 66 && routeNum <= 73) {
+        return 'https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/allezapp_map_sec10.png?alt=media&token=2eaa2377-ece2-43a4-9dc5-bb2af8897f2c';
+      }
+      if (routeNum >= 74 && routeNum <= 80) {
+        return 'https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/allezapp_map_sec11.png?alt=media&token=13b2a799-d99f-4ba7-af01-977fe867647d';
+      }
+      return null;
+    },
     isDateRecentNum(timestamp) {
       if (timestamp) {
         const today = new Date();
@@ -955,6 +1003,7 @@ export default {
     onViewRoute(row) {
       this.modalProps = row; // wherever the user clicked, set the modal to that data
       this.modalViewVisible = true;
+      // this.modalMapExpanded = false;
       console.log(' onViewRoute: modalProps= ', this.modalProps);
 
       // entries are not showing up yet, using this function to load them.
@@ -1135,6 +1184,12 @@ export default {
 </style>
 
 <style lang="scss" scoped>
+.modalMapButton {
+  background: none;
+  height: 40px;
+  position: fixed;
+  top: 20px;
+}
 .entryStyle {
   border-style: solid;
   border-width: thin;

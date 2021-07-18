@@ -677,9 +677,8 @@ git add . | git commit -m 'entry/comment delete logic, new flag' | git push -u o
   [x] make sure field is in db
   [x] show field in viewModal
   
-
 NEXT:
-  
+ []add the map as third modal ( link in file
 [] see your own climbs:
    ex:
    -list with each day
