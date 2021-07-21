@@ -677,8 +677,23 @@ git add . | git commit -m 'entry/comment delete logic, new flag' | git push -u o
   [x] make sure field is in db
   [x] show field in viewModal
   
-NEXT:
- []add the map as third modal ( link in file
+map of gym:
+[x] put above legend first}
+[x] with button
+[x] put above other
+[x] upload actual images
+1 = 10-17
+2= 18-20
+3= 21-26
+4= 27-34
+5= 35-41
+6= 42-47
+7= 48-52
+8= 53-58
+9= 59-65
+10= 66-73
+11= 74-80
+
 [] see your own climbs:
    ex:
    -list with each day
@@ -695,22 +710,56 @@ NEXT:
    jul 06: 2T 0L 0A
    jul 07: 0T 0L 3A
    (click on it to open detailed rows:= with full records.)
-   
-  [] create new page: stats
-  []     -link to it from menu
-  [] create table with data from dbtable.stats:
+ 
 
-[] onReload(){
-       gestatsfull()
-      getstatsummary()
-      show summary in table in vue
-[] columns: T R L Date
-}
+8:13PM:
+[x] create new page: stats
+	-table
+[x]     -link to it from menu
 
-getStatsFull() {
+[x] onReload(){
+[x]      initStatsFull()
+[x]      initStatsSummary()
+[x]      -show summary in table in vue
+	 }
+[x] statsSummary.columns: 
+	T R L Date
+
+onReload():
+1. get profileroutes
+2. if 0, call initPR(profile)
+	-get profile
+3. if >0, go ahead
+initStatsFull() {
+[x] fix entries to be its own table.
   []-find each entry of your pR's
-  []-also look into your stats.
+  []- also look into your history.
   []  -save as array of statsFull:
+  
+  
+problem:
+while getting all entries:
+-entries should be its own table
+-they aleady have a --proflileId
+--and routeId
+
+I could take the entries and move them
+
+but also lets test it first:
+[x move just one to its own table
+[x] then instead of calling InitEntries in the modal, call a diff one, that just pulls that table with that route Id and profileId
+[[x]] it works, so do with all entries.
+[x] then fix how entries are added.
+[x] searching collectionentr
+ [x] fixing deleteEntry
+[x] then back to stats.js
+(dataJS.47
+
+
+
+
+
+ 
       -  (cmpOrA,doneAs,Date,rId)
   [] but also save route,rating,color,flags
 }
@@ -736,6 +785,15 @@ v-for: getDtledStatsForDay(props.date)
    
    
    
+ HISTORY TABLE
+[] 	1. when a route is deleted, save the entries of that profileRoute (add the rating as a field) to table 'history'.
+fields:
+-profileId
+-subcollection:
+	-entries.
+[] 	this happens in profileRoutes during the init.
+[] back to initStatsFull():
+    // find each 'entry' in history
    
    
    
@@ -745,12 +803,12 @@ v-for: getDtledStatsForDay(props.date)
    
    
    
-   
-   
-   
-   
-   
-   
+ [] bug: opacity of attempts
+ [] bug: olegs entries did not get delete:
+ 
+possibly permission issue
+(-orpahned)-my own ones were also orhaned
+[] bug: default can be the selected one if disabled
    
 [] attempt/completed: flash/onsite/redpoint/send
 [] make an accompanying about page:

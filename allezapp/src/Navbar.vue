@@ -38,9 +38,10 @@
               </a>
             </div>
             <div v-if="isLoggedIn" class="navbar-item flexcontainer">
-              <a class="button is-success pl-4 pr-4" style="background:#2463b6">
-                Profile
-              </a>
+              <router-link class="button is-success pl-4 pr-4" style="background:#2463b6"
+               to="/stats">
+                Stats
+              </router-link>
               <a class="button is-danger pl-4 pr-4"
                 style="background:#e44035" @click="logout()">
                 Log Out

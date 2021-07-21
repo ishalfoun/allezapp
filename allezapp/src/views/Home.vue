@@ -766,7 +766,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('dataJS', ['initRoutes', 'initLastUpdate', 'initProfileRoutes', 'getRoutes', 'setCompleted', 'modalSubmit', 'deleteEntry', 'deleteComment', 'initEntries', 'initComments']),
+    ...mapActions('dataJS', ['initRoutes', 'initLastUpdate', 'initProfileRoutes', 'getRoutes', 'setCompleted', 'modalSubmit', 'deleteEntry', 'deleteComment', 'initEntriesForRoute', 'initComments']),
     getModalMapImageSource(routeNum) {
       if (routeNum >= 10 && routeNum <= 17) {
         return 'https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/allezapp_map_sec1.png?alt=media&token=8b23acad-22ab-4667-8848-1dfd19187ac2';
@@ -844,7 +844,7 @@ export default {
     },
     onClickEntryDeleteConfirm(entry) {
       console.log('onClickEntryDeleteConfirm, ', entry);
-      this.deleteEntry([entry.id, this.modalProps.id]);
+      this.deleteEntry(entry.id);
     },
     onClickEntryDeleteShow(arg) {
       const entry = this.entries.find(
@@ -1007,8 +1007,7 @@ export default {
       console.log(' onViewRoute: modalProps= ', this.modalProps);
 
       // entries are not showing up yet, using this function to load them.
-      // (links to profileroutes table, key is id (profileroutesid))
-      this.initEntries(row.id).then(() => {
+      this.initEntriesForRoute({ profileId: row.profileId, routeId: row.routeId }).then(() => {
         console.log('finished loading entries: ', this.entries);
       });
 
@@ -1180,6 +1179,12 @@ export default {
   position: relative;
   top: 10%;
   border-radius: 5px;
+}
+.smallicon {
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+  margin: 2px;
 }
 </style>
 
@@ -1375,12 +1380,6 @@ export default {
 .routeNum {
   width: 23px;
   display: inline-block;
-}
-.smallicon {
-  width: 15px;
-  height: 15px;
-  display: inline-block;
-  margin: 2px;
 }
 .attempt {
   opacity: 30%;

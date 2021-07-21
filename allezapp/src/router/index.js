@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
 import Input from '../views/Input.vue';
 import Publish from '../views/Publish.vue';
+import Stats from '../views/Stats.vue';
 
 Vue.use(VueRouter);
 
@@ -21,6 +22,11 @@ const routes = [
     path: '/publish',
     name: 'Publish',
     component: Publish,
+  },
+  {
+    path: '/stats',
+    name: 'Stats',
+    component: Stats,
   },
 ];
 

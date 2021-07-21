@@ -6,7 +6,7 @@ import profileJS from './profile';
 import publish from './publish';
 ///
 ///
-// this file is only used to display the main data in main screen
+// this file is used to display the main data in main screen
 ///
 ///
 ///
@@ -24,6 +24,7 @@ const data = {
 
 const getters2 = {
   getLoading: (state) => (state.loading ? state.loading : false),
+  getProfileRoutes: (state) => (state.profileroutes ? state.profileroutes : false),
   getComponentKey2: (state) => (state.componentKey2 ? state.componentKey2 : 0),
 };
 
@@ -34,13 +35,23 @@ const getters2 = {
 // }
 
 const actions = {
+  getAllEntriesFromThisPRs() {
+    // const allEntries;
+    // profileroutes.forEach( (element) => {
+    //   allEntries.add(this.getEntriesForPR(element.id));
+    // })
+  },
+  getEntriesForPR() {
+    // db read for that profileRoute
+    // db.collection('profileroutes').doc(profileRouteId).collection('entries')
+  },
   // eslint-disable-next-line
   setFilters({ getters }, arg) {
     console.log('in setFilters', arg);
     data.filters = arg;
     data.componentKey2 += 1; // this refreshes table and closes the modal
   },
-  initEntries: firestoreAction(({ bindFirestoreRef }, profileRouteId) => bindFirestoreRef('entries', db.collection('profileroutes').doc(profileRouteId).collection('entries'))),
+  initEntriesForRoute: firestoreAction(({ bindFirestoreRef }, arg) => bindFirestoreRef('entries', db.collection('entries').where('profileId', '==', arg.profileId).where('routeId', '==', arg.routeId))),
 
   initComments: firestoreAction(({ bindFirestoreRef }, routeId) => bindFirestoreRef('comments', db.collection('routesReal').doc(routeId).collection('comments'))),
 
@@ -63,19 +74,16 @@ const actions = {
   },
   // eslint-disable-next-line
   async deleteEntry({ getters }, arg) {
-    const toDeleteEntryRecordId = arg[0];
-    const prouteId = arg[1];
+    const toDeleteEntryRecordId = arg;
     console.log('in deleteEntry', toDeleteEntryRecordId);
-    console.log('in deleteEntry', prouteId);
 
-    await db.collection('profileroutes').doc(prouteId)
-      .collection('entries').doc(toDeleteEntryRecordId)
+    await db.collection('entries').doc(toDeleteEntryRecordId)
       .delete()
       .then(() => {
-        console.log('      profileroutes.entries deleted in DB!');
+        console.log('      entry deleted in DB!');
       })
       .catch((error) => {
-        console.log('      Error:profileroutes.entries not deleted in DB', error);
+        console.log('      Error: entry not deleted in DB', error);
       });
   },
   // eslint-disable-next-line
@@ -132,8 +140,7 @@ const actions = {
     // update profileroutes record
     //    it has a sub collection of records (entries)
     //    add the current attempt.
-    await db.collection('profileroutes').doc(modalProps.profileRoutesId)
-      .collection('entries').doc()
+    await db.collection('entries').doc()
       .set(newEntryRec)
       .then(() => {
         console.log('      profileroutes.entries updated in DB!');
