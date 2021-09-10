@@ -137,6 +137,9 @@
           </div>
 <!-- nav bar end for desktop: -->
         <div class="navbar-end if-desktop">
+          <div class="navbar-item profile mr-4">
+            <a style="color:white" @click="testModalVisible = !testModalVisible">Map</a>
+          </div>
           <div class="navbar-item has-dropdown is-hoverable" v-if="isLoggedIn">
             <!-- Account dropdown -->
             <div class="navbar-link">
@@ -150,25 +153,107 @@
               </div>
             </div>
             <div class="navbar-dropdown" style="right: 0px;left:auto">
-              <!-- Accont drop down menu -->
-              <div class="navbar-item flexcontainer">
-                <a class="button is-danger is-small pl-2 pr-2"
-                  v-if="isLoggedIn" @click="logout()">
-                  Log Out
-                </a>
-                <a class="button is-success is-small pl-2 pr-2"
-                  v-if="!isLoggedIn" @click="login()">
+              <div v-if="!isLoggedIn" class="navbar-item flexcontainer">
+                <a class="button is-success pl-2 pr-2" @click="login()">
                   Log In
                 </a>
               </div>
-              <div class="navbar-item" @click="closeNav()"
-              v-if="profile[0] && profile[0].id === 'aGyG5o6IaDZtnyK7ouOKmNU1UYP2'">
-                <router-link class="button" to="/input">
+              <div v-if="isLoggedIn" class="navbar-item flexcontainer" style="width: 400px;">
+                <router-link class="button is-success pl-4 pr-4 mr-4" style="background:#2463b6"
+                to="/stats">
+                  Stats
+                </router-link>
+                <a class="button is-danger pl-4 pr-4 mr-4"
+                  style="background:#e44035" @click="logout()">
+                  Log Out
+                </a>
+                <router-link class="button pl-4 pr-4"
+                  v-if="profile[0] && profile[0].id === 'aGyG5o6IaDZtnyK7ouOKmNU1UYP2'"
+                  style="background:lightgrey" to="/input">
                   Input
                 </router-link>
-                <router-link class="button" to="/publish">
-                  Publish
-                </router-link>
+              </div>
+              <div class="navbar-item flexcontainer">
+                <strong>Filters:</strong>
+              </div>
+              <div class="navbar-item flexcontainer ml-2"
+              v-on:click.stop="onSwitchHideAutoB()">
+                Autobelays:
+                <b-field >
+                  <span class='mr-3'>{{ switchHideAutoB }}</span>
+                  <b-switch v-model="switchHideAutoB"
+                    type=""
+                    true-value="Hide"
+                    false-value="Show"
+                    class="hideAutoB">
+                  </b-switch>
+                </b-field>
+              </div>
+              <div class="navbar-item flexcontainer ml-2"
+              v-on:click.stop="onSwitchShowOnlyLead()">
+                <div>
+                  Lead-only routes:
+                </div>
+                <div>
+                  <b-field >
+                    <span class='mr-3'>{{ switchShowOnlyLead }}</span>
+                    <b-switch v-model="switchShowOnlyLead"
+                      type=""
+                      true-value="Hide"
+                      false-value="Show"
+                      class="showOnlyLead">
+                    </b-switch>
+                  </b-field>
+                </div>
+              </div>
+              <div class="navbar-item flexcontainer ml-2"
+              v-on:click.stop="onSwitchShowOnlyToprope()">
+                Toprope-only routes:
+                <b-field>
+                  <span class='mr-3'>{{ switchShowOnlyToprope }}</span>
+                  <b-switch v-model="switchShowOnlyToprope"
+                    type=""
+                    true-value="Hide"
+                    false-value="Show"
+                    class="showOnlyToprope">
+                  </b-switch>
+                </b-field>
+              </div>
+              <div class="navbar-item flexcontainer ml-2"
+              v-on:click.stop="onSwitchShowOnlyOverhang()">
+                Overhang routes:
+                <b-field>
+                  <span class='mr-3'>{{ switchShowOnlyOverhang }}</span>
+                  <b-switch v-model="switchShowOnlyOverhang"
+                    type=""
+                    true-value="Hide"
+                    false-value="Show"
+                    class="showOnlyOverhang">
+                  </b-switch>
+                </b-field>
+              </div>
+              <div class="navbar-item flexcontainer">
+                <div></div>
+                <a class="button is-success pl-4 pr-4 mr-4 mt-2"
+                  @click="onSetFilters()">
+                  Apply
+                </a>
+              </div>
+              <div class="navbar-item flexcontainer">
+                  <strong>Settings:</strong>
+              </div>
+              <div class="navbar-item flexcontainer ml-2"
+                v-on:click.stop="onSwitchDefault()">
+                  Default selection:
+                  <b-field >
+                    <span class='mr-3'>{{ switchDefaultClimb }}</span>
+                    <b-switch v-model="switchDefaultClimb"
+                      type="is-danger"
+                      true-value="Lead"
+                      false-value="Toprope"
+                      class="defaultClimb">
+                    </b-switch>
+                  </b-field>
               </div>
             </div>
           </div>
@@ -178,7 +263,7 @@
               <!-- Login dropdown link -->
               Login
             </a>
-            <div class="navbar-dropdown" style="right: 0px;left:auto">
+            <div class="navbar-dropdown" style="right: 0px;left:auto; width:2000px">
                 <!-- Login dropdown menu -->
               <a href="/quiz" class="navbar-item" @click="login()">
                 With Google
@@ -209,11 +294,10 @@
       </section>
 
       <b-modal v-model="testModalVisible" width="100%" scroll="keep">
-        <div class="card" style="overflow: visible;">
-            <img style="max-width: 200%;" src="https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/allezapp_map2.png?alt=media&token=94a05731-2df8-4685-877f-eae1746766b6" />
+        <div  id="mapModal" class="card" style="overflow: visible;">
+            <img style="max-width: 100%;" src="https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/allezapp_map2.png?alt=media&token=94a05731-2df8-4685-877f-eae1746766b6" />
     <!-- // add a third modal with the map: -->
     <!-- https://firebasestorage.googleapis.com/v0/b/allezapp-isaak.appspot.com/o/allezapp_map2.png?alt=media&token=94a05731-2df8-4685-877f-eae1746766b6 -->
-
         </div>
       </b-modal>
       <router-view id="content" class="ml-4 mr-4" v-if="isLoggedIn"/>
@@ -430,14 +514,18 @@ export default {
   margin-right:0 ;
 }
 @media screen and (min-width: 1024px) { // =  on desktop
+  #mapModal {
+    width: 80%;
+    margin: auto;
+  }
   .if-mobile { // on desktop, if mobile, dont show
     display: none !important;
   }
   .navbar-item {
-    font-size: 1.5em;
+    font-size: 1em;
   }
   .button {
-    font-size: 1.5em;
+    font-size: 1em;
   }
   #content {
     width:80%;
@@ -446,6 +534,9 @@ export default {
   }
 }
 @media screen and (max-width: 1024px) { // = on mobile
+  #mapModal {
+    width: 100%;
+  }
   .if-desktop { // on mobile, if desktop, dont show
     display: none;
   }
